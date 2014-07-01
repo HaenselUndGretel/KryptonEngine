@@ -28,7 +28,7 @@ namespace KryptonEngine.Manager
 
         public override void LoadContent()
         {
-          InteractiveObject iObj = new InteractiveObject();
+          InteractiveObject iObj = new InteractiveObject("");
           XmlSerializer xml = new XmlSerializer(typeof(InteractiveObject));
           TextReader reader;
 
@@ -41,13 +41,13 @@ namespace KryptonEngine.Manager
             {
               reader = new StreamReader(f.FullName);
 				iObj = (InteractiveObject)xml.Deserialize(reader);
-				iObj.TextureName = f.Name.Substring(0, f.Name.Length - 5);
+				iObj.Name = f.Name.Substring(0, f.Name.Length - 5);
 				iObj.Textures = new Texture2D[4];
-              iObj.Textures[0] = TextureManager.Instance.GetElementByString(iObj.TextureName);
+				iObj.Textures[0] = TextureManager.Instance.GetElementByString(iObj.Name);
               reader.Close();
 
-			  if (!mRessourcen.ContainsKey(iObj.TextureName))
-				mRessourcen.Add(iObj.TextureName, iObj);
+			  if (!mRessourcen.ContainsKey(iObj.Name))
+				  mRessourcen.Add(iObj.Name, iObj);
             }
           }
         }
@@ -78,7 +78,7 @@ namespace KryptonEngine.Manager
         {
 			if (mRessourcen.ContainsKey(pElementName))
 			{
-				InteractiveObject io = new InteractiveObject();
+				InteractiveObject io = new InteractiveObject("");
 				io.CopyFrom(mRessourcen[pElementName]);
 				return io;
 			}

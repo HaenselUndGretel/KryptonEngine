@@ -11,7 +11,7 @@ using System.Xml.Serialization;
 namespace HanselAndGretel.Data
 {
 	[Serializable]
-	public class Collectable : Sprite
+	public class Collectable : InteractiveObject
 	{
 		#region Properties
 
@@ -20,6 +20,7 @@ namespace HanselAndGretel.Data
 		protected Texture2D mShowTexture;
 		protected bool mShowDescription;
 		protected bool mIsHidden;
+
 		#endregion
 
 		#region Getter & Setter
@@ -27,25 +28,29 @@ namespace HanselAndGretel.Data
 		// Zur auslese welche Daten das Collectable hat z.b. welche DiarySeite oder welches Spielzeug
 		public int CollectableId { get { return mCollectableId; } set { mCollectableId = value; } }
 		// Anzeige der Item beschreibung in einer 1280x720 Texture;
+		[XmlIgnoreAttribute]
 		public Texture2D ShowTexture { get { return mShowTexture; } set { mShowTexture = value; } }
 		public String ShowTextureName { get { return mShowTextureName; } set { mShowTextureName = value; } }
 		// Überprüf Variable ob Beschreibung angezeigt wird
+		[XmlIgnoreAttribute]
 		public bool ShowDescription { get { return mShowDescription; } set { mShowDescription = value; } }
 		public bool IsHidden { get { return mIsHidden; } set { mIsHidden = value; } }
+
 		#endregion
 
 		#region Constructor
 
-		public Collectable()
-			:base()
-		{
+		public Collectable() : base() { }
 
+		public Collectable(string pName)
+			:base(pName)
+		{
 		}
 
-		public Collectable(Vector2 pPosition, string pTextureName)
-			:base(pPosition, pTextureName)
+		public Collectable(String pTextureName, Vector2 pPosition)
+			:base(pTextureName)
 		{
-
+			this.Position = pPosition;
 		}
 
 		#endregion
@@ -54,20 +59,10 @@ namespace HanselAndGretel.Data
 
 		public override void Draw(SpriteBatch spriteBatch)
 		{
-			spriteBatch.Draw(mTextures[0], Position, Color.White);
+			spriteBatch.Draw(Textures[0], Position, Color.White);
 			if (this.ShowDescription)
 				spriteBatch.Draw(ShowTexture, Vector2.Zero, Color.White);
 
-		}
-
-		public override string GetInfo()
-		{
-			String temp;
-
-			temp = base.GetInfo();
-			temp += "\nCollectable ID: " + mCollectableId;
-
-			return temp;
 		}
 		#endregion
 

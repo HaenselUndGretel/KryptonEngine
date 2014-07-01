@@ -8,9 +8,22 @@ using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 
+
+//******************************************************
+// Beim erstellen eines Spine/ InteractiveObject muss folgendes beachtet werden:
+// Zuerst wird das Object via Konstruktor normal erstellt.
+// Danach muss LoadContent() aufgerufen werden, um die benötigten Texturen zu laden.
+// Dann muss ApplySettings aufgerufen werden. Die Funktion sorft dafür, dass das Interactive Object einmal geupdatet wird
+// und passt dann die Collisions und ActionListen an.
+/*
+ *	InteractiveObject io = new InteractiveObject("InteractiveObjectName");
+ *	io.LoadContent();
+ *	io.ApplySettings();
+ */
+//******************************************************
 namespace KryptonEngine.Entities
 {
-	public class InteractiveObject : GameObject
+	public class InteractiveObject : SpineObject
 	{
 		#region Properties
 
@@ -21,8 +34,6 @@ namespace KryptonEngine.Entities
 		protected Vector2 mActionPosition2;
 
 		protected int mActionId;
-		protected Texture2D[] mTextures;
-		protected String mTextureName;
 
 		protected ActivityState mActivityState;
 		#endregion
@@ -36,19 +47,15 @@ namespace KryptonEngine.Entities
 		public int ActionId { get { return mActionId; } set { mActionId = value; } }
 		public int Height;
 		public int Width;
+
 		[XmlIgnoreAttribute]
 		public Activity Activity { get { return (Activity)ActionId; } }
-		[XmlIgnoreAttribute]
-		public String TextureName { get { return mTextureName; } set { mTextureName = value; } }
-		[XmlIgnoreAttribute]
-		public Texture2D[] Textures { get { return mTextures; } set { mTextures = value; } }
 		[XmlIgnoreAttribute]
 		public List<DrawPackage> DrawPackages { get
 		{
 			List<DrawPackage> TmpPackages = new List<DrawPackage>();
 			//Main Package
-			//TmpPackages.Add(new DrawPackage(Position, DrawZ, CollisionBox, mDebugColor, TextureManager.Instance.GetElementByString("pixel")));
-			TmpPackages.Add(new DrawPackage(Position, DrawZ, new Rectangle(CollisionBox.Center.X - 100, CollisionBox.Center.Y - 100, 200, 200), mDebugColor, TextureManager.Instance.GetElementByString("pixel")));
+			TmpPackages.Add(DrawPackage);
 			//Debug Stuff
 			foreach (Rectangle rect in CollisionRectList) //Collision Rectangles
 				TmpPackages.Add(new DrawPackage(rect, Color.Red));
@@ -59,8 +66,8 @@ namespace KryptonEngine.Entities
 			TmpPackages.Add(new DrawPackage(new Rectangle((int)ActionPosition2.X-5, (int)ActionPosition2.Y-5, 10, 10), Color.Blue));
 			return TmpPackages;
 		} }
+		[XmlIgnoreAttribute]
 		public ActivityState ActivityState { get { return mActivityState; } set { mActivityState = value; } }
-
 		#endregion
 
 		#region Constructor
@@ -68,33 +75,15 @@ namespace KryptonEngine.Entities
 		public InteractiveObject() 
 			: base() 
 		{
-			Initialize();
+
 		}
 
-		#endregion
-
-		#region Override Methods
-
-		public override void Draw(Rendering.TwoDRenderer renderer)
+		public InteractiveObject(String pName)
+			:base(pName)
 		{
-			renderer.Draw(mTextures, new Vector3(Position, NormalZ));
+
 		}
 
-		//public override void Draw(SpriteBatch spriteBatch)
-		//{
-		//	if (mTexture != null)
-		//	{
-		//		spriteBatch.Draw(mTexture, Position, Color.White);
-		//		if (EngineSettings.IsDebug)
-		//		{
-		//			foreach (Rectangle r in ActionRectList)
-		//				spriteBatch.Draw(TextureManager.Instance.GetElementByString("pixel"), r, Color.Yellow);
-		//			foreach (Rectangle r in CollisionRectList)
-		//				spriteBatch.Draw(TextureManager.Instance.GetElementByString("pixel"), r, Color.Blue);
-		//			spriteBatch.Draw(TextureManager.Instance.GetElementByString("pixel"), new Rectangle(PositionX, DrawZ, mTexture.Width, 1), Color.Red);
-		//		}
-		//	}
-		//}
 		#endregion
 
 		#region Methods
@@ -117,75 +106,49 @@ namespace KryptonEngine.Entities
 			return ((ActionPosition1 - pPosition).Length() > (ActionPosition2 - pPosition).Length()) ? ActionPosition1 : ActionPosition2;
 		}
 
-		public void LoadTextures()
-		{
-			if (mTextures == null) mTextures = new Texture2D[4];
-			mTextures[0] = TextureManager.Instance.GetElementByString(TextureName);
-			mTextures[1] = TextureManager.Instance.GetElementByString(TextureName + "Normal");
-			mTextures[2] = TextureManager.Instance.GetElementByString(TextureName + "AO");
-			mTextures[3] = TextureManager.Instance.GetElementByString(TextureName + "Depth");
-
-			Height = mTextures[0].Height;
-			Width = mTextures[0].Width;
-		}
-
 		public void CopyFrom(InteractiveObject io)
 		{
 			this.ActionRectList = new List<Rectangle>(io.ActionRectList);
 			this.CollisionRectList = new List<Rectangle>(io.CollisionRectList);
 			this.ActionPosition1 = io.ActionPosition1;
 			this.ActionPosition2 = io.ActionPosition2;
-			this.DrawZ = io.DrawZ;
 			this.ActionId = io.ActionId;
-			this.mTextureName = io.TextureName;
+
+			this.Name = io.Name;
 			this.mTextures = new Texture2D[4];
-			mTextures[0] = TextureManager.Instance.GetElementByString(TextureName);
-			mTextures[1] = TextureManager.Instance.GetElementByString(TextureName + "Normal");
-			mTextures[2] = TextureManager.Instance.GetElementByString(TextureName + "AO");
-			mTextures[3] = TextureManager.Instance.GetElementByString(TextureName + "Depth");
+			mTextures[0] = TextureManager.Instance.GetElementByString(Name);
+			mTextures[1] = TextureManager.Instance.GetElementByString(Name + "Normal");
+			mTextures[2] = TextureManager.Instance.GetElementByString(Name + "AO");
+			mTextures[3] = TextureManager.Instance.GetElementByString(Name + "Depth");
 
 			this.Position = io.Position;
 		}
 
-		public override string GetInfo()
+		// Muss nach laden der Texture/deserializierung einmalig ausgeführt werden
+		public override void ApplySettings()
 		{
-			String tmp = base.GetInfo();
-			String actID = "";
-			switch(mActionId)
-			{
-				case 0: actID = "None";
-					break;
-				case 1: actID = "CaughtInCobweb";
-					break;
-				case 3: actID = "CaughtInSwamp";
-					break;
-				case 5: actID = "KnockOverTree";
-					break;
-				case 6: actID = "BalanceOverTree";
-					break;
-				case 7: actID = "PushRock";
-					break;
-				case 8: actID = "SlipThroughRock";
-					break;
-				case 9: actID = "JumpOverGap";
-					break;
-				case 10: actID = "LegUp";
-					break;
-				case 11: actID = "LegUpGrab";
-					break;
-				case 12: actID = "UseKey";
-					break;
-				case 13: actID = "PullDoor";
-					break;
-				case 14: actID = "UseChalk";
-					break;
-				case 15: actID = "UseWell";
-					break;
-			}
-			tmp += "\nActionID: " + actID;
-			return tmp;
+			base.ApplySettings();
+			MoveInteractiveObject(Vector2.Zero);
 		}
 
+		public void MoveInteractiveObject(Vector2 mDirection)
+		{
+			SkeletonPosition += mDirection;
+
+			for (int i = 0; i < mActionRectList.Count; i++)
+			{
+				Rectangle temp = mActionRectList[i];
+				temp.X += (int)(SkeletonPosition.X);
+				temp.Y += (int)(SkeletonPosition.Y);
+			}
+
+			for (int i = 0; i < mCollisionRectList.Count; i++)
+			{
+				Rectangle temp = mCollisionRectList[i];
+				temp.X += (int)(SkeletonPosition.X);
+				temp.Y += (int)(SkeletonPosition.Y);
+			}
+		}
 		#endregion
 	}
 }

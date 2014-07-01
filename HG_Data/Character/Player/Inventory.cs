@@ -86,8 +86,8 @@ namespace HanselAndGretel.Data
 				if (ItemSlots[i].Item != null)
 				{
 					int TmpSlot = 2 - pFocus + i;
-					Vector2 TmpOrigin = new Vector2(ItemSlots[i].Item.GetTexture(0).Bounds.Center.X, ItemSlots[i].Item.GetTexture(0).Bounds.Center.Y);
-					pSpriteBatch.Draw(ItemSlots[i].Item.GetTexture(0), pPosition + DrawPosition[TmpSlot], null, Color.White * pVisibility, DrawRotation[TmpSlot], TmpOrigin, DrawScale[TmpSlot], SpriteEffects.None, 1f);
+					Vector2 TmpOrigin = new Vector2(ItemSlots[i].Item.Textures[0].Bounds.Center.X, ItemSlots[i].Item.Textures[0].Bounds.Center.Y);
+					pSpriteBatch.Draw(ItemSlots[i].Item.Textures[0], pPosition + DrawPosition[TmpSlot], null, Color.White * pVisibility, DrawRotation[TmpSlot], TmpOrigin, DrawScale[TmpSlot], SpriteEffects.None, 1f);
 				}
 			}
 		}
@@ -132,10 +132,19 @@ namespace HanselAndGretel.Data
 			return false;
 		}
 
-		public void SetupDeserialized()
+		public Item GetItemByType(Type pItemType)
 		{
 			foreach (InventorySlot slot in ItemSlots)
-				slot.SetupDeserialized();
+				if (slot.Item != null && slot.Item.GetType() == pItemType)
+					return slot.Item;
+			return null;
+		}
+
+
+		public void LoadTextures()
+		{
+			foreach (InventorySlot slot in ItemSlots)
+				slot.LoadContent();
 			LoadContent();
 		}
 

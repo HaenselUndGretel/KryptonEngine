@@ -9,7 +9,7 @@ using KryptonEngine.Manager;
 using System.Xml.Serialization;
 using System.IO;
 using KryptonEngine;
-using KryptonEngine.HG_Data.Objects.Lights;
+using KryptonEngine.HG_Data;
 
 namespace HanselAndGretel.Data
 {
@@ -33,7 +33,7 @@ namespace HanselAndGretel.Data
 
 		public List<GameObject> BackgroundSprites;
 		[XmlIgnoreAttribute]
-		public Texture2D[] BackgroundTextures;
+		public Sprite BackgroundTexture;
 
 		public List<InteractiveObject> InteractiveObjects;
 		public List<Collectable> Collectables;
@@ -45,49 +45,12 @@ namespace HanselAndGretel.Data
 		public AmbientLight SceneAmbientLight;
 		public DirectionLight SceneDirectionLight;
 
-		[XmlIgnoreAttribute]
 		public List<Enemy> Enemies;
 		//public List<Emitter> Emitter;
 		//public List<SoundAreas> SoundAreas;
 
-		#endregion
-
-		#region Getter & Setter
-
 		[XmlIgnoreAttribute]
-		public List<DrawPackage> DrawPackages
-		{
-			get
-			{
-				List<DrawPackage> TmpList = new List<DrawPackage>();
-				foreach (GameObject go in BackgroundSprites)
-				{
-					TmpList.Add(new DrawPackage(go.CollisionBox, Color.White));
-				}
-				foreach (InteractiveObject iObj in InteractiveObjects)
-				{
-					TmpList.AddRange(iObj.DrawPackages);
-				}
-				foreach (Rectangle rect in MoveArea)
-				{
-					TmpList.Add(new DrawPackage(rect, Color.Blue));
-				}
-				foreach (Waypoint wp in Waypoints)
-				{
-					TmpList.Add(wp.DrawPackage);
-				}
-				foreach (Item item in Items)
-				{
-					TmpList.Add(item.DrawPackage);
-				}
-				//Add EVERYTHING for Debug
-				//foreach (InteractiveObject obj in InteractiveObjects)
-				//{
-				//	TmpList.Add(obj.DrawPackage);
-				//}
-				return TmpList;
-			}
-		}
+		public List<InteractiveObject> RenderList;
 
 		#endregion
 
@@ -107,8 +70,10 @@ namespace HanselAndGretel.Data
 			GamePlane = Rectangle.Empty;
 			MoveArea = new List<Rectangle>();
 			Waypoints = new List<Waypoint>();
+
 			BackgroundSprites = new List<GameObject>();
-			BackgroundTextures = new Texture2D[4]; //LightMaps
+
+			BackgroundTexture = new Sprite();
 
 			InteractiveObjects = new List<InteractiveObject>();
 			Collectables = new List<Collectable>();
@@ -116,6 +81,8 @@ namespace HanselAndGretel.Data
 			Enemies = new List<Enemy>();
 			Lights = new List<Light>();
 			Events = new List<EventTrigger>();
+
+			RenderList = new List<InteractiveObject>();
 
 			InteractiveObjects = new List<InteractiveObject>();
 
@@ -130,24 +97,44 @@ namespace HanselAndGretel.Data
 		{
 			MoveArea.Clear();
 			Waypoints.Clear();
-			BackgroundSprites.Clear();
 			InteractiveObjects.Clear();
 			Collectables.Clear();
 			Items.Clear();
 			Lights.Clear();
 			Events.Clear();
+			BackgroundSprites.Clear();
 		}
 
 		// Laden Texturen usw. von Manager das nicht mitserialisiert wird
-		public void SetupDeserialized()
+		public void LoadContent(string pBackgroundTextureName)
 		{
+			BackgroundTexture.TextureName = pBackgroundTextureName;
+			BackgroundTexture.LoadContent();
 			foreach (InteractiveObject iObj in InteractiveObjects)
-				iObj.LoadTextures();
+			{
+				iObj.LoadContent();
+				iObj.ApplySettings();
+			}
 			foreach (Item item in Items)
-				item.LoadTextures();
+				item.LoadContent();
 			foreach (Collectable col in Collectables)
-				col.LoadTextures();
+			{
+				col.LoadContent();
+				col.ApplySettings();
+			}
 		}
+
+		public void SetupRenderList(Hansel pHansel, Gretel pGretel)
+		{
+			RenderList.Clear();
+			RenderList.AddRange(InteractiveObjects);
+			RenderList.AddRange(Items);
+			RenderList.AddRange(Collectables);
+			RenderList.AddRange(Enemies);
+			RenderList.Add(pHansel);
+			RenderList.Add(pGretel);
+		}
+
 		#endregion
 	}
 }

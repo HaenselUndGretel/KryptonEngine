@@ -18,30 +18,29 @@ namespace KryptonEngine.Entities
         #region Properties
 
         protected String mTextureName;
-		[XmlIgnoreAttribute]
 		protected Texture2D[] mTextures;
         protected Color mTint = Color.White;
-        protected int mWidth;
-        protected int mHeight;
+		protected int mWidth;
+		protected int mHeight;
 
         protected Vector2 mOrigin;
-        protected int mRotation = 0;
+		protected int mRotation = 0;
         protected SpriteEffects mEffekt = SpriteEffects.None;
 
         #region Getter & Setter
 
+		public Texture2D[] Textures { get { return mTextures; } set { mTextures = value; } }
         public String TextureName { get { return mTextureName; } set { mTextureName = value; } }
-		[XmlIgnoreAttribute]
-        public Color Tint { set { mTint = value; } }
 		public int Width { get { return mWidth; } set { mWidth = value; } }
 		public int Height { get { return mHeight; } set { mHeight = value; } }
-
         public Vector2 Origin { get { return mOrigin; } }
         public int Rotation { get { return mRotation; } set { mRotation = value; } }
 		[XmlIgnoreAttribute]
         public SpriteEffects Effect { get { return mEffekt; } set { mEffekt = value; } }
-
-		public DrawPackage DrawPackage { get { return new DrawPackage(Position, mDrawZ, CollisionBox, mDebugColor, mTextures[0]); } }
+		[XmlIgnoreAttribute]
+		public DrawPackage DrawPackage { get { return new DrawPackage(Position, mDrawZ, CollisionBox, mDebugColor, mTextures); } }
+		[XmlIgnoreAttribute]
+        public Color Tint { set { mTint = value; } }
 
         #endregion
 
@@ -49,16 +48,22 @@ namespace KryptonEngine.Entities
 
         #region Constructor
 
-        public Sprite() { }
+		public Sprite() : base() { }
+
+		public Sprite(String pTextureName)
+		{
+			mTextureName = pTextureName;
+			LoadContent();
+			mWidth = mTextures[0].Width;
+			mHeight = mTextures[0].Height;
+			mOrigin = new Vector2(mWidth / 2, mHeight / 2);
+		}
 
         public Sprite(Vector2 pPosition, String pTextureName, String pPathName)
             : base(pPosition)
         {
-            TextureName = pTextureName;
-			mTextures[0] = TextureManager.Instance.GetElementByString(TextureName);
-			mTextures[1] = TextureManager.Instance.GetElementByString(TextureName + "Normal");
-			mTextures[2] = TextureManager.Instance.GetElementByString(TextureName + "AO");
-			mTextures[3] = TextureManager.Instance.GetElementByString(TextureName + "Depth");
+            mTextureName = pTextureName;
+			LoadContent();
             
             mWidth = mTextures[0].Width;
             mHeight = mTextures[0].Height;
@@ -71,13 +76,7 @@ namespace KryptonEngine.Entities
             : base(pPosition)
         {
             TextureName = pTextureName;
-
-			mTextures = new Texture2D[4];
-			
-			mTextures[0] = TextureManager.Instance.GetElementByString(TextureName);
-			mTextures[1] = TextureManager.Instance.GetElementByString(TextureName + "Normal");
-			mTextures[2] = TextureManager.Instance.GetElementByString(TextureName + "AO");
-			mTextures[3] = TextureManager.Instance.GetElementByString(TextureName + "Depth");
+			LoadContent();
 			mWidth = mTextures[0].Width;
 			mHeight = mTextures[0].Height;
             mOrigin = new Vector2(mWidth / 2, mHeight / 2);
@@ -115,14 +114,16 @@ namespace KryptonEngine.Entities
 		//	spriteBatch.Draw(mDepthTexture, new Rectangle(PositionX + (int)mOrigin.X, PositionY + (int)mOrigin.Y, mWidth, mHeight), new Rectangle(0, 0, mWidth, mHeight), mTint, MathHelper.ToRadians(mRotation), mOrigin, mEffekt, 0.0f);
 		//}
 
-		public void LoadTextures()
+		public override void LoadContent()
 		{
+			mTextures = new Texture2D[4];
 			mTextures[0] = TextureManager.Instance.GetElementByString(TextureName);
 			mTextures[1] = TextureManager.Instance.GetElementByString(TextureName + "Normal");
 			mTextures[2] = TextureManager.Instance.GetElementByString(TextureName + "AO");
 			mTextures[3] = TextureManager.Instance.GetElementByString(TextureName + "Depth");
 		}
 
+		//direkt über Textures[index], ist dann überall einheitlich
 		public Texture2D GetTexture(int index)
 		{
 			return mTextures[index];
