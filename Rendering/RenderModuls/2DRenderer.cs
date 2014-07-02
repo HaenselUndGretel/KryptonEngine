@@ -445,7 +445,8 @@ namespace KryptonEngine.Rendering
 
             mCombineShader.CurrentTechnique.Passes[0].Apply();
 
-            QuadRenderer.Render(this.mGraphicsDevice);
+			QuadRenderer.Render(this.mGraphicsDevice);
+			EngineSettings.Graphics.GraphicsDevice.SetRenderTarget(null);
         }
 
         #region Function Methods
