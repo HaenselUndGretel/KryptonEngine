@@ -93,6 +93,7 @@ namespace KryptonEngine.SceneManagement
 
         protected void DrawBackground()
         {
+			if (mBackgroundTexture == null) mBackgroundTexture = TextureManager.Instance.GetElementByString("pixel");
             mSpriteBatch.Begin();
             mSpriteBatch.Draw(mBackgroundTexture, new Rectangle(0, 0, EngineSettings.VirtualResWidth, EngineSettings.VirtualResHeight), mClearColor);
             mSpriteBatch.End();

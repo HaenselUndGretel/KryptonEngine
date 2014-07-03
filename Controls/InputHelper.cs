@@ -153,12 +153,12 @@ namespace KryptonEngine.Controls
 
 		#region ButtonStates
 
-		private bool ButtonJustPressed(Buttons pButton)
+		public bool ButtonJustPressed(Buttons pButton)
 		{
 			return (mGamepadStateBefore.IsButtonUp(pButton) && mGamepadStateCurrent.IsButtonDown(pButton)) ? true : false;
 		}
 
-		private bool ButtonJustReleased(Buttons pButton)
+		public bool ButtonJustReleased(Buttons pButton)
 		{
 			return (mGamepadStateBefore.IsButtonDown(pButton) && mGamepadStateCurrent.IsButtonUp(pButton)) ? true : false;
 		}

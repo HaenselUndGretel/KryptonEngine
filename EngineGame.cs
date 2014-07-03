@@ -60,6 +60,8 @@ namespace KryptonEngine
 
             if (EngineSettings.OnWindows)
                 if (Keyboard.GetState().IsKeyDown(EngineSettings.Exitkey)) Exit();
+			if (EngineSettings.Close)
+				Exit();
 
 			if (EngineSettings.OnWindows)
 			{

@@ -94,6 +94,8 @@ namespace KryptonEngine
 
 		public static XnaTextureLoader TextureLoader;
 
+		public static bool Close = false;
+
         #region Resolution
 
         public static int VirtualResHeight = 720;
