@@ -395,7 +395,7 @@ namespace KryptonEngine.Rendering
         #endregion
 
         #region Light Methods
-        public void ProcessLight(List<Light> pLightList)
+        public void ProcessLight(List<Light> pLightList, Matrix pTranslation)
         {
             EngineSettings.Graphics.GraphicsDevice.SetRenderTarget(mLightTarget);
             EngineSettings.Graphics.GraphicsDevice.Clear(Color.Transparent);
@@ -405,14 +405,22 @@ namespace KryptonEngine.Rendering
             KryptonEngine.EngineSettings.Graphics.GraphicsDevice.Textures[0] = mGBuffer.RenderTargets[1];
             KryptonEngine.EngineSettings.Graphics.GraphicsDevice.Textures[1] = mGBuffer.RenderTargets[3];
 
+            this.mTranslatetViewMatrix = Matrix.Multiply(mView, pTranslation);
+
+            this.mLightShader.Parameters["World"].SetValue(this.mWorld);
+            this.mLightShader.Parameters["View"].SetValue(this.mTranslatetViewMatrix);
+            this.mLightShader.Parameters["Projection"].SetValue(this.mProjection);
+
 
             foreach (Light l in pLightList)
             {
                 if (!l.IsVisible) continue;
 
+                Vector3 lightPos = new Vector3(l.Position, l.Depth * 720) + pTranslation.Translation;
+
                this.mLightShader.Parameters["LightIntensity"].SetValue(l.Intensity);
                this.mLightShader.Parameters["LightColor"].SetValue(l.LightColor);
-               this.mLightShader.Parameters["LightPosition"].SetValue(new Vector3(l.Position, l.Depth));
+               this.mLightShader.Parameters["LightPosition"].SetValue(lightPos);
                this.mLightShader.Parameters["screen"].SetValue(new Vector2(EngineSettings.VirtualResWidth, EngineSettings.VirtualResHeight));
 
                if (l.GetType() == typeof(PointLight))
