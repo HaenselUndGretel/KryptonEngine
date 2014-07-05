@@ -28,6 +28,7 @@ namespace KryptonEngine.FModAudio
 		private const float FADING_MAX = 1.0f;
 		private const float FADING_MIN = 0.0f;
 		public static float FadingSpeed = 0.0f;
+		private bool isMuted = false;
 
 		public FmodMediaPlayer()
 		{
@@ -87,6 +88,8 @@ namespace KryptonEngine.FModAudio
 
 		public void Update()
 		{
+			if (isMuted) return;
+
 			EngineSettings.FMODDevice.update();
 
 			if (BackgroundSong != null)
@@ -108,6 +111,15 @@ namespace KryptonEngine.FModAudio
 				mSongList.Remove(s);
 
 			delete.Clear();
+		}
+
+		public void Mute()
+		{
+			isMuted = !isMuted;
+			BackgroundSong.Mute(isMuted);
+
+			foreach (KeyValuePair<string, FModSong> pair in mSongList)
+				pair.Value.Mute(isMuted);
 		}
 	}
 }

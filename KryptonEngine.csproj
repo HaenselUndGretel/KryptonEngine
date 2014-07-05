@@ -71,6 +71,7 @@
     <Compile Include="Entities\ImageButton.cs" />
     <Compile Include="Entities\InteractiveObject.cs" />
     <Compile Include="Entities\InterfaceObject.cs" />
+    <Compile Include="Entities\LockedImageButton.cs" />
     <Compile Include="Entities\ParallaxPlane.cs" />
     <Compile Include="Entities\SpineData.cs" />
     <Compile Include="Entities\SpineObject.cs" />

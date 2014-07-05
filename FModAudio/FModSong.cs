@@ -104,6 +104,24 @@ namespace KryptonEngine.FModAudio
 			for (int i = 0; i < MaxChannelCount; i++)
 				sound[i].release();
 		}
+
+		public void Mute(bool muted)
+		{
+			if (muted)
+			{
+				for (int i = 0; i < MaxChannelCount; i++)
+				{
+					channel[i].setVolume(0.0f);
+				}
+			}
+			else
+			{
+				for (int i = 0; i < MaxChannelCount; i++)
+				{
+					channel[i].setVolume(volume[i]);
+				}
+			}
+		}
 		
 	}
 }
