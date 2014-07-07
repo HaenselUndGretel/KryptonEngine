@@ -17,24 +17,13 @@ namespace HanselAndGretel.Data
 		#region Getter & Setter
 
 		public float Radius { get { return mRadius; } set { mRadius = value; } }
-		new public float NormalZ 
-		{
-			set 
-			{ 
-				mNormalZ = value; 
-				Depth = value; 
-			} 
-			get 
-			{
-				return mNormalZ; 
-			} 
-		}
 		#endregion
 
 		#region Constructor
 		public PointLight() : base()
 		{
-			Intensity = 1.0f;
+			LightColor = Vector3.One;
+			//Intensity = 1.0f;
 		}
 
 		public PointLight(Vector2 pPosition)

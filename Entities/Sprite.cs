@@ -27,24 +27,25 @@ namespace KryptonEngine.Entities
 		protected int mRotation = 0;
         protected SpriteEffects mEffekt = SpriteEffects.None;
 
-        #region Getter & Setter
+        #endregion
 
+		#region Getter & Setter
+
+		[XmlIgnoreAttribute]
 		public Texture2D[] Textures { get { return mTextures; } set { mTextures = value; } }
-        public String TextureName { get { return mTextureName; } set { mTextureName = value; } }
+		public String TextureName { get { return mTextureName; } set { mTextureName = value; } }
 		public int Width { get { return mWidth; } set { mWidth = value; } }
 		public int Height { get { return mHeight; } set { mHeight = value; } }
-        public Vector2 Origin { get { return mOrigin; } }
-        public int Rotation { get { return mRotation; } set { mRotation = value; } }
+		public Vector2 Origin { get { return mOrigin; } }
+		public int Rotation { get { return mRotation; } set { mRotation = value; } }
 		[XmlIgnoreAttribute]
-        public SpriteEffects Effect { get { return mEffekt; } set { mEffekt = value; } }
+		public SpriteEffects Effect { get { return mEffekt; } set { mEffekt = value; } }
 		[XmlIgnoreAttribute]
 		public DrawPackage DrawPackage { get { return new DrawPackage(Position, mDrawZ, CollisionBox, mDebugColor, mTextures); } }
 		[XmlIgnoreAttribute]
-        public Color Tint { set { mTint = value; } }
+		public Color Tint { set { mTint = value; } }
 
-        #endregion
-
-        #endregion
+		#endregion
 
         #region Constructor
 
@@ -100,19 +101,26 @@ namespace KryptonEngine.Entities
 				spriteBatch.Draw(mTextures[0], new Rectangle(PositionX, PositionY, mWidth, mHeight), mDebugColor);
 		}
 
-		//public override void DrawNormal(SpriteBatch spriteBatch)
-		//{
-		//	if (mNormalTexture == null) return;
+		public override void DrawNormal(SpriteBatch spriteBatch)
+		{
+			if (mTextures[1] == null) return;
 
-		//	spriteBatch.Draw(mNormalTexture, new Rectangle(PositionX + (int)mOrigin.X, PositionY + (int)mOrigin.Y, mWidth, mHeight), new Rectangle(0, 0, mWidth, mHeight), mTint, MathHelper.ToRadians(mRotation), mOrigin, mEffekt, 0.0f);
-		//}
+			spriteBatch.Draw(mTextures[1], new Rectangle(PositionX + (int)mOrigin.X, PositionY + (int)mOrigin.Y, mWidth, mHeight), new Rectangle(0, 0, mWidth, mHeight), mTint, MathHelper.ToRadians(mRotation), mOrigin, mEffekt, 0.0f);
+		}
 
-		//public override void DrawDepth(SpriteBatch spriteBatch)
-		//{
-		//	if (mDepthTexture == null) return;
+		public override void DrawAO(SpriteBatch spriteBatch)
+		{
+			if (mTextures[2] == null) return;
 
-		//	spriteBatch.Draw(mDepthTexture, new Rectangle(PositionX + (int)mOrigin.X, PositionY + (int)mOrigin.Y, mWidth, mHeight), new Rectangle(0, 0, mWidth, mHeight), mTint, MathHelper.ToRadians(mRotation), mOrigin, mEffekt, 0.0f);
-		//}
+			spriteBatch.Draw(mTextures[2], new Rectangle(PositionX + (int)mOrigin.X, PositionY + (int)mOrigin.Y, mWidth, mHeight), new Rectangle(0, 0, mWidth, mHeight), mTint, MathHelper.ToRadians(mRotation), mOrigin, mEffekt, 0.0f);
+		}
+
+		public override void DrawDepth(SpriteBatch spriteBatch)
+		{
+			if (mTextures[3] == null) return;
+
+			spriteBatch.Draw(mTextures[3], new Rectangle(PositionX + (int)mOrigin.X, PositionY + (int)mOrigin.Y, mWidth, mHeight), new Rectangle(0, 0, mWidth, mHeight), mTint, MathHelper.ToRadians(mRotation), mOrigin, mEffekt, 0.0f);
+		}
 
 		public override void LoadContent()
 		{

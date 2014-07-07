@@ -407,9 +407,9 @@ namespace KryptonEngine.Rendering
 
             this.mTranslatetViewMatrix = Matrix.Multiply(mView, pTranslation);
 
-            this.mLightShader.Parameters["World"].SetValue(this.mWorld);
-            this.mLightShader.Parameters["View"].SetValue(this.mTranslatetViewMatrix);
-            this.mLightShader.Parameters["Projection"].SetValue(this.mProjection);
+			//this.mLightShader.Parameters["World"].SetValue(this.mWorld);
+			//this.mLightShader.Parameters["View"].SetValue(this.mTranslatetViewMatrix);
+			//this.mLightShader.Parameters["Projection"].SetValue(this.mProjection);
 
 
             foreach (Light l in pLightList)

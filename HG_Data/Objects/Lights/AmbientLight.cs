@@ -15,8 +15,8 @@ namespace KryptonEngine.HG_Data
 		#region Constructir
 		public AmbientLight()
 		{
-			mColor = Vector3.One;
-			mIntensity = 1.0f;
+			mColor = new Vector3(100.0f / 255.0f, 100.0f / 255.0f, 125.0f / 255.0f);
+			mIntensity = 1f;
 		}
 		#endregion
 

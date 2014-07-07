@@ -88,8 +88,9 @@ namespace KryptonEngine.Entities
 
 		public virtual void Draw(TwoDRenderer renderer) { }
         public virtual void Draw(SpriteBatch spriteBatch) { }
-		//public virtual void DrawNormal(SpriteBatch spriteBatch) { }
-		//public virtual void DrawDepth(SpriteBatch spriteBatch) { }
+		public virtual void DrawNormal(SpriteBatch spriteBatch) { }
+		public virtual void DrawDepth(SpriteBatch spriteBatch) { }
+		public virtual void DrawAO(SpriteBatch spriteBatch) { }
 
         public override string GetInfo()
         {
