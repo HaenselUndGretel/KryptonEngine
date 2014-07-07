@@ -144,6 +144,18 @@ namespace KryptonEngine.Entities
 			this.mActionPosition1 += mDirection;
 			this.mActionPosition2 += mDirection;
 		}
+
+		public void DrawDebug(SpriteBatch pSpriteBatch)
+		{
+			Texture2D pixel = TextureManager.Instance.GetElementByString("pixel");
+			foreach (Rectangle rect in CollisionRectList) //Collision Rectangles
+				pSpriteBatch.Draw(pixel, rect, Color.Red * 0.5f);
+			foreach (Rectangle rect in ActionRectList) //Action Rectangles
+				pSpriteBatch.Draw(pixel, rect, Color.Violet * 0.5f);
+			//Action Positions
+			pSpriteBatch.Draw(pixel, new Rectangle((int)ActionPosition1.X - 5, (int)ActionPosition1.Y - 5, 10, 10), Color.Blue * 0.5f);
+			pSpriteBatch.Draw(pixel, new Rectangle((int)ActionPosition2.X - 5, (int)ActionPosition2.Y - 5, 10, 10), Color.Blue * 0.5f);
+		}
 		#endregion
 	}
 }
