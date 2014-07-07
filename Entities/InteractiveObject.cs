@@ -49,7 +49,7 @@ namespace KryptonEngine.Entities
 		public int Width;
 
 		[XmlIgnoreAttribute]
-		public Activity Activity { get { return (Activity)ActionId; } }
+		public Activity ActivityId { get { return (Activity)ActionId; } }
 		[XmlIgnoreAttribute]
 		public List<DrawPackage> DrawPackages { get
 		{
@@ -136,18 +136,13 @@ namespace KryptonEngine.Entities
 			SkeletonPosition += mDirection;
 
 			for (int i = 0; i < mActionRectList.Count; i++)
-			{
-				Rectangle temp = mActionRectList[i];
-				temp.X += (int)(SkeletonPosition.X);
-				temp.Y += (int)(SkeletonPosition.Y);
-			}
+				mActionRectList[i] = new Rectangle((int)(mActionRectList[i].X + mDirection.X),(int)( mActionRectList[i].Y + mDirection.Y), mActionRectList[i].Width, mActionRectList[i].Height);
 
 			for (int i = 0; i < mCollisionRectList.Count; i++)
-			{
-				Rectangle temp = mCollisionRectList[i];
-				temp.X += (int)(SkeletonPosition.X);
-				temp.Y += (int)(SkeletonPosition.Y);
-			}
+				mCollisionRectList[i] = new Rectangle((int)(mCollisionRectList[i].X + mDirection.X), (int)(mCollisionRectList[i].Y + mDirection.Y), mCollisionRectList[i].Width, mCollisionRectList[i].Height);
+
+			this.mActionPosition1 += mDirection;
+			this.mActionPosition2 += mDirection;
 		}
 		#endregion
 	}

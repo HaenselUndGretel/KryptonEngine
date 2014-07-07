@@ -15,7 +15,7 @@ namespace KryptonEngine.Controls
 			public Keys KeyPlayer1;
 			public Keys KeyPlayer2;
 
-			public Input(Buttons pButton ,Keys pKeyPlayer1, Keys pKeyPlayer2)
+			public Input(Buttons pButton, Keys pKeyPlayer1, Keys pKeyPlayer2)
 			{
 				Button = pButton;
 				KeyPlayer1 = pKeyPlayer1;
@@ -25,26 +25,26 @@ namespace KryptonEngine.Controls
 
 		#region Singleton
 
-        private static InputHelper mPlayer1;
+		private static InputHelper mPlayer1;
 		private static InputHelper mPlayer2;
-        public static InputHelper Player1
-        {
-            get
-            {
-                if (mPlayer1 == null) mPlayer1 = new InputHelper(PlayerIndex.One);
-                return mPlayer1;
-            }
-        }
+		public static InputHelper Player1
+		{
+			get
+			{
+				if (mPlayer1 == null) mPlayer1 = new InputHelper(PlayerIndex.One);
+				return mPlayer1;
+			}
+		}
 		public static InputHelper Player2
-        {
-            get
-            {
-                if (mPlayer2 == null) mPlayer2 = new InputHelper(PlayerIndex.Two);
-                return mPlayer2;
-            }
-        }
+		{
+			get
+			{
+				if (mPlayer2 == null) mPlayer2 = new InputHelper(PlayerIndex.Two);
+				return mPlayer2;
+			}
+		}
 
-        #endregion
+		#endregion
 
 		#region Properties
 
@@ -76,21 +76,29 @@ namespace KryptonEngine.Controls
 		#region Getter & Setter
 
 		public bool Connected { get { return mGamepadStateCurrent.IsConnected; } }
-		
+
 		//Movement
-		public Vector2 Movement { get
+		public Vector2 Movement
 		{
-			Vector2 TmpMovement = Vector2.Zero;
-			if (InputPressed(mMoveUp))
-				--TmpMovement.Y;
-			if (InputPressed(mMoveDown))
-				++TmpMovement.Y;
-			if (InputPressed(mMoveLeft))
-				--TmpMovement.X;
-			if (InputPressed(mMoveRight))
-				++TmpMovement.X;
-			return TmpMovement;
-		} }
+			get
+			{
+				Vector2 TmpMovement = Vector2.Zero;
+				if (InputPressed(mMoveUp))
+					--TmpMovement.Y;
+				if (InputPressed(mMoveDown))
+					++TmpMovement.Y;
+				if (InputPressed(mMoveLeft))
+					--TmpMovement.X;
+				if (InputPressed(mMoveRight))
+					++TmpMovement.X;
+				return TmpMovement;
+			}
+		}
+
+		/// <summary>
+		/// Rotation des linken ThumbSticks: 1f = vollständige Drehung im Uhrzeigersinn, -1 = vollständige Drehung gegen den Uhrzeigersinn
+		/// </summary>
+		public float LeftStickRotation { get { return StickRoation(); } }
 
 		//Pause
 		public bool PauseJustPressed { get { return InputJustPressed(mPause); } }
@@ -199,6 +207,34 @@ namespace KryptonEngine.Controls
 
 		#endregion
 
+		/// <summary>
+		/// Rotation des Sticks.
+		/// </summary>
+		/// <param name="pRightStick">true = Rechter Stick, false = linker Stick</param>
+		/// <returns>1f = vollständige Drehung im Uhrzeigersinn, -1 = vollständige Drehung gegen den Uhrzeigersinn</returns>
+		private float StickRoation(bool pRightStick = false)
+		{
+			Vector2 oldPosition;
+			Vector2 newPosition;
+			if (pRightStick)
+			{
+				oldPosition = mGamepadStateBefore.ThumbSticks.Right;
+				newPosition = mGamepadStateBefore.ThumbSticks.Right;
+
+			}
+			else
+			{
+				oldPosition = mGamepadStateCurrent.ThumbSticks.Left;
+				newPosition = mGamepadStateCurrent.ThumbSticks.Left;
+			}
+
+			//ToDo Calc Rotation
+
+
+
+			return 1f;
+		}
+
 		private Keys PlayerMappedKey(Input pInput) //Map Input.pKey to mPlayer
 		{
 			if (mPlayer == PlayerIndex.Two)
@@ -229,7 +265,7 @@ namespace KryptonEngine.Controls
 			if (mPlayer1.InputJustPressed(mDebug))
 				EngineSettings.IsDebug = !EngineSettings.IsDebug;
 		}
-		
+
 		#endregion
 	}
 }

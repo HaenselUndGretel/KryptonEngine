@@ -69,7 +69,8 @@ namespace HanselAndGretel.Data
 		public Vector2 Move(Vector2 pDelta, List<Rectangle> pMoveArea)
 		{
 			Vector2 TmpMovement = Collision.CollisionCheckedVector(CollisionBox, (int)pDelta.X, (int)pDelta.Y, pMoveArea);
-			Position += TmpMovement;
+			this.MoveInteractiveObject(TmpMovement);
+			this.Position += TmpMovement;
 			return TmpMovement;
 		}
 

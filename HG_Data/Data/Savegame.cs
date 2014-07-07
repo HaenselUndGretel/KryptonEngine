@@ -80,7 +80,7 @@ namespace HanselAndGretel.Data
 			InventoryGretel = new Inventory();
 			Chalk = 0;
 			SceneId = 0;
-			Scenes = new SceneData[3]; //ToDo: Anzahl Scenes setzen !---!---!---!---!
+			Scenes = new SceneData[1]; //ToDo: Anzahl Scenes setzen !---!---!---!---!
 			for (int i = 0; i < Scenes.Length; i++)
 				Scenes[i] = new SceneData(); //Scenes initialisieren
 		}
