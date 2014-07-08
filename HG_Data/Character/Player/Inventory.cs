@@ -62,6 +62,8 @@ namespace HanselAndGretel.Data
 		public override void LoadContent()
 		{
 			mInventoryBackground = TextureManager.Instance.GetElementByString("inventory");
+			foreach (InventorySlot slot in ItemSlots)
+				slot.LoadContent();
 		}
 
 		#endregion
@@ -138,14 +140,6 @@ namespace HanselAndGretel.Data
 				if (slot.Item != null && slot.Item.GetType() == pItemType)
 					return slot.Item;
 			return null;
-		}
-
-
-		public void LoadTextures()
-		{
-			foreach (InventorySlot slot in ItemSlots)
-				slot.LoadContent();
-			LoadContent();
 		}
 
 		#endregion

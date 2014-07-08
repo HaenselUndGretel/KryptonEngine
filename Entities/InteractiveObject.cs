@@ -139,8 +139,8 @@ namespace KryptonEngine.Entities
 			if (!InteractiveObjectDataManager.Instance.HasElement(Name)) return;
 
 			//if (mDirection == Vector2.Zero) return;
-			if (mDirection != Vector2.Zero)
-				Console.WriteLine("Größer 0");
+			//if (mDirection != Vector2.Zero)
+				//Console.WriteLine("Größer 0");
 
 			mDirection = new Vector2((int)mDirection.X, (int)mDirection.Y);
 

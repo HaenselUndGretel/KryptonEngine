@@ -181,8 +181,8 @@ namespace HanselAndGretel.Data
 			foreach (Collectable col in Collectables)
 				col.LoadContent();
 
-			InventoryHansel.LoadTextures();
-			InventoryGretel.LoadTextures();
+			InventoryHansel.LoadContent();
+			InventoryGretel.LoadContent();
 		}
 
 		#endregion

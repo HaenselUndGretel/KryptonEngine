@@ -33,7 +33,7 @@ namespace HanselAndGretel.Data
 
 		#region Methods
 
-		public void LoadContent()
+		public override void LoadContent()
 		{
 			if (Item != null)
 				Item.LoadContent();
