@@ -178,7 +178,7 @@ namespace HanselAndGretel.Data
 			//Horizontal
 			Rectangle TmpPlayerLeft;
 			Rectangle TmpPlayerRight;
-			if (rOtherPlayer.CollisionBox.X < Position.X)
+			if (rOtherPlayer.CollisionBox.X < SkeletonPosition.X)
 			{
 				TmpPlayerLeft = rOtherPlayer.CollisionBox;
 				TmpPlayerRight = TmpThisPlayer;
@@ -191,7 +191,7 @@ namespace HanselAndGretel.Data
 			//Vertical
 			Rectangle TmpPlayerUp;
 			Rectangle TmpPlayerDown;
-			if (rOtherPlayer.CollisionBox.Y < Position.Y)
+			if (rOtherPlayer.CollisionBox.Y < SkeletonPosition.Y)
 			{
 				TmpPlayerUp = rOtherPlayer.CollisionBox;
 				TmpPlayerDown = TmpThisPlayer;

@@ -52,6 +52,8 @@ namespace HanselAndGretel.Data
 		[XmlIgnoreAttribute]
 		public List<InteractiveObject> RenderList;
 
+		public List<string> ChalkRockData; //Muss leider für jede Scene da sein, da dies die einfachste Möglichkeit ist, die Pfeiler auf den Felsen im Savegame zu speichern
+
 		#endregion
 
 		#region Constructor
@@ -88,6 +90,8 @@ namespace HanselAndGretel.Data
 
 			SceneAmbientLight = new AmbientLight();
 			SceneDirectionLight = new DirectionLight();
+
+			ChalkRockData = new List<string>();
 		}
 
 		/// <summary>
@@ -103,6 +107,7 @@ namespace HanselAndGretel.Data
 			Lights.Clear();
 			Events.Clear();
 			BackgroundSprites.Clear();
+			ChalkRockData.Clear();
 		}
 
 		// Laden Texturen usw. von Manager das nicht mitserialisiert wird

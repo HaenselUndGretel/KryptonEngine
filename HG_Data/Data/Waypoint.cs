@@ -38,7 +38,6 @@ namespace HanselAndGretel.Data
 		/// </summary>
 		public Vector2 MovementOnEnter { get { return mMovementOnEnter; } set { mMovementOnEnter = value; } }
 
-		public DrawPackage DrawPackage { get { return new DrawPackage(CollisionBox, mDebugColor); } }
 		#endregion
 
 		#region Constructor

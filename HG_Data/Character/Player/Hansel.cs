@@ -1,5 +1,6 @@
 ﻿using KryptonEngine.Controls;
 using KryptonEngine.Entities;
+using KryptonEngine.Manager;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -34,8 +35,8 @@ namespace HanselAndGretel.Data
 		{
 			base.Initialize();
 			mInput = InputHelper.Player1;
-			mCollisionBox.Width = 50;
-			mCollisionBox.Height = 50;
+			//mCollisionBox.Width = 50;
+			//mCollisionBox.Height = 50;
 			mHandicaps.Add(Activity.SlipThroughRock);
 			mHandicaps.Add(Activity.UseChalk);
 		}

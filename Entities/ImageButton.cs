@@ -48,6 +48,15 @@ namespace KryptonEngine.Entities
 				spriteBatch.Draw(mTextures[0], mPosition, Color.White);
 		}
 
+		//Zum zeichnen der Menüs am Fels mit Kreide incl HudFading
+		public void Draw(SpriteBatch spriteBatch, float pAlpha)
+		{
+			if (mIsSelected)
+				spriteBatch.Draw(mTextures[1], mPosition, Color.White * pAlpha);
+			else
+				spriteBatch.Draw(mTextures[0], mPosition, Color.White * pAlpha);
+		}
+
 		public void IsClicked()
 		{
 			mClickAction();

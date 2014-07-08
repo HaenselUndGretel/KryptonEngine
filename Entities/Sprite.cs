@@ -41,8 +41,6 @@ namespace KryptonEngine.Entities
 		[XmlIgnoreAttribute]
 		public SpriteEffects Effect { get { return mEffekt; } set { mEffekt = value; } }
 		[XmlIgnoreAttribute]
-		public DrawPackage DrawPackage { get { return new DrawPackage(Position, mDrawZ, CollisionBox, mDebugColor, mTextures); } }
-		[XmlIgnoreAttribute]
 		public Color Tint { set { mTint = value; } }
 
 		#endregion

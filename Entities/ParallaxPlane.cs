@@ -23,16 +23,6 @@ namespace KryptonEngine.Entities
 		#region Get & Set
 
         public List<GameObject> Tiles { get { return mTiles; } set { mTiles = value; } }
-		[XmlIgnoreAttribute]
-		public List<DrawPackage> DrawPackages { get
-		{
-			List<DrawPackage> TmpPackages = new List<DrawPackage>();
-			foreach (Sprite obj in mTiles)
-			{
-				TmpPackages.Add(new DrawPackage(obj.CollisionBox, mDebugColor));
-			}
-			return TmpPackages;
-		} }
 
         #endregion
 

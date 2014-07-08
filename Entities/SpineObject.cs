@@ -53,9 +53,6 @@ namespace KryptonEngine.Entities
 		public Texture2D[] Textures { get { return mTextures; } set { mTextures = value; } }
 		[XmlIgnoreAttribute]
 		public Vector2 SkeletonPosition { set { Skeleton.x = value.X; Skeleton.y = value.Y; } get { return new Vector2(Skeleton.x, Skeleton.y); } }
-		
-		[XmlIgnoreAttribute]
-		public DrawPackage DrawPackage { get { return new DrawPackage(Position, DrawZ, CollisionBox, mDebugColor, Skeleton, mTextures); } }
 
         #endregion
 
