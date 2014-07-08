@@ -70,7 +70,7 @@ namespace HanselAndGretel.Data
 		{
 			Vector2 TmpMovement = Collision.CollisionCheckedVector(CollisionBox, (int)pDelta.X, (int)pDelta.Y, pMoveArea);
 			this.MoveInteractiveObject(TmpMovement);
-			this.Position += TmpMovement;
+			//this.Position += TmpMovement;
 			return TmpMovement;
 		}
 

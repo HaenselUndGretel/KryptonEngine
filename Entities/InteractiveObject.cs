@@ -86,6 +86,22 @@ namespace KryptonEngine.Entities
 
 		#endregion
 
+		#region Override Methods
+
+		public override void LoadContent()
+		{
+			base.LoadContent();
+			InteractiveObject io = InteractiveObjectDataManager.Instance.GetElementByString(Name);
+			this.ActionPosition1 = io.ActionPosition1;
+			this.ActionPosition2 = io.ActionPosition2;
+			this.ActionRectList = io.ActionRectList;
+			this.CollisionRectList = io.CollisionRectList;
+
+			if (CollisionRectList.Count > 0)
+				this.CollisionBox = this.CollisionRectList[0];
+		}
+		#endregion
+
 		#region Methods
 
 		/*public Vector2 GetNearestStartPosition(Vector2 PlayerPosition)
@@ -133,16 +149,27 @@ namespace KryptonEngine.Entities
 
 		public void MoveInteractiveObject(Vector2 mDirection)
 		{
+			//if (mDirection == Vector2.Zero) return;
+			if (mDirection != Vector2.Zero)
+				Console.WriteLine("Größer 0");
+
+			mDirection = new Vector2((int)mDirection.X, (int)mDirection.Y);
+
 			SkeletonPosition += mDirection;
 
+			InteractiveObject io = InteractiveObjectDataManager.Instance.GetElementByString(Name);
+
 			for (int i = 0; i < mActionRectList.Count; i++)
-				mActionRectList[i] = new Rectangle((int)(mActionRectList[i].X + mDirection.X),(int)( mActionRectList[i].Y + mDirection.Y), mActionRectList[i].Width, mActionRectList[i].Height);
+				mActionRectList[i] = new Rectangle((int)(this.SkeletonPosition.X + io.mActionRectList[i].X), (int)(this.SkeletonPosition.Y + io.mActionRectList[i].Y), io.mActionRectList[i].Width, io.mActionRectList[i].Height);
 
 			for (int i = 0; i < mCollisionRectList.Count; i++)
-				mCollisionRectList[i] = new Rectangle((int)(mCollisionRectList[i].X + mDirection.X), (int)(mCollisionRectList[i].Y + mDirection.Y), mCollisionRectList[i].Width, mCollisionRectList[i].Height);
+				mCollisionRectList[i] = new Rectangle((int)(this.SkeletonPosition.X + io.mCollisionRectList[i].X), (int)(this.SkeletonPosition.Y + io.mCollisionRectList[i].Y), io.mCollisionRectList[i].Width, io.mCollisionRectList[i].Height);
 
-			this.mActionPosition1 += mDirection;
-			this.mActionPosition2 += mDirection;
+			this.mActionPosition1 = io.ActionPosition1 + this.SkeletonPosition;
+			this.mActionPosition2 = io.ActionPosition2 + this.SkeletonPosition; 
+
+			if(mCollisionRectList.Count > 0)
+				this.CollisionBox = mCollisionRectList[0];
 		}
 
 		public void DrawDebug(SpriteBatch pSpriteBatch)

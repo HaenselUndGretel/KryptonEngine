@@ -114,7 +114,7 @@ namespace HanselAndGretel.Data
 		/// <param name="pIgnoreOtherPlayer">Wenn pIgnoreCollision = false ist auch anderen Spieler ignorieren.</param>
 		public void MoveAgainstPoint(Vector2 pTargetPoint, float pMovementSpeedFactor = 1f, SceneData pScene = null, bool pIgnoreCollision = true, bool pIgnoreOtherPlayer = false)
 		{
-			Vector2 TmpMovementDirection = pTargetPoint - Position;
+			Vector2 TmpMovementDirection = pTargetPoint - SkeletonPosition;
 			TmpMovementDirection.Normalize();
 			Vector2 TmpMovement;
 			List<Rectangle> TmpBodies;
@@ -130,8 +130,8 @@ namespace HanselAndGretel.Data
 				TmpMovement = GetMovement(TmpMovementDirection, pMovementSpeedFactor);
 				TmpBodies = GetBodiesForCollisionCheck(pScene);
 			}
-			if ((pTargetPoint - Position).Length() < TmpMovement.Length()) //Nicht über Punkt hinaus gehen.
-				TmpMovement = pTargetPoint - Position;
+			if ((pTargetPoint - SkeletonPosition).Length() < TmpMovement.Length()) //Nicht über Punkt hinaus gehen.
+				TmpMovement = pTargetPoint - SkeletonPosition;
 			AnimBasicAnimation(Move(TmpMovement, TmpBodies));
 		}
 
