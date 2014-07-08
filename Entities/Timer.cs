@@ -21,8 +21,8 @@ namespace KryptonEngine.Entities
         protected bool mLooped = false;
         protected bool mFinished = false;
         protected bool mRunning = false;
-        //public delegate void SelfDestroyer(object sender, EventArgs ea);
-        //public event SelfDestroyer Destroy;
+
+        #endregion
 
         #region Getter & Setter
 
@@ -30,8 +30,6 @@ namespace KryptonEngine.Entities
         public bool IsRunning { set { mRunning = value; } get { return mRunning; } }
         public bool Finish { get { return mFinished; } set { mFinished = value; } }
 
-        #endregion
-        
         #endregion
 
         #region Constructor

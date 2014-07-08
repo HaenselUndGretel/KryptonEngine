@@ -49,6 +49,8 @@ namespace HanselAndGretel.Data
 		// Variabeln für die vorhandenen Events //
 		public Vector2 WitchSpawnPosition { get { return mWitchSpawnPosition; } set { mWitchSpawnPosition = value; } }
 		public String SoundName { get { return mSoundName; } set { mSoundName = value; } }
+		[XmlIgnoreAttribute]
+		public bool Activated { get { return mActivated; } }
 		#endregion
 
 		#region Constructor
@@ -81,6 +83,7 @@ namespace HanselAndGretel.Data
 				case EEvent.SpawnWitch: SpawnWitch();
 					break;
 			}
+			mActivated = true;
 		}
 
 		private void PlaySound()

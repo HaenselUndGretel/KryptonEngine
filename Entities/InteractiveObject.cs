@@ -91,14 +91,17 @@ namespace KryptonEngine.Entities
 		public override void LoadContent()
 		{
 			base.LoadContent();
-			InteractiveObject io = InteractiveObjectDataManager.Instance.GetElementByString(Name);
-			this.ActionPosition1 = io.ActionPosition1;
-			this.ActionPosition2 = io.ActionPosition2;
-			this.ActionRectList = io.ActionRectList;
-			this.CollisionRectList = io.CollisionRectList;
+			if (InteractiveObjectDataManager.Instance.HasElement(Name))
+			{
+				InteractiveObject io = InteractiveObjectDataManager.Instance.GetElementByString(Name);
+				this.ActionPosition1 = io.ActionPosition1;
+				this.ActionPosition2 = io.ActionPosition2;
+				this.ActionRectList = io.ActionRectList;
+				this.CollisionRectList = io.CollisionRectList;
 
-			if (CollisionRectList.Count > 0)
-				this.CollisionBox = this.CollisionRectList[0];
+				if (CollisionRectList.Count > 0)
+					this.CollisionBox = this.CollisionRectList[0];
+			}
 		}
 		#endregion
 
@@ -149,6 +152,8 @@ namespace KryptonEngine.Entities
 
 		public void MoveInteractiveObject(Vector2 mDirection)
 		{
+			if (!InteractiveObjectDataManager.Instance.HasElement(Name)) return;
+
 			//if (mDirection == Vector2.Zero) return;
 			if (mDirection != Vector2.Zero)
 				Console.WriteLine("Größer 0");
