@@ -10,6 +10,7 @@ using KryptonEngine.Rendering.Components;
 using KryptonEngine.Rendering.Core;
 using KryptonEngine.HG_Data;
 using HanselAndGretel.Data;
+using System.IO;
 
 namespace KryptonEngine.Rendering
 {
@@ -204,23 +205,9 @@ namespace KryptonEngine.Rendering
         #endregion
 
         #region Draw Sprite
-        public void Draw(Texture2D[] pMapArray,Vector2 pPosition)
-        {
-            Vector4 vector = default(Vector4);
-            vector.X = pPosition.X;
-            vector.Y = pPosition.Y;
-            vector.Z = pPosition.Y/this.mPlaneHeight;
-            vector.W = 1.0f;
 
-			this.mTextureArray[0] = pMapArray[0];
-            this.mTextureArray[1] = pMapArray[1];
-            this.mTextureArray[2] = pMapArray[2];
-            this.mTextureArray[3] = pMapArray[3];
 
-            this.InternalDraw(this.mTextureArray, vector);
-        }
-
-        public void Draw(Texture2D[] pMapArray, Vector2 pPosition,float pScale)
+        public void Draw(Texture2D[] pMapArray, Vector2 pPosition,float pScale = 1.0f)
         {
             Vector4 vector = default(Vector4);
             vector.X = pPosition.X;
@@ -233,26 +220,13 @@ namespace KryptonEngine.Rendering
 			this.mTextureArray[2] = pMapArray[2];
 			this.mTextureArray[3] = pMapArray[3];
 
-            this.InternalDraw(this.mTextureArray, vector);
+            Rectangle sourceRectangel = Rectangle.Empty;
+
+            this.InternalDraw(this.mTextureArray, vector, ref sourceRectangel);
         }
 
-        public void Draw(Texture2D[] pMapArray, Vector3 pPosition)
-        {
-            Vector4 vector = default(Vector4);
-            vector.X = pPosition.X;
-            vector.Y = pPosition.Y;
-            vector.Z = pPosition.Z;
-            vector.W = 1.0f;
 
-			this.mTextureArray[0] = pMapArray[0];
-			this.mTextureArray[1] = pMapArray[1];
-			this.mTextureArray[2] = pMapArray[2];
-			this.mTextureArray[3] = pMapArray[3];
-
-            this.InternalDraw(this.mTextureArray, vector);
-        }
-
-        public void Draw(Texture2D[] pMapArray, Vector3 pPosition, float pScale)
+        public void Draw(Texture2D[] pMapArray, Vector3 pPosition, float pScale = 1.0f)
         {
             Vector4 vector = default(Vector4);
             vector.X = pPosition.X;
@@ -265,51 +239,82 @@ namespace KryptonEngine.Rendering
 			this.mTextureArray[2] = pMapArray[2];
 			this.mTextureArray[3] = pMapArray[3];
 
-            this.InternalDraw(this.mTextureArray, vector);
+            Rectangle sourceRectangel = new Rectangle(0, 0, pMapArray[0].Width, pMapArray[0].Height);
+
+            this.InternalDraw(this.mTextureArray, vector,ref sourceRectangel);
         }
+
+        public void Draw(Texture2D[] pMapArray, Vector3 pPosition,Rectangle sourceRectangel, float pScale = 1.0f)
+        {
+            Vector4 vector = default(Vector4);
+            vector.X = pPosition.X;
+            vector.Y = pPosition.Y;
+            vector.Z = pPosition.Z;
+            vector.W = pScale;
+
+            
+
+            this.mTextureArray[0] = pMapArray[0];
+            this.mTextureArray[1] = pMapArray[1];
+            this.mTextureArray[2] = pMapArray[2];
+            this.mTextureArray[3] = pMapArray[3];
+
+            this.InternalDraw(this.mTextureArray, vector, ref sourceRectangel);
+        }
+
         #endregion
 
 
         #region InternalDraw
-        private void InternalDraw(Texture2D[] pTextureArray, Vector4 pDestination)
+        private void InternalDraw(Texture2D[] pTextureArray, Vector4 pDestination, ref Rectangle sourceRectangel)
         {
             if (!isBegin) throw new Exception("Beginn muss vor Draw aufgerufen werden!");
             SpriteData item = this.mBatch.createBatchItem();
 
             float scale = pDestination.W;
-            int width = (int)(pTextureArray[0].Width * scale);
-            int height = (int)(pTextureArray[0].Height * scale);
+            int rectWidth = (int)(sourceRectangel.Width );
+            int rectHeight = (int)(sourceRectangel.Height );
+
+            int texWidth = (int)(pTextureArray[0].Width * scale);
+            int texHeigt = (int)(pTextureArray[0].Height * scale);
+
+            float texelWidth = 1f / texWidth;
+            float texelHeight = 1f / texHeigt;
+
+
             item.TextureID = this.mBatch.AddTextures(pTextureArray);
+
+            
 
             item.vertexTL.Position.X = pDestination.X;
             item.vertexTL.Position.Y = pDestination.Y;
             item.vertexTL.Position.Z = pDestination.Z;
 
-            item.vertexTR.Position.X = pDestination.X+width;
+            item.vertexTR.Position.X = pDestination.X + rectWidth*scale;
             item.vertexTR.Position.Y = pDestination.Y;
             item.vertexTR.Position.Z = pDestination.Z;
 
 
             item.vertexBL.Position.X = pDestination.X;
-            item.vertexBL.Position.Y = pDestination.Y + height;
+            item.vertexBL.Position.Y = pDestination.Y + rectHeight*scale;
             item.vertexBL.Position.Z = pDestination.Z;
 
-            item.vertexBR.Position.X = pDestination.X + width;
-            item.vertexBR.Position.Y = pDestination.Y + height;
+            item.vertexBR.Position.X = pDestination.X + rectWidth * scale;
+            item.vertexBR.Position.Y = pDestination.Y + rectHeight * scale;
             item.vertexBR.Position.Z = pDestination.Z;
 
 
-            item.vertexTL.TextureCoordinate.X = 0;
-            item.vertexTL.TextureCoordinate.Y = 0;
+            item.vertexTL.TextureCoordinate.X = sourceRectangel.Location.X*texelWidth;
+            item.vertexTL.TextureCoordinate.Y = sourceRectangel.Location.Y*texelHeight;
 
-            item.vertexTR.TextureCoordinate.X = 1;
-            item.vertexTR.TextureCoordinate.Y = 0;
+            item.vertexTR.TextureCoordinate.X = (sourceRectangel.Location.X * texelWidth) + (rectWidth * texelWidth);
+            item.vertexTR.TextureCoordinate.Y = sourceRectangel.Location.Y * texelHeight;
 
-            item.vertexBL.TextureCoordinate.X = 0;
-            item.vertexBL.TextureCoordinate.Y = 1;
+            item.vertexBL.TextureCoordinate.X = sourceRectangel.Location.X * texelWidth;
+            item.vertexBL.TextureCoordinate.Y = (sourceRectangel.Location.Y * texelHeight) + (rectHeight * texelHeight);
 
-            item.vertexBR.TextureCoordinate.X = 1;
-            item.vertexBR.TextureCoordinate.Y = 1;
+            item.vertexBR.TextureCoordinate.X = (sourceRectangel.Location.X * texelWidth) + (rectWidth * texelWidth);
+            item.vertexBR.TextureCoordinate.Y = (sourceRectangel.Location.Y * texelHeight) + (rectHeight * texelHeight);
 
 
             //if ( textId == -1) 
@@ -392,6 +397,7 @@ namespace KryptonEngine.Rendering
             this.isBegin = false;
         }
         #endregion
+        
         #endregion
 
         #region Light Methods
@@ -407,16 +413,18 @@ namespace KryptonEngine.Rendering
 
             this.mTranslatetViewMatrix = Matrix.Multiply(mView, pTranslation);
 
-			//this.mLightShader.Parameters["World"].SetValue(this.mWorld);
-			//this.mLightShader.Parameters["View"].SetValue(this.mTranslatetViewMatrix);
-			//this.mLightShader.Parameters["Projection"].SetValue(this.mProjection);
+            //this.mLightShader.Parameters["World"].SetValue(this.mWorld);
+            this.mLightShader.Parameters["View"].SetValue(pTranslation);
+            //this.mLightShader.Parameters["Projection"].SetValue(this.mProjection);
 
 
             foreach (Light l in pLightList)
             {
                 if (!l.IsVisible) continue;
 
-                Vector3 lightPos = new Vector3(l.Position, l.Depth * 720) + pTranslation.Translation;
+                Vector4 lightPos = new Vector4(l.Position, l.Depth * 720,1f);
+
+               
 
                this.mLightShader.Parameters["LightIntensity"].SetValue(l.Intensity);
                this.mLightShader.Parameters["LightColor"].SetValue(l.LightColor);
@@ -437,8 +445,7 @@ namespace KryptonEngine.Rendering
 
             EngineSettings.Graphics.GraphicsDevice.SetRenderTarget(null);
         }
-        #endregion
-
+       
         public void ProcessFinalScene()
         {
             EngineSettings.Graphics.GraphicsDevice.SetRenderTarget(mFinalTarget);
@@ -456,6 +463,7 @@ namespace KryptonEngine.Rendering
 			QuadRenderer.Render(this.mGraphicsDevice);
 			EngineSettings.Graphics.GraphicsDevice.SetRenderTarget(null);
         }
+        #endregion
 
         #region Function Methods
 
@@ -478,6 +486,13 @@ namespace KryptonEngine.Rendering
 		{
 			return mGBuffer.RenderTargets[index];
 		}
+
+        public void SaveRenderTargetToTexture(int index)
+        {
+            FileStream file = new FileStream("target"+1,FileMode.CreateNew);
+            this.mGBuffer.RenderTargets[index].SaveAsPng(file, this.mGBuffer.RenderTargets[index].Width, this.mGBuffer.RenderTargets[index].Height);
+
+        }
         #endregion
 
         #region Debug
