@@ -80,7 +80,7 @@ namespace HanselAndGretel.Data
 			InventoryGretel = new Inventory();
 			Chalk = 0;
 			SceneId = 0;
-			Scenes = new SceneData[1]; //ToDo: Anzahl Scenes setzen !---!---!---!---!
+			Scenes = new SceneData[2]; //ToDo: Anzahl Scenes setzen !---!---!---!---!
 			for (int i = 0; i < Scenes.Length; i++)
 				Scenes[i] = new SceneData(); //Scenes initialisieren
 		}
@@ -97,6 +97,7 @@ namespace HanselAndGretel.Data
 				pGretel.Position = new Vector2(250, 50); //Init Position Gretel
 				Savegame.Save(TmpSavegame, pHansel, pGretel);
 				TmpSavegame.LoadContent();
+				TmpSavegame.Scenes[TmpSavegame.SceneId].SetupRenderList(pHansel, pGretel);
 				return TmpSavegame;
 			}
 			xmlReader = new StreamReader(Savegame.SavegamePath);

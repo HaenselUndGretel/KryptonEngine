@@ -181,6 +181,26 @@ namespace KryptonEngine.Controls
 			return mGamepadStateCurrent.IsButtonUp(pButton);
 		}
 
+		public static bool ButtonJustPressed2Player(Buttons pButton)
+		{
+			return (Player1.ButtonJustPressed(pButton) || Player2.ButtonJustPressed(pButton)) ? true : false;
+		}
+
+		public static bool ButtonJustReleased2Player(Buttons pButton)
+		{
+			return (Player1.ButtonJustReleased(pButton) || Player2.ButtonJustReleased(pButton)) ? true : false;
+		}
+
+		public static bool ButtonPressed2Player(Buttons pButton)
+		{
+			return (Player1.ButtonPressed(pButton) || Player2.ButtonPressed(pButton)) ? true : false;
+		}
+
+		public static bool ButtonReleased2Player(Buttons pButton)
+		{
+			return (Player1.ButtonReleased(pButton) && Player2.ButtonReleased(pButton)) ? true : false;
+		}
+
 		#endregion
 
 		#region KeyboardStates

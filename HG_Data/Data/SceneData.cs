@@ -135,6 +135,19 @@ namespace HanselAndGretel.Data
 			RenderList.Add(pGretel);
 		}
 
+		public void DrawDebug(SpriteBatch pSpriteBatch)
+		{
+			Texture2D pixel = TextureManager.Instance.GetElementByString("pixel");
+			foreach (Rectangle rect in MoveArea) //Collision Rectangles
+				pSpriteBatch.Draw(pixel, rect, Color.Aquamarine * 0.5f);
+			foreach (Waypoint wp in Waypoints)
+				pSpriteBatch.Draw(pixel, wp.CollisionBox, Color.Tan * 0.5f);
+			foreach (Light light in Lights)
+				pSpriteBatch.Draw(pixel, light.CollisionBox, Color.Thistle * 0.5f);
+			foreach (EventTrigger trigger in Events)
+				pSpriteBatch.Draw(pixel, trigger.CollisionBox, Color.Thistle * 0.5f);
+		}
+
 		#endregion
 	}
 }
