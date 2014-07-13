@@ -38,7 +38,6 @@ namespace HanselAndGretel.Data
 			//mCollisionBox.Width = 50;
 			//mCollisionBox.Height = 50;
 			mHandicaps.Add(Activity.SlipThroughRock);
-			mHandicaps.Add(Activity.UseChalk);
 		}
 
 		#endregion
