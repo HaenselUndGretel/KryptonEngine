@@ -206,22 +206,22 @@ namespace KryptonEngine.Controls
 
 		#region KeyboardStates
 
-		private bool KeyJustPressed(Keys pKey)
+		public bool KeyJustPressed(Keys pKey)
 		{
 			return (mKeyboardStateBefore.IsKeyUp(pKey) && mKeyboardStateCurrent.IsKeyDown(pKey)) ? true : false;
 		}
 
-		private bool KeyJustReleased(Keys pKey)
+		public bool KeyJustReleased(Keys pKey)
 		{
 			return (mKeyboardStateBefore.IsKeyDown(pKey) && mKeyboardStateCurrent.IsKeyUp(pKey)) ? true : false;
 		}
 
-		private bool KeyPressed(Keys pKey)
+		public bool KeyPressed(Keys pKey)
 		{
 			return mKeyboardStateCurrent.IsKeyDown(pKey);
 		}
 
-		private bool KeyReleased(Keys pKey)
+		public bool KeyReleased(Keys pKey)
 		{
 			return mKeyboardStateCurrent.IsKeyUp(pKey);
 		}
