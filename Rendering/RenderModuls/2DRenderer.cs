@@ -421,11 +421,9 @@ namespace KryptonEngine.Rendering
             foreach (Light l in pLightList)
             {
                 if (!l.IsVisible) continue;
+			   Vector4 lightPos = new Vector4(l.Position, l.Depth * 720, 1f);
 
-                Vector4 lightPos = new Vector4(l.Position, l.Depth * 720,1f);
-
-               
-
+			   this.mLightShader.Parameters["View"].SetValue(pTranslation);
                this.mLightShader.Parameters["LightIntensity"].SetValue(l.Intensity);
                this.mLightShader.Parameters["LightColor"].SetValue(l.LightColor);
                this.mLightShader.Parameters["LightPosition"].SetValue(lightPos);
