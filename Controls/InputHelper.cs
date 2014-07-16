@@ -109,6 +109,7 @@ namespace KryptonEngine.Controls
 		public bool ActionIsPressed { get { return InputPressed(mAction); } }
 		//Item
 		public bool UseItemJustPressed { get { return InputJustPressed(mUseItem); } }
+		public bool UseItemIsPressed { get { return InputPressed(mUseItem); } }
 		public bool SwitchItemJustPressed { get { return InputJustPressed(mSwitchItem); } }
 
 		public bool ItemLeftJustPressed { get { return InputJustPressed(mItemLeft); } }

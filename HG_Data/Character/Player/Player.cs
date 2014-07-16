@@ -13,7 +13,6 @@ namespace HanselAndGretel.Data
 	{
 		#region Properties
 
-		public Inventory Inventory;
 		public List<Activity> mHandicaps;
 		public ActivityState mCurrentActivity;
 		public int mCurrentState;
@@ -46,7 +45,6 @@ namespace HanselAndGretel.Data
 		{
 			base.Initialize();
 			mDebugColor = Color.LimeGreen;
-			Inventory = new Inventory();
 			mHandicaps = new List<Activity>();
 			mCurrentState = 0;
 			mSpeed = 400;
@@ -55,7 +53,6 @@ namespace HanselAndGretel.Data
 		public override void LoadContent()
 		{
 			base.LoadContent();
-			Inventory.LoadContent();
 		}
 
 		#endregion

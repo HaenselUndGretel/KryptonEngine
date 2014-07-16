@@ -108,7 +108,7 @@ namespace KryptonEngine.Entities
 
 		public virtual Activity GetPossibleActivity(Player pPlayer, Player pOtherPlayer) { return Activity.None; }
 		public virtual void Update(Player pPlayer, Player pOtherPlayer) { }
-		public virtual void Draw(SpriteBatch pSpriteBatch, Player pPlayer) { }
+		public virtual void Draw(SpriteBatch pSpriteBatch, Player pPlayer, Player pOtherPlayer) { }
 
 		#endregion
 	}

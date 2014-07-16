@@ -12,8 +12,6 @@ namespace HanselAndGretel.Data
 	{
 		#region Properties
 
-		public int Chalk;
-
 		#endregion
 
 		#region Getter & Setter

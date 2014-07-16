@@ -16,10 +16,6 @@ namespace HanselAndGretel.Data
 
 		public List<Collectable> Collectables;
 
-		public Inventory InventoryHansel;
-		public Inventory InventoryGretel;
-		public int Chalk;
-
 		public SceneData[] Scenes;
 
 		public Vector2 PositionHansel;
@@ -56,9 +52,6 @@ namespace HanselAndGretel.Data
 		{
 			Initialize();
 			Collectables = pSavegame.Collectables;
-			InventoryHansel = pSavegame.InventoryHansel;
-			InventoryGretel = pSavegame.InventoryGretel;
-			Chalk = pSavegame.Chalk;
 			PositionHansel = pSavegame.PositionHansel;
 			PositionGretel = pSavegame.PositionGretel;
 			SceneId = pSavegame.SceneId;
@@ -76,11 +69,8 @@ namespace HanselAndGretel.Data
 			SceneSerializer = new XmlSerializer(typeof(SceneData));
 			SavegameSerializer = new XmlSerializer(typeof(Savegame));
 			Collectables = new List<Collectable>();
-			InventoryHansel = new Inventory();
-			InventoryGretel = new Inventory();
-			Chalk = 0;
 			SceneId = 0;
-			Scenes = new SceneData[2]; //ToDo: Anzahl Scenes setzen !---!---!---!---!
+			Scenes = new SceneData[1]; //ToDo: Anzahl Scenes setzen !---!---!---!---!
 			for (int i = 0; i < Scenes.Length; i++)
 				Scenes[i] = new SceneData(); //Scenes initialisieren
 		}
@@ -104,11 +94,8 @@ namespace HanselAndGretel.Data
 			TmpSavegame = (Savegame)SavegameSerializer.Deserialize(xmlReader); //Savegame aus File laden
 			xmlReader.Close();
 			TmpSavegame.LoadContent();
-			pHansel.Inventory = TmpSavegame.InventoryHansel;
-			pGretel.Inventory = TmpSavegame.InventoryGretel;
 			pHansel.Position = TmpSavegame.PositionHansel;
 			pGretel.Position = TmpSavegame.PositionGretel;
-			pGretel.Chalk = TmpSavegame.Chalk;
 			TmpSavegame.Scenes[TmpSavegame.SceneId].SetupRenderList(pHansel, pGretel);
 			return TmpSavegame;
 		}
@@ -135,11 +122,8 @@ namespace HanselAndGretel.Data
 		/// <param name="pSavegame">Savegame, das gesaved werden soll.</param>
 		public static void Save(Savegame pSavegame, Hansel pHansel, Gretel pGretel) //Muss static sein damit das Savegame als solches serialisiert werden kann.
 		{
-			pSavegame.InventoryHansel = pHansel.Inventory;
-			pSavegame.InventoryGretel = pGretel.Inventory;
 			pSavegame.PositionHansel = pHansel.Position;
 			pSavegame.PositionGretel = pGretel.Position;
-			pSavegame.Chalk = pGretel.Chalk;
 			xmlWriter = new StreamWriter(Savegame.SavegamePath);
 			SavegameSerializer.Serialize(xmlWriter, pSavegame); //Savegame in File schreiben
 			xmlWriter.Close();
@@ -180,9 +164,6 @@ namespace HanselAndGretel.Data
 			}
 			foreach (Collectable col in Collectables)
 				col.LoadContent();
-
-			InventoryHansel.LoadContent();
-			InventoryGretel.LoadContent();
 		}
 
 		#endregion
