@@ -75,6 +75,7 @@ namespace KryptonEngine.Entities
 		public override void LoadContent()
 		{
 			base.LoadContent();
+			//?Hier darf nicht aus der .iObj-Datei geladen werden da so die Serialisierung des IObj-States im Savegame zerstört wird?
 			if (InteractiveObjectDataManager.Instance.HasElement(Name))
 			{
 				InteractiveObject io = InteractiveObjectDataManager.Instance.GetElementByString(Name);

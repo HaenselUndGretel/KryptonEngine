@@ -73,6 +73,8 @@ namespace HanselAndGretel.Data
 			Scenes = new SceneData[1]; //ToDo: Anzahl Scenes setzen !---!---!---!---!
 			for (int i = 0; i < Scenes.Length; i++)
 				Scenes[i] = new SceneData(); //Scenes initialisieren
+			PositionHansel = new Vector2(190, 50); //Init Position Hansel
+			PositionGretel = new Vector2(250, 50); //Init Position Gretel
 		}
 
 		public static Savegame Load(Hansel pHansel, Gretel pGretel) //Muss static sein damit das Savegame als solches gesetzt werden kann.
@@ -81,21 +83,30 @@ namespace HanselAndGretel.Data
 			FileInfo file = new FileInfo(Savegame.SavegamePath);
 			if (!file.Exists)
 			{
+				//Build Default Savegame
 				TmpSavegame = new Savegame();
 				TmpSavegame.Reset();
-				pHansel.Position = new Vector2(190, 50); //Init Position Hansel
-				pGretel.Position = new Vector2(250, 50); //Init Position Gretel
+				pHansel.Position = TmpSavegame.PositionHansel;
+				pGretel.Position = TmpSavegame.PositionGretel;
+				pHansel.ApplySettings();
+				pGretel.ApplySettings();
+				//Save new Savegame to File
 				Savegame.Save(TmpSavegame, pHansel, pGretel);
+				//Setup Savegame
 				TmpSavegame.LoadContent();
 				TmpSavegame.Scenes[TmpSavegame.SceneId].SetupRenderList(pHansel, pGretel);
 				return TmpSavegame;
 			}
+			//Get Savegame from File
 			xmlReader = new StreamReader(Savegame.SavegamePath);
 			TmpSavegame = (Savegame)SavegameSerializer.Deserialize(xmlReader); //Savegame aus File laden
 			xmlReader.Close();
+			//SetupSavegame
 			TmpSavegame.LoadContent();
 			pHansel.Position = TmpSavegame.PositionHansel;
 			pGretel.Position = TmpSavegame.PositionGretel;
+			pHansel.ApplySettings();
+			pGretel.ApplySettings();
 			TmpSavegame.Scenes[TmpSavegame.SceneId].SetupRenderList(pHansel, pGretel);
 			return TmpSavegame;
 		}
@@ -122,8 +133,8 @@ namespace HanselAndGretel.Data
 		/// <param name="pSavegame">Savegame, das gesaved werden soll.</param>
 		public static void Save(Savegame pSavegame, Hansel pHansel, Gretel pGretel) //Muss static sein damit das Savegame als solches serialisiert werden kann.
 		{
-			pSavegame.PositionHansel = pHansel.Position;
-			pSavegame.PositionGretel = pGretel.Position;
+			pSavegame.PositionHansel = pHansel.SkeletonPosition;
+			pSavegame.PositionGretel = pGretel.SkeletonPosition;
 			xmlWriter = new StreamWriter(Savegame.SavegamePath);
 			SavegameSerializer.Serialize(xmlWriter, pSavegame); //Savegame in File schreiben
 			xmlWriter.Close();
