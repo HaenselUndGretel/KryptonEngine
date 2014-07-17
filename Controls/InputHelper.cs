@@ -240,20 +240,22 @@ namespace KryptonEngine.Controls
 			if (pRightStick)
 			{
 				oldPosition = mGamepadStateBefore.ThumbSticks.Right;
-				newPosition = mGamepadStateBefore.ThumbSticks.Right;
-
+				newPosition = mGamepadStateCurrent.ThumbSticks.Right;
 			}
 			else
 			{
-				oldPosition = mGamepadStateCurrent.ThumbSticks.Left;
+				oldPosition = mGamepadStateBefore.ThumbSticks.Left;
 				newPosition = mGamepadStateCurrent.ThumbSticks.Left;
 			}
+			oldPosition.Normalize();
+			newPosition.Normalize();
+			float oldAngle = (float)Math.Atan2(oldPosition.Y, oldPosition.X);
+			float newAngle = (float)Math.Atan2(newPosition.Y, newPosition.X);
 
-			//ToDo Calc Rotation
-
-
-
-			return 1f;
+			float rotation = MathHelper.ToDegrees(newAngle - oldAngle) / 360;
+			if (float.IsNaN(rotation) || Math.Abs(newAngle - oldAngle) > 0.5f) //Threshold gegen clipping bei 360Cut links
+				rotation = 0f;
+			return -rotation;
 		}
 
 		private Keys PlayerMappedKey(Input pInput) //Map Input.pKey to mPlayer
