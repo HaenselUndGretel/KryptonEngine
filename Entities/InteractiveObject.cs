@@ -76,6 +76,7 @@ namespace KryptonEngine.Entities
 		{
 			base.LoadContent();
 			//?Hier darf nicht aus der .iObj-Datei geladen werden da so die Serialisierung des IObj-States im Savegame zerstört wird?
+			/*
 			if (InteractiveObjectDataManager.Instance.HasElement(Name))
 			{
 				InteractiveObject io = InteractiveObjectDataManager.Instance.GetElementByString(Name);
@@ -87,6 +88,33 @@ namespace KryptonEngine.Entities
 				if (CollisionRectList.Count > 0)
 					this.CollisionBox = this.CollisionRectList[0];
 			}
+			*/
+
+			if (InteractiveObjectDataManager.Instance.HasElement(Name))
+			{
+				InteractiveObject io = InteractiveObjectDataManager.Instance.GetElementByString(Name);
+				this.ActionPosition1 = io.ActionPosition1 + Position;
+				this.ActionPosition2 = io.ActionPosition2 + Position;
+				for (int i = 0; i < ActionRectList.Count; ++i)
+				{
+					ActionRectList[i] = io.ActionRectList[i];
+					Rectangle rect = ActionRectList[i];
+					rect.X += (int)Position.X;
+					rect.Y += (int)Position.Y;
+					ActionRectList[i] = rect;
+				}
+				for (int i = 0; i < CollisionRectList.Count; ++i)
+				{
+					CollisionRectList[i] = io.CollisionRectList[i];
+					Rectangle rect = CollisionRectList[i];
+					rect.X += (int)Position.X;
+					rect.Y += (int)Position.Y;
+					CollisionRectList[i] = rect;
+				}
+				if (CollisionRectList.Count > 0)
+					this.CollisionBox = this.CollisionRectList[0];
+			}
+
 		}
 		#endregion
 
@@ -146,6 +174,7 @@ namespace KryptonEngine.Entities
 			mDirection = new Vector2((int)mDirection.X, (int)mDirection.Y);
 
 			SkeletonPosition += mDirection;
+			Position += mDirection;
 
 			InteractiveObject io = InteractiveObjectDataManager.Instance.GetElementByString(Name);
 
