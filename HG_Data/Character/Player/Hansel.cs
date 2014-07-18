@@ -11,15 +11,9 @@ namespace HanselAndGretel.Data
 {
 	public class Hansel : Player
 	{
-		#region Properties
-
-		#endregion
-
-		#region Getter & Setter
-
-		#endregion
-
 		#region Constructor
+
+		public Hansel() : base() { Initialize(); }
 
 		public Hansel(string pName)
 			:base(pName)
@@ -29,7 +23,7 @@ namespace HanselAndGretel.Data
 
 		#endregion
 
-		#region OverrideMethods
+		#region Override Methods
 
 		public override void Initialize()
 		{
@@ -40,11 +34,11 @@ namespace HanselAndGretel.Data
 			mHandicaps.Add(Activity.SlipThroughRock);
 		}
 
-		#endregion
-
-		#region Methods
-
-		
+		public override void LoadContent()
+		{
+			base.LoadContent();
+			SkeletonPosition = new Vector2(190, 50); //Init Position Hansel
+		}
 
 		#endregion
 	}

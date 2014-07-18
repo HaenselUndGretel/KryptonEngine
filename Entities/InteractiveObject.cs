@@ -104,7 +104,7 @@ namespace KryptonEngine.Entities
 					ActionRectList[i] = rect;
 				}
 				for (int i = 0; i < CollisionRectList.Count; ++i)
-				{
+				{ //Beim Player wird explizit die gesamte Liste übernommen
 					CollisionRectList[i] = io.CollisionRectList[i];
 					Rectangle rect = CollisionRectList[i];
 					rect.X += (int)Position.X;

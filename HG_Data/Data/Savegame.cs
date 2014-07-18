@@ -18,8 +18,8 @@ namespace HanselAndGretel.Data
 
 		public SceneData[] Scenes;
 
-		public Vector2 PositionHansel;
-		public Vector2 PositionGretel;
+		public Hansel hansel;
+		public Gretel gretel;
 
 		/// <summary>
 		/// Saved Scene to start from.
@@ -52,8 +52,8 @@ namespace HanselAndGretel.Data
 		{
 			Initialize();
 			Collectables = pSavegame.Collectables;
-			PositionHansel = pSavegame.PositionHansel;
-			PositionGretel = pSavegame.PositionGretel;
+			hansel = pSavegame.hansel;
+			gretel = pSavegame.gretel;
 			SceneId = pSavegame.SceneId;
 			Scenes = pSavegame.Scenes;
 		}
@@ -73,8 +73,8 @@ namespace HanselAndGretel.Data
 			Scenes = new SceneData[1]; //ToDo: Anzahl Scenes setzen !---!---!---!---!
 			for (int i = 0; i < Scenes.Length; i++)
 				Scenes[i] = new SceneData(); //Scenes initialisieren
-			PositionHansel = new Vector2(190, 50); //Init Position Hansel
-			PositionGretel = new Vector2(250, 50); //Init Position Gretel
+			hansel = new Hansel("skeleton");
+			gretel = new Gretel("skeleton");
 		}
 
 		public static Savegame Load(Hansel pHansel, Gretel pGretel) //Muss static sein damit das Savegame als solches gesetzt werden kann.
@@ -86,8 +86,10 @@ namespace HanselAndGretel.Data
 				//Build Default Savegame
 				TmpSavegame = new Savegame();
 				TmpSavegame.Reset();
-				pHansel.Position = TmpSavegame.PositionHansel;
-				pGretel.Position = TmpSavegame.PositionGretel;
+				pHansel.SkeletonPosition = TmpSavegame.hansel.Position;
+				pHansel.CollisionRectList = TmpSavegame.hansel.CollisionRectList;
+				pGretel.SkeletonPosition = TmpSavegame.gretel.Position;
+				pGretel.CollisionRectList = TmpSavegame.gretel.CollisionRectList;
 				pHansel.ApplySettings();
 				pGretel.ApplySettings();
 				//Save new Savegame to File
@@ -103,8 +105,10 @@ namespace HanselAndGretel.Data
 			xmlReader.Close();
 			//SetupSavegame
 			TmpSavegame.LoadContent();
-			pHansel.Position = TmpSavegame.PositionHansel;
-			pGretel.Position = TmpSavegame.PositionGretel;
+			pHansel.SkeletonPosition = TmpSavegame.hansel.Position;
+			pHansel.CollisionRectList = TmpSavegame.hansel.CollisionRectList;
+			pGretel.SkeletonPosition = TmpSavegame.gretel.Position;
+			pGretel.CollisionRectList = TmpSavegame.gretel.CollisionRectList;
 			pHansel.ApplySettings();
 			pGretel.ApplySettings();
 			TmpSavegame.Scenes[TmpSavegame.SceneId].SetupRenderList(pHansel, pGretel);
@@ -133,8 +137,8 @@ namespace HanselAndGretel.Data
 		/// <param name="pSavegame">Savegame, das gesaved werden soll.</param>
 		public static void Save(Savegame pSavegame, Hansel pHansel, Gretel pGretel) //Muss static sein damit das Savegame als solches serialisiert werden kann.
 		{
-			pSavegame.PositionHansel = pHansel.SkeletonPosition;
-			pSavegame.PositionGretel = pGretel.SkeletonPosition;
+			pSavegame.hansel = pHansel;
+			pSavegame.gretel = pGretel;
 			xmlWriter = new StreamWriter(Savegame.SavegamePath);
 			SavegameSerializer.Serialize(xmlWriter, pSavegame); //Savegame in File schreiben
 			xmlWriter.Close();
@@ -154,6 +158,7 @@ namespace HanselAndGretel.Data
 		public void Reset()
 		{
 			Initialize(); //Flush Savegame mit default Werten
+			LoadContent();
 			for (int i = 0; i < Scenes.Length; i++)
 				LoadLevel(i); //Scenes neu laden
 		}
@@ -175,6 +180,8 @@ namespace HanselAndGretel.Data
 			}
 			foreach (Collectable col in Collectables)
 				col.LoadContent();
+			hansel.LoadContent();
+			gretel.LoadContent();
 		}
 
 		#endregion

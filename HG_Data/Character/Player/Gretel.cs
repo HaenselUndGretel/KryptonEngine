@@ -10,15 +10,9 @@ namespace HanselAndGretel.Data
 {
 	public class Gretel : Player
 	{
-		#region Properties
-
-		#endregion
-
-		#region Getter & Setter
-
-		#endregion
-
 		#region Constructor
+
+		public Gretel() : base() { Initialize(); }
 
 		public Gretel(string pName)
 			:base(pName)
@@ -39,13 +33,10 @@ namespace HanselAndGretel.Data
 			mHandicaps.Add(Activity.JumpOverGap);
 		}
 
-		#endregion
-
-		#region Methods
-
-		public void TryToGrabItem()
+		public override void LoadContent()
 		{
-			
+			base.LoadContent();
+			SkeletonPosition = new Vector2(250, 50); //Init Position Gretel
 		}
 
 		#endregion

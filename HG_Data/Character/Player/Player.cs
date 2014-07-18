@@ -1,11 +1,13 @@
 ﻿using KryptonEngine;
 using KryptonEngine.Controls;
 using KryptonEngine.Entities;
+using KryptonEngine.Manager;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml.Serialization;
 
 namespace HanselAndGretel.Data
 {
@@ -13,8 +15,11 @@ namespace HanselAndGretel.Data
 	{
 		#region Properties
 
+		[XmlIgnoreAttribute]
 		public List<Activity> mHandicaps;
+		[XmlIgnoreAttribute]
 		public ActivityState mCurrentActivity;
+		[XmlIgnoreAttribute]
 		public int mCurrentState;
 		protected InputHelper mInput;
 
@@ -25,11 +30,14 @@ namespace HanselAndGretel.Data
 
 		#region Getter & Setter
 
+		[XmlIgnoreAttribute]
 		public InputHelper Input { get { return mInput; } }
 
 		#endregion
 
 		#region Constructor
+
+		public Player() : base() { }
 
 		public Player(string pName)
 			:base(pName)
@@ -53,6 +61,10 @@ namespace HanselAndGretel.Data
 		public override void LoadContent()
 		{
 			base.LoadContent();
+			InteractiveObject io = InteractiveObjectDataManager.Instance.GetElementByString(Name);
+			CollisionRectList = io.CollisionRectList;
+			if (CollisionRectList.Count > 0)
+				this.CollisionBox = this.CollisionRectList[0];
 		}
 
 		#endregion
