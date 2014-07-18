@@ -47,7 +47,7 @@ namespace HanselAndGretel.Data
 			mDebugColor = Color.LimeGreen;
 			mHandicaps = new List<Activity>();
 			mCurrentState = 0;
-			mSpeed = 400;
+			mSpeed = 200;
 		}
 
 		public override void LoadContent()
