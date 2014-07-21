@@ -86,12 +86,7 @@ namespace HanselAndGretel.Data
 				//Build Default Savegame
 				TmpSavegame = new Savegame();
 				TmpSavegame.Reset();
-				pHansel.SkeletonPosition = TmpSavegame.hansel.Position;
-				pHansel.CollisionRectList = TmpSavegame.hansel.CollisionRectList;
-				pGretel.SkeletonPosition = TmpSavegame.gretel.Position;
-				pGretel.CollisionRectList = TmpSavegame.gretel.CollisionRectList;
-				pHansel.ApplySettings();
-				pGretel.ApplySettings();
+				CopyPlayerPositions(pHansel, pGretel, TmpSavegame);
 				//Save new Savegame to File
 				Savegame.Save(TmpSavegame, pHansel, pGretel);
 				//Setup Savegame
@@ -105,12 +100,7 @@ namespace HanselAndGretel.Data
 			xmlReader.Close();
 			//SetupSavegame
 			TmpSavegame.LoadContent();
-			pHansel.SkeletonPosition = TmpSavegame.hansel.Position;
-			pHansel.CollisionRectList = TmpSavegame.hansel.CollisionRectList;
-			pGretel.SkeletonPosition = TmpSavegame.gretel.Position;
-			pGretel.CollisionRectList = TmpSavegame.gretel.CollisionRectList;
-			pHansel.ApplySettings();
-			pGretel.ApplySettings();
+			CopyPlayerPositions(pHansel, pGretel, TmpSavegame);
 			TmpSavegame.Scenes[TmpSavegame.SceneId].SetupRenderList(pHansel, pGretel);
 			return TmpSavegame;
 		}
@@ -182,6 +172,18 @@ namespace HanselAndGretel.Data
 				col.LoadContent();
 			hansel.LoadContent();
 			gretel.LoadContent();
+		}
+
+		protected static void CopyPlayerPositions(Hansel pHansel, Gretel pGretel, Savegame pSavegame)
+		{
+			pHansel.SkeletonPosition = pSavegame.hansel.Position;
+			pHansel.Position = pSavegame.hansel.Position;
+			pHansel.CollisionRectList = pSavegame.hansel.CollisionRectList;
+			pGretel.SkeletonPosition = pSavegame.gretel.Position;
+			pGretel.Position = pSavegame.gretel.Position;
+			pGretel.CollisionRectList = pSavegame.gretel.CollisionRectList;
+			pHansel.ApplySettings();
+			pGretel.ApplySettings();
 		}
 
 		#endregion

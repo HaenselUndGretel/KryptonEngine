@@ -37,6 +37,7 @@ namespace HanselAndGretel.Data
 		{
 			base.LoadContent();
 			SkeletonPosition = new Vector2(250, 50); //Init Position Gretel
+			Position = SkeletonPosition;
 		}
 
 		#endregion
