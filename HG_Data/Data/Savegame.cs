@@ -99,8 +99,8 @@ namespace HanselAndGretel.Data
 			TmpSavegame = (Savegame)SavegameSerializer.Deserialize(xmlReader); //Savegame aus File laden
 			xmlReader.Close();
 			//SetupSavegame
-			TmpSavegame.LoadContent();
 			CopyPlayerPositions(pHansel, pGretel, TmpSavegame);
+			TmpSavegame.LoadContent();
 			TmpSavegame.Scenes[TmpSavegame.SceneId].SetupRenderList(pHansel, pGretel);
 			return TmpSavegame;
 		}
