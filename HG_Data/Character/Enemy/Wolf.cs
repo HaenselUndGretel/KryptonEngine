@@ -12,11 +12,15 @@ namespace HanselAndGretel.Data
 	public class Wolf : Enemy
 	{
 		#region Properties
+        private Hansel mHansel;
+        private Gretel mGretel;
 
+        private Player mTargetPlayer;
 		#endregion
 
 		#region Getter & Setter
-
+        public Hansel hansel { set { this.mHansel = value; } }
+        public Gretel gretel { set { this.mGretel = value; } }
 		#endregion
 
 		#region Constructor
@@ -42,6 +46,25 @@ namespace HanselAndGretel.Data
 		//{
 		//	spriteBatch.Draw(TextureManager.Instance.GetElementByString("EnemyWolf"), mPosition, Color.White);
 		//}
+
+        public override void Update()
+        {
+
+           
+
+            // Überprüfen ob Spieler ohne licht im LichtRadius ist
+
+            // sinus bewegnung zum Anviesierten Spieler
+
+
+            // im Lichtradius abfall der Bewegungs geschwindigkeit
+            // erreicht den inneren minimal abstand, rückzug in sinus zur flucht distanz
+
+
+
+            base.Update();
+        }
+
 		#endregion
 
 		#region Methods
