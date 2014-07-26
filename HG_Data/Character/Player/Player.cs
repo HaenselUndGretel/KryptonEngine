@@ -22,6 +22,7 @@ namespace HanselAndGretel.Data
 		[XmlIgnoreAttribute]
 		public int mCurrentState;
 		protected InputHelper mInput;
+		public bool Lantern;
 
 		//References
 		protected Player rOtherPlayer;
@@ -56,6 +57,7 @@ namespace HanselAndGretel.Data
 			mHandicaps = new List<Activity>();
 			mCurrentState = 0;
 			mSpeed = 200;
+			Lantern = false;
 		}
 
 		public override void LoadContent()
