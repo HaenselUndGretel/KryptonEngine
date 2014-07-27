@@ -118,6 +118,11 @@ namespace HanselAndGretel.Data
 				col.LoadContent();
 				col.ApplySettings();
 			}
+			foreach (Enemy e in Enemies)
+			{
+				e.LoadContent();
+				e.ApplySettings();
+			}
 		}
 
 		public void SetupRenderList(Hansel pHansel, Gretel pGretel)
