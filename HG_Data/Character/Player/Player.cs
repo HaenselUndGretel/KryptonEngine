@@ -24,11 +24,6 @@ namespace HanselAndGretel.Data
 		protected InputHelper mInput;
 		public bool Lantern;
 
-		[XmlIgnoreAttribute]
-		public bool HasLamp;
-		[XmlIgnoreAttribute]
-		public static float LIGHT_RADIUS = 200.0f;
-
 		//References
 		protected Player rOtherPlayer;
 

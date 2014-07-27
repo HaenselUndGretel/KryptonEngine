@@ -17,7 +17,6 @@ namespace HanselAndGretel.Data
 	{
 		Forest,
 		Mountain,
-		Swamp,
 		Inside
 	}
 
@@ -45,6 +44,8 @@ namespace HanselAndGretel.Data
 		public DirectionLight SceneDirectionLight;
 
 		public List<Enemy> Enemies;
+
+		public bool Fog;
 
 		[XmlIgnoreAttribute]
 		public List<InteractiveObject> RenderList;

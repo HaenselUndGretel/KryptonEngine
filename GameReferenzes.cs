@@ -22,6 +22,7 @@ namespace KryptonEngine
 		public static Player UntargetPlayer;
 
 		public readonly static int RasterSize = 16;
+		public static float LIGHT_RADIUS = 200.0f;
 		#endregion
 
 		public GameReferenzes()

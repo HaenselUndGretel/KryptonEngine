@@ -63,7 +63,7 @@ namespace HanselAndGretel.Data
 			base.Update();
 
 			if (GameReferenzes.UntargetPlayer == null) return;
-			if (Vector2.Distance(GameReferenzes.UntargetPlayer.Position, Position) < Player.LIGHT_RADIUS)
+			if (Vector2.Distance(GameReferenzes.UntargetPlayer.Position, Position) < GameReferenzes.LIGHT_RADIUS)
 				IsEscaping = true;
 
 			if (Vector2.Distance(GameReferenzes.UntargetPlayer.Position, Position) > Wolf.ESCAPE_DISTANCE)

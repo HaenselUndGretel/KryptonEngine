@@ -92,8 +92,8 @@ namespace KryptonEngine.AI
 
 			if (GameReferenzes.ReferenzHansel == null || GameReferenzes.ReferenzGretel == null) return;
 
-			GameReferenzes.TargetPlayer = (GameReferenzes.ReferenzHansel.HasLamp) ? (Player)GameReferenzes.ReferenzGretel : (Player)GameReferenzes.ReferenzHansel;
-			GameReferenzes.UntargetPlayer = (GameReferenzes.ReferenzHansel.HasLamp) ? (Player)GameReferenzes.ReferenzHansel : (Player)GameReferenzes.ReferenzGretel;
+			GameReferenzes.TargetPlayer = (GameReferenzes.ReferenzHansel.Lantern) ? (Player)GameReferenzes.ReferenzGretel : (Player)GameReferenzes.ReferenzHansel;
+			GameReferenzes.UntargetPlayer = (GameReferenzes.ReferenzHansel.Lantern) ? (Player)GameReferenzes.ReferenzHansel : (Player)GameReferenzes.ReferenzGretel;
 
 			TargetField = new Vector2(GameReferenzes.TargetPlayer.PositionX / GameReferenzes.RasterSize, GameReferenzes.TargetPlayer.PositionY / GameReferenzes.RasterSize);
 
@@ -137,7 +137,7 @@ namespace KryptonEngine.AI
 		{
 			CalculateWitchPath(StartPos);
 
-			if (Vector2.Distance(GameReferenzes.ReferenzGretel.Position, e.Position) < Player.LIGHT_RADIUS)
+			if (Vector2.Distance(GameReferenzes.ReferenzGretel.Position, e.Position) < GameReferenzes.LIGHT_RADIUS)
 				e.SlowFactor = 0.6f;
 			else
 				e.SlowFactor = 1.0f;
@@ -272,8 +272,8 @@ namespace KryptonEngine.AI
 					Node newNode = new Node(n, new Vector2(fieldX, fieldY), estimatedCost);
 
 
-					if (Map[fieldX, fieldY] != -1 
-						 || !(Vector2.Distance(new Vector2(fieldX,fieldY) * GameReferenzes.RasterSize, GameReferenzes.UntargetPlayer.Position) > Player.LIGHT_RADIUS - 50.0f))
+					if (Map[fieldX, fieldY] != -1
+						 || !(Vector2.Distance(new Vector2(fieldX, fieldY) * GameReferenzes.RasterSize, GameReferenzes.UntargetPlayer.Position) > GameReferenzes.LIGHT_RADIUS - 50.0f))
 					{
 						bool NodeAvailable = false;
 						foreach (Node nodes in OpenList)
@@ -288,12 +288,8 @@ namespace KryptonEngine.AI
 								NodeAvailable = true;
 								break;
 							}
-						if (wolfEscaping && !(Vector2.Distance(new Vector2(fieldX, fieldY) * GameReferenzes.RasterSize, GameReferenzes.UntargetPlayer.Position) > Player.LIGHT_RADIUS - GameReferenzes.RasterSize))
+						if (wolfEscaping && !(Vector2.Distance(new Vector2(fieldX, fieldY) * GameReferenzes.RasterSize, GameReferenzes.UntargetPlayer.Position) > GameReferenzes.LIGHT_RADIUS - GameReferenzes.RasterSize))
 							NodeAvailable = true;
-
-						//if(!wolfEscaping && !(Vector2.Distance(new Vector2(fieldX, fieldY), GameReferenzes.TargetPlayer.Position) > Player.LIGHT_RADIUS)
-						//	&& (Vector2.Distance(GameReferenzes.TargetPlayer.Position, GameReferenzes.UntargetPlayer.Position) < Player.LIGHT_RADIUS))
-						//	NodeAvailable = true;
 
 						if (!NodeAvailable)
 							OpenList.Add(newNode);
