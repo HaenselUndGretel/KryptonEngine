@@ -97,6 +97,7 @@
     <Compile Include="HG_Data\Data\SceneData.cs" />
     <Compile Include="HG_Data\Data\Waypoint.cs" />
     <Compile Include="HG_Data\Objects\Collectables\Collectable.cs" />
+    <Compile Include="HG_Data\Objects\Collectables\Lantern.cs" />
     <Compile Include="HG_Data\Objects\EventTrigger.cs" />
     <Compile Include="HG_Data\Objects\Lights\AmbientLight.cs" />
     <Compile Include="HG_Data\Objects\Lights\DirectionLight.cs" />

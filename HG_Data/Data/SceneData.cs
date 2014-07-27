@@ -131,6 +131,10 @@ namespace HanselAndGretel.Data
 			RenderList.AddRange(Enemies);
 			RenderList.Add(pHansel);
 			RenderList.Add(pGretel);
+			//Brunnen Overlay hinzufügen
+			foreach (InteractiveObject iObj in InteractiveObjects)
+				if (iObj.ActivityId == Activity.UseWell)
+					RenderList.Add(InteractiveObjectDataManager.Instance.GetElementByString("wellOverlay"));
 		}
 
 		public void DrawDebug(SpriteBatch pSpriteBatch)
