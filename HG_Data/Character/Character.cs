@@ -29,8 +29,6 @@ namespace HanselAndGretel.Data
 		public float Speed { get { return mSpeed; } }
 		[XmlIgnoreAttribute]
 		public float BodyTemperature { get { return mBodyTemperature; } set { mBodyTemperature = value; } }
-		[XmlIgnoreAttribute]
-		new public int DrawZ { get { return (int)SkeletonPosition.Y + base.DrawZ; } }
 
 		#endregion
 
