@@ -148,9 +148,9 @@ namespace HanselAndGretel.Data
 		public void Reset()
 		{
 			Initialize(); //Flush Savegame mit default Werten
-			LoadContent();
 			for (int i = 0; i < Scenes.Length; i++)
 				LoadLevel(i); //Scenes neu laden
+			LoadContent();
 		}
 
 		protected string LevelNameFromId(int pLevelId)
