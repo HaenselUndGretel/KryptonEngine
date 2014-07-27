@@ -37,8 +37,6 @@ namespace HanselAndGretel.Data
 
 		public List<InteractiveObject> InteractiveObjects;
 		public List<Collectable> Collectables;
-		//Descope = keine Items mehr. Lantern & Amulet sind Collectables die beim einsammeln nicht zu den anderen Collectables kommen (GDs müssen entscheiden ob sie da doch mit aufgelistet werden...)
-		//public List<Item> Items;
 		public List<Light> Lights;
 
 		public List<EventTrigger> Events;
@@ -47,8 +45,6 @@ namespace HanselAndGretel.Data
 		public DirectionLight SceneDirectionLight;
 
 		public List<Enemy> Enemies;
-		//public List<Emitter> Emitter;
-		//public List<SoundAreas> SoundAreas;
 
 		[XmlIgnoreAttribute]
 		public List<InteractiveObject> RenderList;

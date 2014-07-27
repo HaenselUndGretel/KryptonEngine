@@ -23,6 +23,11 @@ namespace HanselAndGretel.Data
 		public int mCurrentState;
 		protected InputHelper mInput;
 
+		[XmlIgnoreAttribute]
+		public bool HasLamp;
+		[XmlIgnoreAttribute]
+		public static float LIGHT_RADIUS = 200.0f;
+
 		//References
 		protected Player rOtherPlayer;
 
@@ -30,7 +35,6 @@ namespace HanselAndGretel.Data
 
 		#region Getter & Setter
 
-		[XmlIgnoreAttribute]
 		public InputHelper Input { get { return mInput; } }
 
 		#endregion

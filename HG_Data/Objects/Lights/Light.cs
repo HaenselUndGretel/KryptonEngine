@@ -70,11 +70,9 @@ namespace HanselAndGretel.Data
 
 		protected void DrawLine(Vector2 from, Vector2 to, Texture2D texture, float size, SpriteBatch spriteBatch)
 		{
-
 			double degress = Math.Atan2((to - from).Y, (to - from).X);
 			float length = Vector2.Distance(from, to);
 			spriteBatch.Draw(texture, from, new Rectangle(0, 0, 1, 1), Color.White, (float)degress, Vector2.Zero, new Vector2(length, size), SpriteEffects.None, 0);
-
 		}
 		#endregion
 	}

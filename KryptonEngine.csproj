@@ -59,6 +59,8 @@
     <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AI\AIManager.cs" />
+    <Compile Include="AI\Node.cs" />
     <Compile Include="Controls\InputHelper.cs" />
     <Compile Include="Controls\MouseHelper.cs" />
     <Compile Include="EngineGame.cs" />
@@ -84,6 +86,7 @@
     <Compile Include="FMOD\fmod_dsp.cs" />
     <Compile Include="FMOD\fmod_errors.cs" />
     <Compile Include="FMOD\fmod_memoryinfo.cs" />
+    <Compile Include="GameReferenzes.cs" />
     <Compile Include="HG_Data\Character\Character.cs" />
     <Compile Include="HG_Data\Character\Enemy\Enemy.cs" />
     <Compile Include="HG_Data\Character\Enemy\Mother.cs" />
