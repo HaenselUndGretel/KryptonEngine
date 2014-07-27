@@ -11,6 +11,11 @@ namespace KryptonEngine.AI
 {
 	public class AIManager
 	{
+		#region Singleton
+		public static AIManager Instance { get { if (instance == null) instance = new AIManager(); return instance; } }
+		private static AIManager instance;
+		#endregion
+
 		#region Properties
 
 		const float UPDATETIME = 500;
@@ -22,21 +27,19 @@ namespace KryptonEngine.AI
 
 		public List<Enemy> Agents;
 
-		//public Player TargetPlayer;
-		//public Player UntargetPlayer;
-
 		private Vector2 TargetField;
 		private List<Node> OpenList;
 		private List<Node> ClosedList;
 		#endregion
 
 		#region Constructor
-		public AIManager(Rectangle MapSize)
+		public AIManager()
 		{
-			FieldsWidth = MapSize.Width / GameReferenzes.RasterSize;
-			FieldsHeight = MapSize.Height / GameReferenzes.RasterSize;
-			Map = new int[FieldsWidth, FieldsHeight];
+			Initialize();
+		}
 
+		public void Initialize()
+		{
 			Agents = new List<Enemy>();
 			OpenList = new List<Node>();
 			ClosedList = new List<Node>();
@@ -68,7 +71,7 @@ namespace KryptonEngine.AI
 		}
 
 		// Neuberechnung der Map nachdem die Scene gewechselt wurde
-		public void ChangeMap(Rectangle MapSize, int EdgeSize, List<Rectangle> MoveList)
+		public void ChangeMap(Rectangle MapSize, List<Rectangle> MoveList)
 		{
 			FieldsWidth = MapSize.Width / GameReferenzes.RasterSize;
 			FieldsHeight = MapSize.Height / GameReferenzes.RasterSize;
@@ -165,8 +168,8 @@ namespace KryptonEngine.AI
 					if (TargetField.X < 0) TargetField.X = 0;
 					if (TargetField.Y < 0) TargetField.Y = 0;
 
-					if (TargetField.X > FieldsWidth) TargetField.X = FieldsWidth - 2;
-					if (TargetField.Y > FieldsHeight) TargetField.Y = FieldsHeight - 2;
+					if (TargetField.X >= FieldsWidth) TargetField.X = FieldsWidth - 1;
+					if (TargetField.Y >= FieldsHeight) TargetField.Y = FieldsHeight - 1;
 				} while (Map[(int)TargetField.X, (int)TargetField.Y] == -1);
 				e.EscapePoint = TargetField;
 
