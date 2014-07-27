@@ -32,10 +32,13 @@ namespace KryptonEngine.Rendering
         private Effect mDraw,mMRTDraw,mSingelDraw;
         private Effect mLightShader;
         private Effect mCombineShader;
-
+        private Effect mClearLightAndShadow;
 
         private RenderTarget2D mLightTarget;
         private RenderTarget2D mFinalTarget;
+        private RenderTarget2D mShadowTarget;
+        private RenderTarget2D mShadowPositionTarget;
+        private RenderTarget2D mShadowUV;
 
         private GBuffer mGBuffer;
 
@@ -125,6 +128,9 @@ namespace KryptonEngine.Rendering
 
             this.mLightTarget = new RenderTarget2D(this.mGraphicsDevice, pWidth, pHeight, false, SurfaceFormat.Color, DepthFormat.None);
             this.mFinalTarget = new RenderTarget2D(this.mGraphicsDevice, pWidth, pHeight, false, SurfaceFormat.Color, DepthFormat.None);
+            this.mShadowTarget = new RenderTarget2D(this.mGraphicsDevice, pWidth, pHeight, false, SurfaceFormat.Color, DepthFormat.None);
+            this.mShadowPositionTarget = new RenderTarget2D(this.mGraphicsDevice, pWidth, pHeight, false, SurfaceFormat.Color, DepthFormat.None);
+            this.mShadowUV = new RenderTarget2D(this.mGraphicsDevice, pWidth, pHeight, false, SurfaceFormat.Color, DepthFormat.None);
 
             this.mView  = Matrix.CreateLookAt(new Vector3(0.0f, 0.0f, 1.0f), Vector3.Zero, Vector3.Up);
             this.mTranslatetViewMatrix = this.mView;
@@ -153,6 +159,7 @@ namespace KryptonEngine.Rendering
             this.mCombineShader = KryptonEngine.Manager.ShaderManager.Instance.GetElementByString("CombineShader");
             this.mSingelDraw = KryptonEngine.Manager.ShaderManager.Instance.GetElementByString("Singel");
             this.mMRTDraw = KryptonEngine.Manager.ShaderManager.Instance.GetElementByString("MRT");
+            this.mClearLightAndShadow = KryptonEngine.Manager.ShaderManager.Instance.GetElementByString("ClearLS");
 
             this.mGBuffer.LoadContent();
         }
@@ -403,8 +410,14 @@ namespace KryptonEngine.Rendering
         #region Light Methods
         public void ProcessLight(List<Light> pLightList, Matrix pTranslation)
         {
-            EngineSettings.Graphics.GraphicsDevice.SetRenderTarget(mLightTarget);
-            EngineSettings.Graphics.GraphicsDevice.Clear(Color.Transparent);
+            RenderTargetBinding[] renderTargets = new RenderTargetBinding[] { this.mLightTarget, this.mShadowPositionTarget, this.mShadowUV };
+            this.mGraphicsDevice.SetRenderTargets(renderTargets);
+
+            mClearLightAndShadow.CurrentTechnique.Passes[0].Apply();
+            QuadRenderer.Render(mGraphicsDevice);
+
+            //EngineSettings.Graphics.GraphicsDevice.SetRenderTarget(mLightTarget);
+           // EngineSettings.Graphics.GraphicsDevice.Clear(Color.Transparent);
 
             EngineSettings.Graphics.GraphicsDevice.BlendState = mLightMapBlendState;
 
@@ -443,6 +456,24 @@ namespace KryptonEngine.Rendering
                QuadRenderer.Render(this.mGraphicsDevice);
             }
 
+            EngineSettings.Graphics.GraphicsDevice.SetRenderTarget(null);
+        }
+
+        public void ProcessShadow()
+        {
+            EngineSettings.Graphics.GraphicsDevice.SetRenderTarget(mFinalTarget);
+            EngineSettings.Graphics.GraphicsDevice.Clear(Color.Transparent);
+
+
+            EngineSettings.Graphics.GraphicsDevice.Textures[0] = this.mGBuffer.RenderTargets[0];
+            EngineSettings.Graphics.GraphicsDevice.Textures[1] = mLightTarget;
+
+            this.mCombineShader.Parameters["ambientColor"].SetValue(AmbientLight.LightColor);
+            this.mCombineShader.Parameters["ambientIntensity"].SetValue(AmbientLight.Intensity);
+
+            mCombineShader.CurrentTechnique.Passes[0].Apply();
+
+            QuadRenderer.Render(this.mGraphicsDevice);
             EngineSettings.Graphics.GraphicsDevice.SetRenderTarget(null);
         }
        
@@ -528,6 +559,13 @@ namespace KryptonEngine.Rendering
         {
             batch.Begin();
             batch.Draw(mLightTarget, Vector2.Zero, Color.White);
+            batch.End();
+        }
+
+        public void DrawShadowTargettOnScreen(SpriteBatch batch)
+        {
+            batch.Begin();
+            batch.Draw(mShadowUV, Vector2.Zero, Color.White);
             batch.End();
         }
 
