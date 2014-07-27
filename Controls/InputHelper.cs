@@ -109,6 +109,7 @@ namespace KryptonEngine.Controls
 		public bool ActionIsPressed { get { return InputPressed(mAction); } }
 		//Item
 		public bool UseItemJustPressed { get { return InputJustPressed(mUseItem); } }
+		public bool UseItemIsPressed { get { return InputPressed(mUseItem); } }
 		public bool SwitchItemJustPressed { get { return InputJustPressed(mSwitchItem); } }
 
 		public bool ItemLeftJustPressed { get { return InputJustPressed(mItemLeft); } }
@@ -205,22 +206,22 @@ namespace KryptonEngine.Controls
 
 		#region KeyboardStates
 
-		private bool KeyJustPressed(Keys pKey)
+		public bool KeyJustPressed(Keys pKey)
 		{
 			return (mKeyboardStateBefore.IsKeyUp(pKey) && mKeyboardStateCurrent.IsKeyDown(pKey)) ? true : false;
 		}
 
-		private bool KeyJustReleased(Keys pKey)
+		public bool KeyJustReleased(Keys pKey)
 		{
 			return (mKeyboardStateBefore.IsKeyDown(pKey) && mKeyboardStateCurrent.IsKeyUp(pKey)) ? true : false;
 		}
 
-		private bool KeyPressed(Keys pKey)
+		public bool KeyPressed(Keys pKey)
 		{
 			return mKeyboardStateCurrent.IsKeyDown(pKey);
 		}
 
-		private bool KeyReleased(Keys pKey)
+		public bool KeyReleased(Keys pKey)
 		{
 			return mKeyboardStateCurrent.IsKeyUp(pKey);
 		}
@@ -239,20 +240,22 @@ namespace KryptonEngine.Controls
 			if (pRightStick)
 			{
 				oldPosition = mGamepadStateBefore.ThumbSticks.Right;
-				newPosition = mGamepadStateBefore.ThumbSticks.Right;
-
+				newPosition = mGamepadStateCurrent.ThumbSticks.Right;
 			}
 			else
 			{
-				oldPosition = mGamepadStateCurrent.ThumbSticks.Left;
+				oldPosition = mGamepadStateBefore.ThumbSticks.Left;
 				newPosition = mGamepadStateCurrent.ThumbSticks.Left;
 			}
+			oldPosition.Normalize();
+			newPosition.Normalize();
+			float oldAngle = (float)Math.Atan2(oldPosition.Y, oldPosition.X);
+			float newAngle = (float)Math.Atan2(newPosition.Y, newPosition.X);
 
-			//ToDo Calc Rotation
-
-
-
-			return 1f;
+			float rotation = MathHelper.ToDegrees(newAngle - oldAngle) / 360;
+			if (float.IsNaN(rotation) || Math.Abs(newAngle - oldAngle) > 0.5f) //Threshold gegen clipping bei 360Cut links
+				rotation = 0f;
+			return -rotation;
 		}
 
 		private Keys PlayerMappedKey(Input pInput) //Map Input.pKey to mPlayer

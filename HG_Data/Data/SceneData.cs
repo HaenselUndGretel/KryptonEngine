@@ -37,7 +37,8 @@ namespace HanselAndGretel.Data
 
 		public List<InteractiveObject> InteractiveObjects;
 		public List<Collectable> Collectables;
-		public List<Item> Items;
+		//Descope = keine Items mehr. Lantern & Amulet sind Collectables die beim einsammeln nicht zu den anderen Collectables kommen (GDs müssen entscheiden ob sie da doch mit aufgelistet werden...)
+		//public List<Item> Items;
 		public List<Light> Lights;
 
 		public List<EventTrigger> Events;
@@ -51,8 +52,6 @@ namespace HanselAndGretel.Data
 
 		[XmlIgnoreAttribute]
 		public List<InteractiveObject> RenderList;
-
-		public List<string> ChalkRockData; //Muss leider für jede Scene da sein, da dies die einfachste Möglichkeit ist, die Pfeiler auf den Felsen im Savegame zu speichern
 
 		#endregion
 
@@ -79,7 +78,6 @@ namespace HanselAndGretel.Data
 
 			InteractiveObjects = new List<InteractiveObject>();
 			Collectables = new List<Collectable>();
-			Items = new List<Item>();
 			Enemies = new List<Enemy>();
 			Lights = new List<Light>();
 			Events = new List<EventTrigger>();
@@ -90,8 +88,6 @@ namespace HanselAndGretel.Data
 
 			SceneAmbientLight = new AmbientLight();
 			SceneDirectionLight = new DirectionLight();
-
-			ChalkRockData = new List<string>();
 		}
 
 		/// <summary>
@@ -103,11 +99,11 @@ namespace HanselAndGretel.Data
 			Waypoints.Clear();
 			InteractiveObjects.Clear();
 			Collectables.Clear();
-			Items.Clear();
+			Enemies.Clear();
 			Lights.Clear();
 			Events.Clear();
 			BackgroundSprites.Clear();
-			ChalkRockData.Clear();
+			RenderList.Clear();
 		}
 
 		// Laden Texturen usw. von Manager das nicht mitserialisiert wird
@@ -120,8 +116,6 @@ namespace HanselAndGretel.Data
 				iObj.LoadContent();
 				iObj.ApplySettings();
 			}
-			foreach (Item item in Items)
-				item.LoadContent();
 			foreach (Collectable col in Collectables)
 			{
 				col.LoadContent();
@@ -133,11 +127,19 @@ namespace HanselAndGretel.Data
 		{
 			RenderList.Clear();
 			RenderList.AddRange(InteractiveObjects);
-			RenderList.AddRange(Items);
 			RenderList.AddRange(Collectables);
 			RenderList.AddRange(Enemies);
 			RenderList.Add(pHansel);
 			RenderList.Add(pGretel);
+			//Brunnen Overlay hinzufügen
+			foreach (InteractiveObject iObj in InteractiveObjects)
+				if (iObj.ActivityId == Activity.UseWell)
+				{
+					InteractiveObject wellOverlay = InteractiveObjectDataManager.Instance.GetElementByString("wellOverlay");
+					wellOverlay.SkeletonPosition = iObj.SkeletonPosition + new Vector2(-100, 300);
+					wellOverlay.ApplySettings();
+					RenderList.Add(wellOverlay);
+				}
 		}
 
 		public void DrawDebug(SpriteBatch pSpriteBatch)

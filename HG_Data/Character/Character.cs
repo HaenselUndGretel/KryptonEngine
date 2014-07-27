@@ -16,6 +16,7 @@ namespace HanselAndGretel.Data
 		#region Properties
 
 		protected float mSpeed;
+		protected float mBodyTemperature;
 
 		//References
 		protected Camera rCamera;
@@ -23,8 +24,11 @@ namespace HanselAndGretel.Data
 		#endregion
 
 		#region Getter & Setter
+
 		[XmlIgnoreAttribute]
 		public float Speed { get { return mSpeed; } }
+		[XmlIgnoreAttribute]
+		public float BodyTemperature { get { return mBodyTemperature; } set { mBodyTemperature = value; } }
 
 		#endregion
 
@@ -52,6 +56,7 @@ namespace HanselAndGretel.Data
 		{
 			base.Initialize();
 			mDebugColor = Color.LightYellow;
+			mBodyTemperature = 1f;
 		}
 
 		#endregion
@@ -81,7 +86,7 @@ namespace HanselAndGretel.Data
 		{
 			if (pMovementDirection.Length() != 1f)
 				pMovementDirection.Normalize();
-			return pMovementDirection * mSpeed * pMovementSpeedFactor * (EngineSettings.Time.ElapsedGameTime.Milliseconds / 1000f);
+			return pMovementDirection * mSpeed * mBodyTemperature * pMovementSpeedFactor * (EngineSettings.Time.ElapsedGameTime.Milliseconds / 1000f);
 		}
 
 		#region Animation
@@ -126,6 +131,8 @@ namespace HanselAndGretel.Data
 			//else //Runter
 			//	TmpAnimation = "WalkDown";
 			TmpAnimation = "idle";
+			if (mBodyTemperature < 1f)
+				TmpAnimation += "";//"Shiver";
 			SetAnimation(TmpAnimation);
 		}
 

@@ -1,5 +1,6 @@
 ﻿using HanselAndGretel.Data;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +9,22 @@ using System.Text;
 namespace KryptonEngine.Entities
 {
 	public enum Activity
+	{
+		None,
+		KnockOverTree,
+		BalanceOverTree,
+		PushRock,
+		SlipThroughRock,
+		JumpOverGap,
+		LegUp,
+		LegUpGrab,
+		PushDoor,
+		PullDoor,
+		UseWell,
+		UseItem
+	};
+
+	public enum OldActivity
 	{
 		None,
 		CaughtInCobweb,
@@ -91,6 +108,7 @@ namespace KryptonEngine.Entities
 
 		public virtual Activity GetPossibleActivity(Player pPlayer, Player pOtherPlayer) { return Activity.None; }
 		public virtual void Update(Player pPlayer, Player pOtherPlayer) { }
+		public virtual void Draw(SpriteBatch pSpriteBatch, Player pPlayer, Player pOtherPlayer) { }
 
 		#endregion
 	}
