@@ -52,6 +52,7 @@ namespace KryptonEngine.Entities
 		public Activity ActivityId { get { return (Activity)ActionId; } }
 		[XmlIgnoreAttribute]
 		public ActivityState ActivityState { get { return mActivityState; } set { mActivityState = value; } }
+
 		#endregion
 
 		#region Constructor
@@ -175,6 +176,7 @@ namespace KryptonEngine.Entities
 
 			SkeletonPosition += mDirection;
 			Position += mDirection;
+			NormalZ = (SkeletonPosition.Y - DrawZ) / 4096; //Damit z.B. bewegliche Steine und Spieler den richtigen Tiefenwert haben
 
 			InteractiveObject io = InteractiveObjectDataManager.Instance.GetElementByString(Name);
 
