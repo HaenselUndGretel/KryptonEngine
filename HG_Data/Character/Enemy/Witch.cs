@@ -1,4 +1,5 @@
-﻿using KryptonEngine.Manager;
+﻿using KryptonEngine;
+using KryptonEngine.Manager;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -31,10 +32,21 @@ namespace HanselAndGretel.Data
 		#endregion
 
 		#region OverrideMethods
-		//public override void Draw(SpriteBatch spriteBatch)
-		//{
-		//	spriteBatch.Draw(TextureManager.Instance.GetElementByString("EnemyWitch"), mPosition, Color.White);
-		//}
+		public override void Update()
+		{
+			base.Update();
+
+			if (Path == null || CurrentPath == -1) return;
+
+			Vector2 Direction = Path[CurrentPath].Position * 16 - Position + new Vector2(EngineSettings.Randomizer.Next(0, 16), EngineSettings.Randomizer.Next(0, 16));
+			Direction = Vector2.Normalize(Direction);
+
+			MoveInteractiveObject(Direction * 3.0f * SlowFactor);
+
+			if (Path[CurrentPath].Position.X == (int)(Position.X / 16)
+				&& Path[CurrentPath].Position.Y == (int)(Position.Y / 16))
+				CurrentPath--;
+		}
 		#endregion
 
 		#region Methods

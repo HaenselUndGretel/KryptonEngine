@@ -32,8 +32,8 @@ namespace KryptonEngine.Entities
 			set 
 			{
 				mGameScreen = value;
-				int x = mGameScreen.Width / EngineSettings.VirtualResWidth;
-				int y = mGameScreen.Height / EngineSettings.VirtualResHeight;
+				float x = mGameScreen.Width / EngineSettings.VirtualResWidth;
+				float y = mGameScreen.Height / EngineSettings.VirtualResHeight;
 
 				mScaleMax = (x <= y) ? x : y;
 				mViewportDimensions = new Vector2(EngineSettings.VirtualResWidth * mScaleMax, EngineSettings.VirtualResHeight * mScaleMax);
