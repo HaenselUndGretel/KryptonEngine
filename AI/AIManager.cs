@@ -17,7 +17,6 @@ namespace KryptonEngine.AI
 		float currentUpdateTime = 0;
 
 		protected int[,] Map;
-		protected int mRasterSize;
 		protected int FieldsHeight;
 		protected int FieldsWidth;
 
@@ -32,11 +31,10 @@ namespace KryptonEngine.AI
 		#endregion
 
 		#region Constructor
-		public AIManager(Rectangle MapSize, int EdgeSize)
+		public AIManager(Rectangle MapSize)
 		{
-			mRasterSize = EdgeSize;
-			FieldsWidth = MapSize.Width / EdgeSize;
-			FieldsHeight = MapSize.Height / EdgeSize;
+			FieldsWidth = MapSize.Width / GameReferenzes.RasterSize;
+			FieldsHeight = MapSize.Height / GameReferenzes.RasterSize;
 			Map = new int[FieldsWidth, FieldsHeight];
 
 			Agents = new List<Enemy>();
@@ -50,13 +48,13 @@ namespace KryptonEngine.AI
 		// Fügt eine Liste von Rectangle hinzu, mit dennen Kollidiert werden kann.
 		public void CalculateMoveableFields(List<Rectangle> MoveList)
 		{
-			Rectangle Raster = new Rectangle(0, 0, mRasterSize, mRasterSize);
+			Rectangle Raster = new Rectangle(0, 0, GameReferenzes.RasterSize, GameReferenzes.RasterSize);
 
 			for (int y = 0; y < FieldsHeight; y++)
 				for(int x = 0; x < FieldsWidth; x++)
 				{
-					Raster.X = x * mRasterSize;
-					Raster.Y = y * mRasterSize;
+					Raster.X = x * GameReferenzes.RasterSize;
+					Raster.Y = y * GameReferenzes.RasterSize;
 
 					foreach(Rectangle r in MoveList)
 					{
@@ -72,9 +70,8 @@ namespace KryptonEngine.AI
 		// Neuberechnung der Map nachdem die Scene gewechselt wurde
 		public void ChangeMap(Rectangle MapSize, int EdgeSize, List<Rectangle> MoveList)
 		{
-			mRasterSize = EdgeSize;
-			FieldsWidth = MapSize.Width / EdgeSize;
-			FieldsHeight = MapSize.Height / EdgeSize;
+			FieldsWidth = MapSize.Width / GameReferenzes.RasterSize;
+			FieldsHeight = MapSize.Height / GameReferenzes.RasterSize;
 			Map = new int[FieldsWidth, FieldsHeight];
 
 			CalculateMoveableFields(MoveList);
@@ -98,14 +95,14 @@ namespace KryptonEngine.AI
 			GameReferenzes.TargetPlayer = (GameReferenzes.ReferenzHansel.HasLamp) ? (Player)GameReferenzes.ReferenzGretel : (Player)GameReferenzes.ReferenzHansel;
 			GameReferenzes.UntargetPlayer = (GameReferenzes.ReferenzHansel.HasLamp) ? (Player)GameReferenzes.ReferenzHansel : (Player)GameReferenzes.ReferenzGretel;
 
-			TargetField = new Vector2(GameReferenzes.TargetPlayer.PositionX / mRasterSize, GameReferenzes.TargetPlayer.PositionY / mRasterSize);
+			TargetField = new Vector2(GameReferenzes.TargetPlayer.PositionX / GameReferenzes.RasterSize, GameReferenzes.TargetPlayer.PositionY / GameReferenzes.RasterSize);
 
 			foreach(Enemy e in Agents)
 			{
 				OpenList.Clear();
 				ClosedList.Clear();
 				
-				Vector2 FieldPosition = new Vector2(e.PositionX / mRasterSize, e.PositionY / mRasterSize);
+				Vector2 FieldPosition = new Vector2(e.PositionX / GameReferenzes.RasterSize, e.PositionY / GameReferenzes.RasterSize);
 				OpenList.Add(new Node(FieldPosition));
 
 				if (e.GetType() == typeof(Witch))
@@ -148,7 +145,8 @@ namespace KryptonEngine.AI
 
 		private void CalculateWolfAiEscape(Wolf e, Vector2 StartPos)
 		{
-			if(e.EscapePoint == StartPos)
+			if(e.EscapePoint == StartPos
+				|| e.CurrentPath == 0)
 			{
 				e.EscapePoint = Vector2.Zero;
 				e.IsEscaping = false;
@@ -161,14 +159,14 @@ namespace KryptonEngine.AI
 				{
 				float Angle = EngineSettings.Randomizer.Next() * 360;
 					TargetField = new Vector2(
-						(int)(GameReferenzes.UntargetPlayer.PositionX + Wolf.ESCAPE_DISTANCE * Math.Cos(Angle)) / mRasterSize,
-						(int)(GameReferenzes.UntargetPlayer.PositionY + Wolf.ESCAPE_DISTANCE * Math.Sin(Angle)) / mRasterSize);
+						(int)(GameReferenzes.UntargetPlayer.PositionX + Wolf.ESCAPE_DISTANCE * Math.Cos(Angle)) / GameReferenzes.RasterSize,
+						(int)(GameReferenzes.UntargetPlayer.PositionY + Wolf.ESCAPE_DISTANCE * Math.Sin(Angle)) / GameReferenzes.RasterSize);
 
 					if (TargetField.X < 0) TargetField.X = 0;
 					if (TargetField.Y < 0) TargetField.Y = 0;
 
-					if (TargetField.X > FieldsWidth) TargetField.X = FieldsWidth;
-					if (TargetField.Y > FieldsHeight) TargetField.Y = FieldsHeight;
+					if (TargetField.X > FieldsWidth) TargetField.X = FieldsWidth - 2;
+					if (TargetField.Y > FieldsHeight) TargetField.Y = FieldsHeight - 2;
 				} while (Map[(int)TargetField.X, (int)TargetField.Y] == -1);
 				e.EscapePoint = TargetField;
 
@@ -189,7 +187,8 @@ namespace KryptonEngine.AI
 			{
 				CheckNextNodesWitch(GetNextNode());
 			} while (ClosedList[ClosedList.Count - 1].Position != TargetField && Map[(int)TargetField.X, (int)TargetField.Y] != -1
-			&& StartPos.X >= 0 && StartPos.Y >= 0 && StartPos.X < FieldsWidth && StartPos.Y < FieldsHeight);
+			&& StartPos.X >= 0 && StartPos.Y >= 0 && StartPos.X < FieldsWidth && StartPos.Y < FieldsHeight
+			|| OpenList.Count == 0);
 		}
 
 		private void CalculateWolfPath(Vector2 StartPos, bool escaping)
@@ -198,7 +197,8 @@ namespace KryptonEngine.AI
 			{
 				CheckNextNodesWolf(GetNextNode(), escaping);
 			} while (ClosedList[ClosedList.Count - 1].Position != TargetField && Map[(int)TargetField.X, (int)TargetField.Y] != -1
-				&& StartPos.X >= 0 && StartPos.Y >= 0 && StartPos.X < FieldsWidth && StartPos.Y < FieldsHeight);
+				&& StartPos.X >= 0 && StartPos.Y >= 0 && StartPos.X < FieldsWidth && StartPos.Y < FieldsHeight
+				&& OpenList.Count != 0 && ClosedList.Count < 500);
 
 		}
 		
@@ -273,7 +273,7 @@ namespace KryptonEngine.AI
 
 
 					if (Map[fieldX, fieldY] != -1 
-						 || !(Vector2.Distance(new Vector2(fieldX,fieldY) * mRasterSize, GameReferenzes.UntargetPlayer.Position) > Player.LIGHT_RADIUS - 50.0f))
+						 || !(Vector2.Distance(new Vector2(fieldX,fieldY) * GameReferenzes.RasterSize, GameReferenzes.UntargetPlayer.Position) > Player.LIGHT_RADIUS - 50.0f))
 					{
 						bool NodeAvailable = false;
 						foreach (Node nodes in OpenList)
@@ -288,9 +288,12 @@ namespace KryptonEngine.AI
 								NodeAvailable = true;
 								break;
 							}
-						if (wolfEscaping && !(Vector2.Distance(new Vector2(fieldX, fieldY) * mRasterSize, GameReferenzes.UntargetPlayer.Position) > Player.LIGHT_RADIUS - mRasterSize))
+						if (wolfEscaping && !(Vector2.Distance(new Vector2(fieldX, fieldY) * GameReferenzes.RasterSize, GameReferenzes.UntargetPlayer.Position) > Player.LIGHT_RADIUS - GameReferenzes.RasterSize))
 							NodeAvailable = true;
-							//Console.WriteLine("Feld im Licht!");
+
+						//if(!wolfEscaping && !(Vector2.Distance(new Vector2(fieldX, fieldY), GameReferenzes.TargetPlayer.Position) > Player.LIGHT_RADIUS)
+						//	&& (Vector2.Distance(GameReferenzes.TargetPlayer.Position, GameReferenzes.UntargetPlayer.Position) < Player.LIGHT_RADIUS))
+						//	NodeAvailable = true;
 
 						if (!NodeAvailable)
 							OpenList.Add(newNode);
@@ -322,19 +325,19 @@ namespace KryptonEngine.AI
 		{
 			Texture2D pixel = TextureManager.Instance.GetElementByString("pixel");
 			for(int y = 0; y < FieldsHeight; y++)
-				spriteBatch.Draw(pixel, new Rectangle(0, y * mRasterSize,FieldsWidth * mRasterSize, 2), Color.Black);
+				spriteBatch.Draw(pixel, new Rectangle(0, y * GameReferenzes.RasterSize,FieldsWidth * GameReferenzes.RasterSize, 2), Color.Black);
 
 			for (int x = 0; x < FieldsHeight; x++)
-				spriteBatch.Draw(pixel, new Rectangle(x * mRasterSize, 0, 2, FieldsHeight * mRasterSize), Color.Black);
+				spriteBatch.Draw(pixel, new Rectangle(x * GameReferenzes.RasterSize, 0, 2, FieldsHeight * GameReferenzes.RasterSize), Color.Black);
 
 			foreach (Node n in ClosedList)
-				spriteBatch.Draw(pixel, new Rectangle((int)n.Position.X * mRasterSize, (int)n.Position.Y * mRasterSize, mRasterSize, mRasterSize), Color.Yellow * 0.8f);
+				spriteBatch.Draw(pixel, new Rectangle((int)n.Position.X * GameReferenzes.RasterSize, (int)n.Position.Y * GameReferenzes.RasterSize, GameReferenzes.RasterSize, GameReferenzes.RasterSize), Color.Yellow * 0.8f);
 			foreach (Node n in OpenList)
-				spriteBatch.Draw(pixel, new Rectangle((int)n.Position.X * mRasterSize, (int)n.Position.Y * mRasterSize, mRasterSize, mRasterSize), Color.Red * 0.8f);
+				spriteBatch.Draw(pixel, new Rectangle((int)n.Position.X * GameReferenzes.RasterSize, (int)n.Position.Y * GameReferenzes.RasterSize, GameReferenzes.RasterSize, GameReferenzes.RasterSize), Color.Red * 0.8f);
 			foreach(Enemy e in Agents)
 				if(e.Path != null)
 				foreach(Node n in e.Path)
-					spriteBatch.Draw(pixel, new Rectangle((int)n.Position.X * mRasterSize, (int)n.Position.Y * mRasterSize, mRasterSize, mRasterSize), Color.Green * 0.8f);
+					spriteBatch.Draw(pixel, new Rectangle((int)n.Position.X * GameReferenzes.RasterSize, (int)n.Position.Y * GameReferenzes.RasterSize, GameReferenzes.RasterSize, GameReferenzes.RasterSize), Color.Green * 0.8f);
 		}
 		#endregion
 	}

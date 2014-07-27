@@ -20,6 +20,8 @@ namespace KryptonEngine
 
 		public static Player TargetPlayer;
 		public static Player UntargetPlayer;
+
+		public readonly static int RasterSize = 16;
 		#endregion
 
 		public GameReferenzes()
