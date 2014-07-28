@@ -89,7 +89,6 @@ namespace KryptonEngine.Entities
 
 		public override void Draw(TwoDRenderer renderer)
 		{
-           // Rectangle test = new Rectangle(0, 0, 200, 200);
 			renderer.Draw(mTextures, new Vector3(Position, NormalZ));
 		}
 
