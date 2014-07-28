@@ -1,4 +1,5 @@
 ﻿using HanselAndGretel.Data;
+using KryptonEngine.Entities;
 using KryptonEngine.Manager;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -11,6 +12,11 @@ namespace KryptonEngine.AI
 {
 	public class AIManager
 	{
+		#region Singleton
+		public static AIManager Instance { get { if (instance == null) instance = new AIManager(); return instance; } }
+		private static AIManager instance;
+		#endregion
+
 		#region Properties
 
 		const float UPDATETIME = 500;
@@ -22,8 +28,7 @@ namespace KryptonEngine.AI
 
 		public List<Enemy> Agents;
 
-		//public Player TargetPlayer;
-		//public Player UntargetPlayer;
+		public List<InteractiveObject> MoveAreaInteractiveObjects;
 
 		private Vector2 TargetField;
 		private List<Node> OpenList;
@@ -31,15 +36,17 @@ namespace KryptonEngine.AI
 		#endregion
 
 		#region Constructor
-		public AIManager(Rectangle MapSize)
+		public AIManager()
 		{
-			FieldsWidth = MapSize.Width / GameReferenzes.RasterSize;
-			FieldsHeight = MapSize.Height / GameReferenzes.RasterSize;
-			Map = new int[FieldsWidth, FieldsHeight];
+			Initialize();
+		}
 
+		public void Initialize()
+		{
 			Agents = new List<Enemy>();
 			OpenList = new List<Node>();
 			ClosedList = new List<Node>();
+			MoveAreaInteractiveObjects = new List<InteractiveObject>();
 		}
 		#endregion
 
@@ -68,7 +75,7 @@ namespace KryptonEngine.AI
 		}
 
 		// Neuberechnung der Map nachdem die Scene gewechselt wurde
-		public void ChangeMap(Rectangle MapSize, int EdgeSize, List<Rectangle> MoveList)
+		public void ChangeMap(Rectangle MapSize, List<Rectangle> MoveList)
 		{
 			FieldsWidth = MapSize.Width / GameReferenzes.RasterSize;
 			FieldsHeight = MapSize.Height / GameReferenzes.RasterSize;
@@ -83,12 +90,46 @@ namespace KryptonEngine.AI
 			Agents = AgentList;
 		}
 
+		public void SetInterActiveObjects(List<InteractiveObject> iObj)
+		{
+			MoveAreaInteractiveObjects = iObj;
+		}
+
+		private void SetCollisionInteractiveObject()
+		{
+			Rectangle Raster = new Rectangle(0, 0, GameReferenzes.RasterSize, GameReferenzes.RasterSize);
+
+			for (int y = 0; y < FieldsHeight; y++)
+				for (int x = 0; x < FieldsWidth; x++)
+				{
+					Raster.X = x * GameReferenzes.RasterSize;
+					Raster.Y = y * GameReferenzes.RasterSize;
+
+				foreach(InteractiveObject iObj in MoveAreaInteractiveObjects)
+					foreach(Rectangle r in iObj.CollisionRectList)
+					{
+						if (r.Intersects(Raster))
+							{
+								Map[x, y] = -2;
+								continue;
+							}
+						}
+				}
+
+		}
+
 		public void Update()
 		{
 			currentUpdateTime += EngineSettings.Time.ElapsedGameTime.Milliseconds;
 			if (currentUpdateTime < UPDATETIME) return;
 
 			currentUpdateTime -= UPDATETIME;
+
+			for (int y = 0; y < FieldsHeight; y++)
+				for (int x = 0; x < FieldsWidth; x++)
+					if (Map[x, y] == -2)
+						Map[x, y] = 0;
+			SetCollisionInteractiveObject();
 
 			if (GameReferenzes.ReferenzHansel == null || GameReferenzes.ReferenzGretel == null) return;
 
@@ -99,6 +140,18 @@ namespace KryptonEngine.AI
 
 			foreach(Enemy e in Agents)
 			{
+				if(!e.IsAiActive)
+				{
+					int x = (int)(EngineSettings.VirtualResWidth / 2 - (EngineSettings.VirtualResWidth / GameReferenzes.GameCamera.Scale) / 2 + GameReferenzes.GameCamera.Position.X - EngineSettings.VirtualResWidth / 2);
+					if (x < 0) x = 0;
+					int y = (int)(EngineSettings.VirtualResHeight / 2 - (EngineSettings.VirtualResHeight / GameReferenzes.GameCamera.Scale) / 2 + GameReferenzes.GameCamera.Position.Y - EngineSettings.VirtualResHeight / 2);
+					if(y < 0) y = 0;
+					Rectangle ScreenView = new Rectangle(x, y, (int)(EngineSettings.VirtualResWidth / GameReferenzes.GameCamera.Scale), (int)(EngineSettings.VirtualResHeight / GameReferenzes.GameCamera.Scale));
+					if(ScreenView.Contains(e.PositionX, e.PositionY))
+						e.IsAiActive = true;
+				}
+				if (!e.IsAiActive) continue;
+
 				OpenList.Clear();
 				ClosedList.Clear();
 				
@@ -165,14 +218,14 @@ namespace KryptonEngine.AI
 					if (TargetField.X < 0) TargetField.X = 0;
 					if (TargetField.Y < 0) TargetField.Y = 0;
 
-					if (TargetField.X > FieldsWidth) TargetField.X = FieldsWidth - 2;
-					if (TargetField.Y > FieldsHeight) TargetField.Y = FieldsHeight - 2;
-				} while (Map[(int)TargetField.X, (int)TargetField.Y] == -1);
+					if (TargetField.X >= FieldsWidth) TargetField.X = FieldsWidth - 1;
+					if (TargetField.Y >= FieldsHeight) TargetField.Y = FieldsHeight - 1;
+				} while (Map[(int)TargetField.X, (int)TargetField.Y] == -1 || Map[(int)TargetField.X, (int)TargetField.Y] == -2 );
 				e.EscapePoint = TargetField;
 
 				CalculateWolfPath(StartPos,true);
+				ApplyPath(e);
 			}
-			ApplyPath(e);
 
 		}
 
@@ -187,8 +240,9 @@ namespace KryptonEngine.AI
 			{
 				CheckNextNodesWitch(GetNextNode());
 			} while (ClosedList[ClosedList.Count - 1].Position != TargetField && Map[(int)TargetField.X, (int)TargetField.Y] != -1
+			&& Map[(int)TargetField.X, (int)TargetField.Y] != -2
 			&& StartPos.X >= 0 && StartPos.Y >= 0 && StartPos.X < FieldsWidth && StartPos.Y < FieldsHeight
-			|| OpenList.Count == 0);
+			&& OpenList.Count != 0);
 		}
 
 		private void CalculateWolfPath(Vector2 StartPos, bool escaping)
@@ -197,8 +251,9 @@ namespace KryptonEngine.AI
 			{
 				CheckNextNodesWolf(GetNextNode(), escaping);
 			} while (ClosedList[ClosedList.Count - 1].Position != TargetField && Map[(int)TargetField.X, (int)TargetField.Y] != -1
-				&& StartPos.X >= 0 && StartPos.Y >= 0 && StartPos.X < FieldsWidth && StartPos.Y < FieldsHeight
-				&& OpenList.Count != 0 && ClosedList.Count < 500);
+			&& Map[(int)TargetField.X, (int)TargetField.Y] != -2
+			&& StartPos.X >= 0 && StartPos.Y >= 0 && StartPos.X < FieldsWidth && StartPos.Y < FieldsHeight
+			&& OpenList.Count != 0 && ClosedList.Count < 500);
 
 		}
 		
@@ -232,7 +287,7 @@ namespace KryptonEngine.AI
 					float estimatedCost = (Math.Abs(fieldX - (int)TargetField.X) + Math.Abs(fieldY - (int)TargetField.Y)) * 10;
 					Node newNode = new Node(n, new Vector2(fieldX, fieldY), estimatedCost);
 
-					if (Map[fieldX, fieldY] != -1)
+					if (Map[fieldX, fieldY] != -1 && Map[fieldX, fieldY] != -2)
 					{
 						bool NodeAvailable = false;
 						foreach(Node nodes in OpenList)
@@ -272,7 +327,7 @@ namespace KryptonEngine.AI
 					Node newNode = new Node(n, new Vector2(fieldX, fieldY), estimatedCost);
 
 
-					if (Map[fieldX, fieldY] != -1
+					if (Map[fieldX, fieldY] != -1 && Map[fieldX, fieldY] != -2
 						 || !(Vector2.Distance(new Vector2(fieldX, fieldY) * GameReferenzes.RasterSize, GameReferenzes.UntargetPlayer.Position) > GameReferenzes.LIGHT_RADIUS - 50.0f))
 					{
 						bool NodeAvailable = false;
