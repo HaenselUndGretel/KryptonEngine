@@ -1,4 +1,5 @@
-﻿using KryptonEngine.Entities;
+﻿using KryptonEngine;
+using KryptonEngine.Entities;
 using KryptonEngine.FModAudio;
 using KryptonEngine.Manager;
 using Microsoft.Xna.Framework;
@@ -40,7 +41,7 @@ namespace HanselAndGretel.Data
 
 		#region Getter & Setter
 		// Trigger kann wegfallen, da von GameObject erbt
-		//public Rectangle Trigger { get { return mTrigger; } set { mTrigger = value; } }
+		// public Rectangle Trigger { get { return mTrigger; } set { mTrigger = value; } }
 		public EEvent Event { get { return mEvent; } set { mEvent = value; } }
 		public int Target { get { return mIdToTrigger; } set { mIdToTrigger = value; } }
 		public bool IsAcitvated { get { return mActivated; } set { mActivated = value; } }
@@ -95,7 +96,11 @@ namespace HanselAndGretel.Data
 		{
 			//FmodMediaPlayer.Instance.AddSong("WitchSpawn");
 			//FmodMediaPlayer.Instance.FadeBackgroundChannelIn(WitchChannelIndex);
-			//level.Add(Witch)
+			Witch witch = new Witch("witch");
+			witch.Position = mWitchSpawnPosition;
+			witch.ApplySettings();
+			witch.IsAiActive = true;
+			GameReferenzes.Level.Enemies.Add(witch);
 		}
 		#endregion
 	}

@@ -1,4 +1,5 @@
-﻿using KryptonEngine.AI;
+﻿using KryptonEngine;
+using KryptonEngine.AI;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -19,6 +20,8 @@ namespace HanselAndGretel.Data
 		public int CurrentPath = 0;
 		[XmlIgnoreAttribute]
 		public float SlowFactor = 1.0f;
+		[XmlIgnoreAttribute]
+		public bool IsAiActive = false;
 		#endregion
 
 		#region Getter & Setter
@@ -40,6 +43,11 @@ namespace HanselAndGretel.Data
 
 		#region OverrideMethods
 
+		public override void Update()
+		{
+			base.Update();
+
+		}
 		#endregion
 
 		#region Methods

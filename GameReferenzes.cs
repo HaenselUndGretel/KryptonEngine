@@ -1,4 +1,5 @@
 ﻿using HanselAndGretel.Data;
+using KryptonEngine.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +23,12 @@ namespace KryptonEngine
 		public static Player UntargetPlayer;
 
 		public readonly static int RasterSize = 16;
+		public readonly static float DEATH_ZONE = 20.0f;
 		public static float LIGHT_RADIUS = 200.0f;
+
+		public static Camera GameCamera;
+
+		public static SceneData Level;
 		#endregion
 
 		public GameReferenzes()
