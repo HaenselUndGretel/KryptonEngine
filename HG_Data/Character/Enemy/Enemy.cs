@@ -13,6 +13,8 @@ namespace HanselAndGretel.Data
 	{
 		#region Properties
 		[XmlIgnoreAttribute]
+		public float CurrentAiUpdateTime = 0.0f;
+		[XmlIgnoreAttribute]
 		public Vector2 Destination = Vector2.Zero;
 		[XmlIgnoreAttribute]
 		public List<Node> Path;

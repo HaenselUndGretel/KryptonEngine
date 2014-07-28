@@ -19,8 +19,7 @@ namespace KryptonEngine.AI
 
 		#region Properties
 
-		const float UPDATETIME = 500;
-		float currentUpdateTime = 0;
+		const float UPDATETIME = 800;
 
 		protected int[,] Map;
 		protected int FieldsHeight;
@@ -120,10 +119,10 @@ namespace KryptonEngine.AI
 
 		public void Update()
 		{
-			currentUpdateTime += EngineSettings.Time.ElapsedGameTime.Milliseconds;
-			if (currentUpdateTime < UPDATETIME) return;
+			//currentUpdateTime += EngineSettings.Time.ElapsedGameTime.Milliseconds;
+			//if (currentUpdateTime < UPDATETIME) return;
 
-			currentUpdateTime -= UPDATETIME;
+			//currentUpdateTime -= UPDATETIME;
 
 			for (int y = 0; y < FieldsHeight; y++)
 				for (int x = 0; x < FieldsWidth; x++)
@@ -151,6 +150,11 @@ namespace KryptonEngine.AI
 						e.IsAiActive = true;
 				}
 				if (!e.IsAiActive) continue;
+
+				e.CurrentAiUpdateTime += EngineSettings.Time.ElapsedGameTime.Milliseconds;
+				if (e.CurrentAiUpdateTime < UPDATETIME) continue;
+
+				e.CurrentAiUpdateTime -= UPDATETIME;
 
 				OpenList.Clear();
 				ClosedList.Clear();
