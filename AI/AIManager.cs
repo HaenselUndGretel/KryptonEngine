@@ -119,10 +119,6 @@ namespace KryptonEngine.AI
 
 		public void Update()
 		{
-			//currentUpdateTime += EngineSettings.Time.ElapsedGameTime.Milliseconds;
-			//if (currentUpdateTime < UPDATETIME) return;
-
-			//currentUpdateTime -= UPDATETIME;
 
 			for (int y = 0; y < FieldsHeight; y++)
 				for (int x = 0; x < FieldsWidth; x++)
@@ -149,35 +145,41 @@ namespace KryptonEngine.AI
 					if(ScreenView.Contains(e.PositionX, e.PositionY))
 						e.IsAiActive = true;
 				}
+
 				if (!e.IsAiActive) continue;
 
 				e.CurrentAiUpdateTime += EngineSettings.Time.ElapsedGameTime.Milliseconds;
 				if (e.CurrentAiUpdateTime < UPDATETIME) continue;
-
 				e.CurrentAiUpdateTime -= UPDATETIME;
-
-				OpenList.Clear();
-				ClosedList.Clear();
 				
-				Vector2 FieldPosition = new Vector2(e.PositionX / GameReferenzes.RasterSize, e.PositionY / GameReferenzes.RasterSize);
-				OpenList.Add(new Node(FieldPosition));
+				UpdateEnemy(e);
+			}
+		}
 
-				if (e.GetType() == typeof(Witch))
-				{
-					CalculateWitchAI(e, FieldPosition);
-					ApplyPath(e);
-				}
+		private void UpdateEnemy(Enemy e)
+		{
 
-				if(e.GetType() == typeof(Wolf))
+			OpenList.Clear();
+			ClosedList.Clear();
+
+			Vector2 FieldPosition = new Vector2(e.PositionX / GameReferenzes.RasterSize, e.PositionY / GameReferenzes.RasterSize);
+			OpenList.Add(new Node(FieldPosition));
+
+			if (e.GetType() == typeof(Witch))
+			{
+				CalculateWitchAI(e, FieldPosition);
+				ApplyPath(e);
+			}
+
+			if (e.GetType() == typeof(Wolf))
+			{
+				Wolf w = (Wolf)e;
+				if (w.IsEscaping)
+					CalculateWolfAiEscape(w, FieldPosition);
+				else
 				{
-					Wolf w = (Wolf)e;
-					if (w.IsEscaping)
-						CalculateWolfAiEscape(w, FieldPosition);
-					else
-					{
-						CalculateWolfAiAttack(w, FieldPosition);
-						ApplyPath(w);
-					}
+					CalculateWolfAiAttack(w, FieldPosition);
+					ApplyPath(w);
 				}
 			}
 		}

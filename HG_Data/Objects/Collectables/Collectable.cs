@@ -1,4 +1,5 @@
 ﻿using KryptonEngine.Entities;
+using KryptonEngine.Manager;
 using KryptonEngine.Rendering;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -47,6 +48,12 @@ namespace HanselAndGretel.Data
 		{
 		}
 
+		public Collectable(string pName, string pShowTextureName)
+			: base(pName)
+		{
+			mShowTextureName = pShowTextureName;
+		}
+
 		public Collectable(String pTextureName, Vector2 pPosition)
 			:base(pTextureName)
 		{
@@ -57,6 +64,12 @@ namespace HanselAndGretel.Data
 
 		#region OverrideMethods
 
+		public override void LoadContent()
+		{
+			base.LoadContent();
+			mShowTexture = TextureManager.Instance.GetElementByString(mShowTextureName);
+		}
+
 		public override void Draw(SpriteBatch spriteBatch)
 		{
 			spriteBatch.Draw(Textures[0], Position, Color.White);
@@ -64,6 +77,7 @@ namespace HanselAndGretel.Data
 				spriteBatch.Draw(ShowTexture, Vector2.Zero, Color.White);
 
 		}
+
 		#endregion
 
 		#region Methods

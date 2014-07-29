@@ -36,6 +36,9 @@ namespace KryptonEngine.Entities
 		protected int mActionId;
 
 		protected ActivityState mActivityState;
+
+		protected InteractiveObject IoBlueprint; //DEUTLICH bessere Performance wenn nicht dauernd im Dictionary gesucht wird.
+
 		#endregion
 
 		#region Getter & Setter
@@ -76,29 +79,14 @@ namespace KryptonEngine.Entities
 		public override void LoadContent()
 		{
 			base.LoadContent();
-			//?Hier darf nicht aus der .iObj-Datei geladen werden da so die Serialisierung des IObj-States im Savegame zerstört wird?
-			/*
 			if (InteractiveObjectDataManager.Instance.HasElement(Name))
 			{
-				InteractiveObject io = InteractiveObjectDataManager.Instance.GetElementByString(Name);
-				this.ActionPosition1 = io.ActionPosition1;
-				this.ActionPosition2 = io.ActionPosition2;
-				this.ActionRectList = io.ActionRectList;
-				this.CollisionRectList = io.CollisionRectList;
-
-				if (CollisionRectList.Count > 0)
-					this.CollisionBox = this.CollisionRectList[0];
-			}
-			*/
-
-			if (InteractiveObjectDataManager.Instance.HasElement(Name))
-			{
-				InteractiveObject io = InteractiveObjectDataManager.Instance.GetElementByString(Name);
-				this.ActionPosition1 = io.ActionPosition1 + Position;
-				this.ActionPosition2 = io.ActionPosition2 + Position;
+				IoBlueprint = InteractiveObjectDataManager.Instance.GetElementByString(Name);
+				this.ActionPosition1 = IoBlueprint.ActionPosition1 + Position;
+				this.ActionPosition2 = IoBlueprint.ActionPosition2 + Position;
 				for (int i = 0; i < ActionRectList.Count; ++i)
 				{
-					ActionRectList[i] = io.ActionRectList[i];
+					ActionRectList[i] = IoBlueprint.ActionRectList[i];
 					Rectangle rect = ActionRectList[i];
 					rect.X += (int)Position.X;
 					rect.Y += (int)Position.Y;
@@ -106,7 +94,7 @@ namespace KryptonEngine.Entities
 				}
 				for (int i = 0; i < CollisionRectList.Count; ++i)
 				{ //Beim Player wird explizit die gesamte Liste übernommen
-					CollisionRectList[i] = io.CollisionRectList[i];
+					CollisionRectList[i] = IoBlueprint.CollisionRectList[i];
 					Rectangle rect = CollisionRectList[i];
 					rect.X += (int)Position.X;
 					rect.Y += (int)Position.Y;
@@ -166,7 +154,7 @@ namespace KryptonEngine.Entities
 
 		public void MoveInteractiveObject(Vector2 mDirection)
 		{
-			if (!InteractiveObjectDataManager.Instance.HasElement(Name)) return;
+			if (IoBlueprint == null) return;
 
 			if (mDirection == Vector2.Zero) return;
 			//if (mDirection != Vector2.Zero)
@@ -178,16 +166,14 @@ namespace KryptonEngine.Entities
 			Position += mDirection;
 			NormalZ = (SkeletonPosition.Y - DrawZ) / 4096; //Damit z.B. bewegliche Steine und Spieler den richtigen Tiefenwert haben
 
-			InteractiveObject io = InteractiveObjectDataManager.Instance.GetElementByString(Name);
-
 			for (int i = 0; i < mActionRectList.Count; i++)
-				mActionRectList[i] = new Rectangle((int)(this.SkeletonPosition.X + io.mActionRectList[i].X), (int)(this.SkeletonPosition.Y + io.mActionRectList[i].Y), io.mActionRectList[i].Width, io.mActionRectList[i].Height);
+				mActionRectList[i] = new Rectangle((int)(this.SkeletonPosition.X + IoBlueprint.mActionRectList[i].X), (int)(this.SkeletonPosition.Y + IoBlueprint.mActionRectList[i].Y), IoBlueprint.mActionRectList[i].Width, IoBlueprint.mActionRectList[i].Height);
 
 			for (int i = 0; i < mCollisionRectList.Count; i++)
-				mCollisionRectList[i] = new Rectangle((int)(this.SkeletonPosition.X + io.mCollisionRectList[i].X), (int)(this.SkeletonPosition.Y + io.mCollisionRectList[i].Y), io.mCollisionRectList[i].Width, io.mCollisionRectList[i].Height);
+				mCollisionRectList[i] = new Rectangle((int)(this.SkeletonPosition.X + IoBlueprint.mCollisionRectList[i].X), (int)(this.SkeletonPosition.Y + IoBlueprint.mCollisionRectList[i].Y), IoBlueprint.mCollisionRectList[i].Width, IoBlueprint.mCollisionRectList[i].Height);
 
-			this.mActionPosition1 = io.ActionPosition1 + this.SkeletonPosition;
-			this.mActionPosition2 = io.ActionPosition2 + this.SkeletonPosition; 
+			this.mActionPosition1 = IoBlueprint.ActionPosition1 + this.SkeletonPosition;
+			this.mActionPosition2 = IoBlueprint.ActionPosition2 + this.SkeletonPosition; 
 
 			if(mCollisionRectList.Count > 0)
 				this.CollisionBox = mCollisionRectList[0];
