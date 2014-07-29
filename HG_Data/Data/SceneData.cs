@@ -155,6 +155,8 @@ namespace HanselAndGretel.Data
 				pSpriteBatch.Draw(pixel, light.CollisionBox, Color.Thistle * 0.5f);
 			foreach (EventTrigger trigger in Events)
 				pSpriteBatch.Draw(pixel, trigger.CollisionBox, Color.Thistle * 0.5f);
+			foreach (Collectable col in Collectables)
+				pSpriteBatch.Draw(pixel, col.CollisionBox, Color.DarkGreen * 0.5f);
 		}
 
 		#endregion

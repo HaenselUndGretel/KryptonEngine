@@ -8,6 +8,23 @@ namespace HanselAndGretel.Data
 {
 	public class Lantern : Collectable
 	{
+		public Lantern()
+			:base()
+		{
+
+		}
+
+		public Lantern(string pName)
+			:base(pName)
+		{
+
+		}
+
+		public Lantern(string pName, string pShowTextureName)
+			:base(pName, pShowTextureName)
+		{
+
+		}
 
 	}
 }
