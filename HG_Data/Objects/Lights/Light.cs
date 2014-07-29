@@ -1,4 +1,5 @@
-﻿using KryptonEngine.Entities;
+﻿using KryptonEngine;
+using KryptonEngine.Entities;
 using KryptonEngine.Manager;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -20,6 +21,15 @@ namespace HanselAndGretel.Data
 		protected Vector3 mColor;
 
 		protected List<Vector2> mCircleSize;
+
+		public bool LightFading;
+		public Vector3 FadingLightColor;
+		public int FadingDuration;
+
+		protected float mCurrentFading;
+		public Vector3 StartColor;
+
+		protected bool fadeMax;
 		#endregion
 
 		#region Getter & Setter
@@ -47,9 +57,31 @@ namespace HanselAndGretel.Data
 
 		#region Override Methods
 
+		public override void Update()
+		{
+			Fade();
+			base.Update();
+		}
+
 		public override string GetInfo()
 		{
 			return base.GetInfo();
+		}
+
+		private void Fade()
+		{
+			if (LightFading)
+			{
+				if (FadingDuration == 0)
+					FadingDuration = 1;
+
+				float lerpFactor = Math.Abs((float)Math.Sin(EngineSettings.Time.TotalGameTime.TotalMilliseconds * (1.0f / (float)FadingDuration)));
+
+				float X = MathHelper.Lerp(StartColor.X, FadingLightColor.X, lerpFactor);
+				float Y = MathHelper.Lerp(StartColor.Y, FadingLightColor.Y, lerpFactor);
+				float Z = MathHelper.Lerp(StartColor.Z, FadingLightColor.Z, lerpFactor);
+				LightColor = new Vector3(X, Y, Z);
+			}
 		}
 		#endregion
 
