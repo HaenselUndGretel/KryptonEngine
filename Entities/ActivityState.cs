@@ -21,7 +21,7 @@ namespace KryptonEngine.Entities
 		PushDoor,
 		PullDoor,
 		UseWell,
-		UseItem
+		UseAmulet
 	};
 
 	public enum OldActivity
@@ -59,7 +59,7 @@ namespace KryptonEngine.Entities
 		public bool IsAvailable;
 
 		/// <summary>
-		/// Free -> Caught. KnockOver -> BalanceOver. UseKey -> PullDoor. PullDoor -> None. PushRock -> None.
+		/// Free -> Caught. KnockOver -> BalanceOver. UseKey -> PullDoor. PullDoor -> None. PushRock -> None. UseAmulet -> UsedAmulet.
 		/// </summary>
 		public bool m2ndState;
 
