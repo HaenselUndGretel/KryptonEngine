@@ -15,6 +15,19 @@ namespace HanselAndGretel.Data
 	{
 		#region Properties
 
+		#region AnimationMapping
+
+		protected const string Anim_Idle = "idle";
+		protected const string Anim_Walk = "walk";
+		protected const string Anim_Addon_Walk_Up = "Up";
+		protected const string Anim_Addon_Walk_Down = "Down";
+		protected const string Anim_Addon_Walk_Side = "Side";
+		protected const string Anim_Addon_Walk_SideUp = "SideUp";
+		protected const string Anim_Addon_Walk_SideDown = "SideDown";
+		protected const string Anim_Addon_Shiver = "Shiver";
+
+		#endregion
+
 		protected float mSpeed;
 		protected float mBodyTemperature;
 
@@ -97,7 +110,7 @@ namespace HanselAndGretel.Data
 		public void AnimCutToIdle()
 		{
 			AnimationState.ClearTracks();
-			AnimationState.SetAnimation(0, "idle", true);
+			AnimationState.SetAnimation(0, Anim_Idle, true);
 		}
 
 		/// <summary>
@@ -111,7 +124,7 @@ namespace HanselAndGretel.Data
 				SetAnimation();
 				return;
 			}
-			string TmpAnimation;
+			string TmpAnimation = Anim_Walk;
 			Vector2 TmpMovement = pMovement;
 			TmpMovement.Normalize();
 			//Flip?
@@ -120,19 +133,21 @@ namespace HanselAndGretel.Data
 			else if (TmpMovement.X < 0)
 				Flip = false;
 			//Get correct Animation
-			//if (TmpMovement.Y > Math.Sin(67.5)) //Hoch
-			//	TmpAnimation = "walkUp";
-			//else if (TmpMovement.Y > Math.Sin(22.5)) //Seitlich hoch
-			//	TmpAnimation = "walkSideUp";
-			//else if (TmpMovement.Y > -Math.Sin(22.5)) //Seitlich
-			//	TmpAnimation = "walkSide";
-			//else if (TmpMovement.Y > -Math.Sin(67.5)) //Seitlich runter
-			//	TmpAnimation = "walkSideDown";
-			//else //Runter
-			//	TmpAnimation = "WalkDown";
-			TmpAnimation = "idle";
+			/*
+			if (TmpMovement.Y > Math.Sin(67.5)) //Hoch
+				TmpAnimation += Anim_Addon_Walk_Up;
+			else if (TmpMovement.Y > Math.Sin(22.5)) //Seitlich hoch
+				TmpAnimation += Anim_Addon_Walk_SideUp;
+			else if (TmpMovement.Y > -Math.Sin(22.5)) //Seitlich
+				TmpAnimation += Anim_Addon_Walk_Side;
+			else if (TmpMovement.Y > -Math.Sin(67.5)) //Seitlich runter
+				TmpAnimation += Anim_Addon_Walk_SideDown;
+			else //Runter
+				TmpAnimation += Anim_Addon_Walk_Down;
+			*/
+			TmpAnimation = Anim_Idle; //
 			if (mBodyTemperature < 1f)
-				TmpAnimation += "";//"Shiver";
+				TmpAnimation += "";//Anim_Addon_Shiver;
 			SetAnimation(TmpAnimation);
 		}
 
