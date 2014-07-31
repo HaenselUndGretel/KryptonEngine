@@ -126,6 +126,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rendering\Components\FPSCounter.cs" />
     <Compile Include="Rendering\Components\GBuffer.cs" />
+    <Compile Include="Rendering\Components\MeshData.cs" />
     <Compile Include="Rendering\Components\QuadRenderer.cs" />
     <Compile Include="Rendering\Components\SpriteData.cs" />
     <Compile Include="Rendering\Core\BaseRenderer.cs" />
