@@ -156,7 +156,7 @@ namespace KryptonEngine.Entities
 		{
 			if (IoBlueprint == null) return;
 
-			if (mDirection == Vector2.Zero) return;
+			//if (mDirection == Vector2.Zero) return; Darf nicht gemacht werden da diese Methode mit Vecor2.Zero verwendet wird um alles passend zu setzen...
 			//if (mDirection != Vector2.Zero)
 				//Console.WriteLine("Größer 0");
 
