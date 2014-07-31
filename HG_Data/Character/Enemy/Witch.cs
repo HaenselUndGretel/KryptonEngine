@@ -1,4 +1,5 @@
 ﻿using KryptonEngine;
+using KryptonEngine.FModAudio;
 using KryptonEngine.Manager;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -35,6 +36,15 @@ namespace HanselAndGretel.Data
 		public override void Update()
 		{
 			base.Update();
+
+			mSoundCountdown += EngineSettings.Time.ElapsedGameTime.Milliseconds;
+
+			if (mSoundCountdown > SOUND_COOLDOWN)
+			{
+				int number = EngineSettings.Randomizer.Next(1, 5);
+				FmodMediaPlayer.Instance.AddSong("ghost_groan_0" + number);
+				mSoundCountdown -= SOUND_COOLDOWN;
+			}
 
 			if (Path == null || CurrentPath == -1) return;
 

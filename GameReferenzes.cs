@@ -29,6 +29,23 @@ namespace KryptonEngine
 		public static Camera GameCamera;
 
 		public static SceneData Level;
+
+		public static List<String> ForestTheme = new List<String>() { "MusicForest0", "MusicForest1", "MusicForest2", "MusicForest3" };
+		public static List<String> HouseTheme = new List<String>() { "MusicHouse0", "MusicHouse1", "MusicHouse2", "MusicHouse3", "MusicHouse4" };
+		public static List<String> MountainsTheme = new List<String>() { "MusicMountains0", "MusicMountains1", "MusicMountains2", "MusicMountains3" };
+		public static List<String> MainTheme = new List<String>(){"MusicMainTheme"};
+
+		public static List<String> GetBackgroundMusic()
+		{
+			switch(Level.BackgroundSoundSetting)
+			{
+				case SoundSetting.Forest: return ForestTheme;
+				case SoundSetting.Inside: return HouseTheme;
+				case SoundSetting.Mountain: return MountainsTheme;
+				default: return ForestTheme;
+			}
+		}
+
 		#endregion
 
 		public GameReferenzes()

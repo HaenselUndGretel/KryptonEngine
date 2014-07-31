@@ -24,6 +24,9 @@ namespace HanselAndGretel.Data
 		public float SlowFactor = 1.0f;
 		[XmlIgnoreAttribute]
 		public bool IsAiActive = false;
+
+		protected const float SOUND_COOLDOWN = 15000.0f;
+		protected float mSoundCountdown = 15000;
 		#endregion
 
 		#region Getter & Setter

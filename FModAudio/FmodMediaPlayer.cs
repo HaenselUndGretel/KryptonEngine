@@ -56,6 +56,10 @@ namespace KryptonEngine.FModAudio
 		// Setzt die Hintergrund Musik. Muss gemacht werden sobald die Scene gewechselt wird und in der neuen Scene ein anderes SoundSetting ist.
 		public void SetBackgroundSong(List<string> pMusicList)
 		{
+			if (BackgroundSong != null)
+				for (int i = 0; i < BackgroundSong.MaxChannelCount; i++)
+					BackgroundSong.Channel[i].setVolume(0.0f);
+
 			BackgroundSong = new FModSong(pMusicList);
 			BackgroundSong.StartSong();
 			FadeBackgroundIn();
