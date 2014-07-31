@@ -124,31 +124,43 @@ namespace HanselAndGretel.Data
 				SetAnimation();
 				return;
 			}
-			string TmpAnimation = Anim_Walk;
 			Vector2 TmpMovement = pMovement;
-			TmpMovement.Normalize();
-			//Flip?
-			if (TmpMovement.X > 0)
-				Flip = true;
-			else if (TmpMovement.X < 0)
-				Flip = false;
-			//Get correct Animation
-			/*
-			if (TmpMovement.Y > Math.Sin(67.5)) //Hoch
-				TmpAnimation += Anim_Addon_Walk_Up;
-			else if (TmpMovement.Y > Math.Sin(22.5)) //Seitlich hoch
-				TmpAnimation += Anim_Addon_Walk_SideUp;
-			else if (TmpMovement.Y > -Math.Sin(22.5)) //Seitlich
-				TmpAnimation += Anim_Addon_Walk_Side;
-			else if (TmpMovement.Y > -Math.Sin(67.5)) //Seitlich runter
-				TmpAnimation += Anim_Addon_Walk_SideDown;
-			else //Runter
-				TmpAnimation += Anim_Addon_Walk_Down;
-			*/
-			TmpAnimation = Anim_Idle; //
+			SetSkeletonFlipState(this, TmpMovement);
+			string TmpAnimation = Anim_Walk + GetRightDirectionAnimation(TmpMovement, Anim_Addon_Walk_Up, Anim_Addon_Walk_Down, Anim_Addon_Walk_Side, Anim_Addon_Walk_Up, Anim_Addon_Walk_Down);
 			if (mBodyTemperature < 1f)
 				TmpAnimation += "";//Anim_Addon_Shiver;
+
+			TmpAnimation = Anim_Idle;//
+
 			SetAnimation(TmpAnimation);
+		}
+
+		public static string GetRightDirectionAnimation(Vector2 pDirection, string pAnimUp, string pAnimDown, string pAnimSide, string pAnimSideUp, string pAnimSideDown)
+		{
+			pDirection.Normalize();
+			string anim = "";
+			
+			if (pDirection.Y > Math.Sin(67.5)) //Hoch
+				anim = pAnimUp;
+			else if (pDirection.Y > Math.Sin(22.5)) //Seitlich hoch
+				anim = pAnimSideUp;
+			else if (pDirection.Y > -Math.Sin(22.5)) //Seitlich
+				anim = pAnimSide;
+			else if (pDirection.Y > -Math.Sin(67.5)) //Seitlich runter
+				anim = pAnimSideDown;
+			else //Runter
+				anim = pAnimDown;
+
+			return anim;
+		}
+
+		public static void SetSkeletonFlipState(SpineObject pSpineObj, Vector2 pAnimDirection)
+		{
+			pAnimDirection.Normalize();
+			if (pAnimDirection.X > 0)
+				pSpineObj.Flip = true;
+			else if (pAnimDirection.X < 0)
+				pSpineObj.Flip = false;
 		}
 
 		#endregion

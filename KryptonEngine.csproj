@@ -90,7 +90,6 @@
     <Compile Include="HG_Data\Character\Character.cs" />
     <Compile Include="HG_Data\Character\Enemy\Enemy.cs" />
     <Compile Include="HG_Data\Character\Enemy\Mother.cs" />
-    <Compile Include="HG_Data\Character\Enemy\Spider.cs" />
     <Compile Include="HG_Data\Character\Enemy\Witch.cs" />
     <Compile Include="HG_Data\Character\Enemy\Wolf.cs" />
     <Compile Include="HG_Data\Character\Player\Gretel.cs" />
