@@ -25,17 +25,19 @@ namespace HanselAndGretel.Data
 		public bool LightFading;
 		public Vector3 FadingLightColor;
 		public int FadingDuration;
-
-		protected float mCurrentFading;
 		public Vector3 StartColor;
 
-		protected bool fadeMax;
+		public bool IsLightMoving;
+		public int MoveSpeed;
+		public int MaxHeight;
+		public int MinHeight;
+		private float DepthStandart;
 		#endregion
 
 		#region Getter & Setter
 
 		public float Intensity { get { return mIntensity; } set { mIntensity = value; } }
-		public float Depth { get { return mDepth; } set {mDepth = value;} }
+		public float Depth { get { return mDepth; } set { mDepth = value; DepthStandart = value; } }
 		public Vector3 LightColor { get { return mColor; } set { mColor = value; } }
 		#endregion
 
@@ -60,32 +62,42 @@ namespace HanselAndGretel.Data
 		public override void Update()
 		{
 			Fade();
+			Move();
 			base.Update();
 		}
 
-		public override string GetInfo()
-		{
-			return base.GetInfo();
-		}
 
-		private void Fade()
-		{
-			if (LightFading)
-			{
-				if (FadingDuration == 0)
-					FadingDuration = 1;
-
-				float lerpFactor = Math.Abs((float)Math.Sin(EngineSettings.Time.TotalGameTime.TotalMilliseconds * (1.0f / (float)FadingDuration)));
-
-				float X = MathHelper.Lerp(StartColor.X, FadingLightColor.X, lerpFactor);
-				float Y = MathHelper.Lerp(StartColor.Y, FadingLightColor.Y, lerpFactor);
-				float Z = MathHelper.Lerp(StartColor.Z, FadingLightColor.Z, lerpFactor);
-				LightColor = new Vector3(X, Y, Z);
-			}
-		}
 		#endregion
 
 		#region Methods
+
+		private void Fade()
+		{
+			if (!LightFading) return;
+			
+			if (FadingDuration == 0)
+				FadingDuration = 1;
+
+			float lerpFactor = ((float)Math.Sin(EngineSettings.Time.TotalGameTime.TotalMilliseconds * (1.0f / (float)FadingDuration)) + 1) / 2.0f;
+			
+			float X = MathHelper.Lerp(StartColor.X, FadingLightColor.X, lerpFactor);
+			float Y = MathHelper.Lerp(StartColor.Y, FadingLightColor.Y, lerpFactor);
+			float Z = MathHelper.Lerp(StartColor.Z, FadingLightColor.Z, lerpFactor);
+			LightColor = new Vector3(X, Y, Z);
+
+		}
+
+		private void Move()
+		{
+			if (!IsLightMoving) return;
+
+			if (MoveSpeed == 0)
+				FadingDuration = 1;
+
+			float lerpFactor = ((float)Math.Sin(EngineSettings.Time.TotalGameTime.TotalMilliseconds * (1.0f / (float)MoveSpeed)) +  1) / 2.0f;
+
+			mDepth = (Math.Abs(MinHeight - MaxHeight) / 1000.0f) * lerpFactor + MinHeight / 1000.0f;
+		}
 
 		protected void DrawPartCircel(SpriteBatch spriteBatch,float radius, float startAngel, float endAngel, Vector2 pos)
 		{

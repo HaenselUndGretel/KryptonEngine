@@ -18,6 +18,15 @@ namespace KryptonEngine.Rendering
     public class TwoDRenderer : BaseRenderer 
     {
         #region Properties
+
+        private const int TL = 0;
+        private const int TR = 1;
+        private const int BL = 2;
+        private const int BR = 3;
+
+        float[] vertices = new float[8];
+        int[] quadIndecies = { 0, 1, 2, 1, 3, 2 };
+
         private Batch mBatch;
 
         private GraphicsDevice mGraphicsDevice;
@@ -32,10 +41,13 @@ namespace KryptonEngine.Rendering
         private Effect mDraw,mMRTDraw,mSingelDraw;
         private Effect mLightShader;
         private Effect mCombineShader;
-
+        private Effect mClearLightAndShadow;
 
         private RenderTarget2D mLightTarget;
         private RenderTarget2D mFinalTarget;
+        private RenderTarget2D mShadowTarget;
+        private RenderTarget2D mShadowPositionTarget;
+        private RenderTarget2D mShadowUV;
 
         private GBuffer mGBuffer;
 
@@ -125,6 +137,9 @@ namespace KryptonEngine.Rendering
 
             this.mLightTarget = new RenderTarget2D(this.mGraphicsDevice, pWidth, pHeight, false, SurfaceFormat.Color, DepthFormat.None);
             this.mFinalTarget = new RenderTarget2D(this.mGraphicsDevice, pWidth, pHeight, false, SurfaceFormat.Color, DepthFormat.None);
+            this.mShadowTarget = new RenderTarget2D(this.mGraphicsDevice, pWidth, pHeight, false, SurfaceFormat.Color, DepthFormat.None);
+            this.mShadowPositionTarget = new RenderTarget2D(this.mGraphicsDevice, pWidth, pHeight, false, SurfaceFormat.Color, DepthFormat.None);
+            this.mShadowUV = new RenderTarget2D(this.mGraphicsDevice, pWidth, pHeight, false, SurfaceFormat.Color, DepthFormat.None);
 
             this.mView  = Matrix.CreateLookAt(new Vector3(0.0f, 0.0f, 1.0f), Vector3.Zero, Vector3.Up);
             this.mTranslatetViewMatrix = this.mView;
@@ -153,6 +168,7 @@ namespace KryptonEngine.Rendering
             this.mCombineShader = KryptonEngine.Manager.ShaderManager.Instance.GetElementByString("CombineShader");
             this.mSingelDraw = KryptonEngine.Manager.ShaderManager.Instance.GetElementByString("Singel");
             this.mMRTDraw = KryptonEngine.Manager.ShaderManager.Instance.GetElementByString("MRT");
+            this.mClearLightAndShadow = KryptonEngine.Manager.ShaderManager.Instance.GetElementByString("ClearLS");
 
             this.mGBuffer.LoadContent();
         }
@@ -269,7 +285,7 @@ namespace KryptonEngine.Rendering
         private void InternalDraw(Texture2D[] pTextureArray, Vector4 pDestination, ref Rectangle sourceRectangel)
         {
             if (!isBegin) throw new Exception("Beginn muss vor Draw aufgerufen werden!");
-            SpriteData item = this.mBatch.createBatchItem();
+            MeshData item = this.mBatch.NextItem(4,6);
 
             float scale = pDestination.W;
             int rectWidth = (int)(sourceRectangel.Width );
@@ -283,38 +299,31 @@ namespace KryptonEngine.Rendering
 
 
             item.TextureID = this.mBatch.AddTextures(pTextureArray);
-
-            
-
-            item.vertexTL.Position.X = pDestination.X;
-            item.vertexTL.Position.Y = pDestination.Y;
-            item.vertexTL.Position.Z = pDestination.Z;
-
-            item.vertexTR.Position.X = pDestination.X + rectWidth*scale;
-            item.vertexTR.Position.Y = pDestination.Y;
-            item.vertexTR.Position.Z = pDestination.Z;
+            item.triangles = quadIndecies;
 
 
-            item.vertexBL.Position.X = pDestination.X;
-            item.vertexBL.Position.Y = pDestination.Y + rectHeight*scale;
-            item.vertexBL.Position.Z = pDestination.Z;
+            item.vertices[TL].Position.X = pDestination.X;
+            item.vertices[TL].Position.Y = pDestination.Y;
+            item.vertices[TL].Position.Z = pDestination.Z;
+            item.vertices[TR].Position.X = pDestination.X + rectWidth * scale;
+            item.vertices[TR].Position.Y = pDestination.Y;
+            item.vertices[TR].Position.Z = pDestination.Z;
+            item.vertices[BL].Position.X = pDestination.X;
+            item.vertices[BL].Position.Y = pDestination.Y + rectHeight * scale;
+            item.vertices[BL].Position.Z = pDestination.Z;
+            item.vertices[BR].Position.X = pDestination.X + rectWidth * scale;
+            item.vertices[BR].Position.Y = pDestination.Y + rectHeight * scale;
+            item.vertices[BR].Position.Z = pDestination.Z;
 
-            item.vertexBR.Position.X = pDestination.X + rectWidth * scale;
-            item.vertexBR.Position.Y = pDestination.Y + rectHeight * scale;
-            item.vertexBR.Position.Z = pDestination.Z;
 
-
-            item.vertexTL.TextureCoordinate.X = sourceRectangel.Location.X*texelWidth;
-            item.vertexTL.TextureCoordinate.Y = sourceRectangel.Location.Y*texelHeight;
-
-            item.vertexTR.TextureCoordinate.X = (sourceRectangel.Location.X * texelWidth) + (rectWidth * texelWidth);
-            item.vertexTR.TextureCoordinate.Y = sourceRectangel.Location.Y * texelHeight;
-
-            item.vertexBL.TextureCoordinate.X = sourceRectangel.Location.X * texelWidth;
-            item.vertexBL.TextureCoordinate.Y = (sourceRectangel.Location.Y * texelHeight) + (rectHeight * texelHeight);
-
-            item.vertexBR.TextureCoordinate.X = (sourceRectangel.Location.X * texelWidth) + (rectWidth * texelWidth);
-            item.vertexBR.TextureCoordinate.Y = (sourceRectangel.Location.Y * texelHeight) + (rectHeight * texelHeight);
+            item.vertices[TL].TextureCoordinate.X = sourceRectangel.Location.X * texelWidth;
+            item.vertices[TL].TextureCoordinate.Y = sourceRectangel.Location.Y * texelHeight;
+            item.vertices[TR].TextureCoordinate.X = (sourceRectangel.Location.X * texelWidth) + (rectWidth * texelWidth);
+            item.vertices[TR].TextureCoordinate.Y = sourceRectangel.Location.Y * texelHeight;
+            item.vertices[BL].TextureCoordinate.X = sourceRectangel.Location.X * texelWidth;
+            item.vertices[BL].TextureCoordinate.Y = (sourceRectangel.Location.Y * texelHeight) + (rectHeight * texelHeight);
+            item.vertices[BR].TextureCoordinate.X = (sourceRectangel.Location.X * texelWidth) + (rectWidth * texelWidth);
+            item.vertices[BR].TextureCoordinate.Y = (sourceRectangel.Location.Y * texelHeight) + (rectHeight * texelHeight);
 
 
             //if ( textId == -1) 
@@ -329,50 +338,112 @@ namespace KryptonEngine.Rendering
         private void InternalDraw(Skeleton pSkeleton,Texture2D[] pTextureArray,float pDepth ,float scale)
         {
             if (!isBegin) throw new Exception("Beginn muss vor Draw aufgerufen werden!");
+            
+            float[] vertices = this.mSkeletonVertecies;
             List<Slot> drawOrder = pSkeleton.DrawOrder;
             float x = pSkeleton.X, y = pSkeleton.Y;
 			int textId =  this.mBatch.AddTextures(pTextureArray);
-            float orderDepth = 0.00000000001f;
+           
             for (int i = 0, n = drawOrder.Count; i < n; i++)
             {
                 Slot slot = drawOrder[i];
-                RegionAttachment regionAttachment = slot.Attachment as RegionAttachment;
-                if (regionAttachment != null)
-                {
-                  
-                    SpriteData item = this.mBatch.createBatchItem();
-                    AtlasRegion region = (AtlasRegion)regionAttachment.RendererObject;
-                   // pTextureArray[0] = pTextureArray[0] != (Texture2D)region.page.rendererObject ?  (Texture2D)region.page.rendererObject : pTextureArray[0];
+                Attachment attachment = slot.Attachment;
 
-                    float[] vertices = this.mSkeletonVertecies;
+                if (attachment is RegionAttachment)
+                {
+
+                    RegionAttachment regionAttachment = (RegionAttachment)attachment;
+
+                    MeshData item = this.mBatch.NextItem(4, 6);
+
+                    item.triangles = quadIndecies;
+
+                    AtlasRegion region = (AtlasRegion)regionAttachment.RendererObject;                
                     regionAttachment.ComputeWorldVertices(x, y, slot.Bone, vertices);
-                    item.vertexTL.Position.X = vertices[RegionAttachment.X1];
-                    item.vertexTL.Position.Y = vertices[RegionAttachment.Y1];
-					item.vertexTL.Position.Z = pDepth;// -orderDepth * (n - (i + 1));
-                    item.vertexBL.Position.X = vertices[RegionAttachment.X2];
-                    item.vertexBL.Position.Y = vertices[RegionAttachment.Y2];
-					item.vertexBL.Position.Z = pDepth;// -orderDepth * (n - (i + 1));
-                    item.vertexBR.Position.X = vertices[RegionAttachment.X3];
-                    item.vertexBR.Position.Y = vertices[RegionAttachment.Y3];
-					item.vertexBR.Position.Z = pDepth;// -orderDepth * (n - (i + 1));
-                    item.vertexTR.Position.X = vertices[RegionAttachment.X4];
-                    item.vertexTR.Position.Y = vertices[RegionAttachment.Y4];
-					item.vertexTR.Position.Z = pDepth;// -orderDepth * (n - (i + 1));
+
+                    
+ 
+                    item.vertices[TL].Position.X = vertices[RegionAttachment.X1];
+                    item.vertices[TL].Position.Y = vertices[RegionAttachment.Y1];
+					item.vertices[TL].Position.Z = pDepth;// -orderDepth * (n - (i + 1));
+                    item.vertices[BL].Position.X = vertices[RegionAttachment.X2];
+                    item.vertices[BL].Position.Y = vertices[RegionAttachment.Y2];
+                    item.vertices[BL].Position.Z = pDepth;// -orderDepth * (n - (i + 1));
+                    item.vertices[BR].Position.X = vertices[RegionAttachment.X3];
+                    item.vertices[BR].Position.Y = vertices[RegionAttachment.Y3];
+                    item.vertices[BR].Position.Z = pDepth;// -orderDepth * (n - (i + 1));
+                    item.vertices[TR].Position.X = vertices[RegionAttachment.X4];
+                    item.vertices[TR].Position.Y = vertices[RegionAttachment.Y4];
+                    item.vertices[TR].Position.Z = pDepth;// -orderDepth * (n - (i + 1));
 
                     float[] uvs = regionAttachment.UVs;
-                    item.vertexTL.TextureCoordinate.X = uvs[RegionAttachment.X1];
-                    item.vertexTL.TextureCoordinate.Y = uvs[RegionAttachment.Y1];
-                    item.vertexBL.TextureCoordinate.X = uvs[RegionAttachment.X2];
-                    item.vertexBL.TextureCoordinate.Y = uvs[RegionAttachment.Y2];
-                    item.vertexBR.TextureCoordinate.X = uvs[RegionAttachment.X3];
-                    item.vertexBR.TextureCoordinate.Y = uvs[RegionAttachment.Y3];
-                    item.vertexTR.TextureCoordinate.X = uvs[RegionAttachment.X4];
-                    item.vertexTR.TextureCoordinate.Y = uvs[RegionAttachment.Y4];
+                    item.vertices[TL].TextureCoordinate.X = uvs[RegionAttachment.X1];
+                    item.vertices[TL].TextureCoordinate.Y = uvs[RegionAttachment.Y1];
+                    item.vertices[BL].TextureCoordinate.X = uvs[RegionAttachment.X2];
+                    item.vertices[BL].TextureCoordinate.Y = uvs[RegionAttachment.Y2];
+                    item.vertices[BR].TextureCoordinate.X = uvs[RegionAttachment.X3];
+                    item.vertices[BR].TextureCoordinate.Y = uvs[RegionAttachment.Y3];
+                    item.vertices[TR].TextureCoordinate.X = uvs[RegionAttachment.X4];
+                    item.vertices[TR].TextureCoordinate.Y = uvs[RegionAttachment.Y4];
 
                     item.TextureID = textId;
-                    orderDepth += 0.00001f;
                 }
+                else if(attachment is MeshAttachment)
+                {
+                    MeshAttachment mesh = (MeshAttachment)attachment;
 
+                    int vertexCount = mesh.Vertices.Length;
+                    if (vertices.Length < vertexCount) vertices = new float[vertexCount];
+
+                    mesh.ComputeWorldVertices(x, y, slot, vertices);
+
+                    int[] triangles = mesh.triangles;
+                    MeshData item = mBatch.NextItem(vertexCount, triangles.Length);
+
+                    item.triangles = triangles;
+                    item.TextureID = textId;
+
+                    AtlasRegion region = (AtlasRegion)mesh.RendererObject;
+
+                    float[] uvs = mesh.UVs;
+                    VertexPositionTexture[] itemVertices = item.vertices;
+
+                    for (int ii = 0, v = 0; v < vertexCount; ii++, v += 2)
+                    {
+                        itemVertices[ii].Position.X = vertices[v];
+                        itemVertices[ii].Position.Y = vertices[v + 1];
+                        itemVertices[ii].Position.Z = pDepth;
+                        itemVertices[ii].TextureCoordinate.X = uvs[v];
+                        itemVertices[ii].TextureCoordinate.Y = uvs[v + 1];
+                    }
+
+                }
+                else if(attachment is SkinnedMeshAttachment)
+                {
+                    SkinnedMeshAttachment mesh = (SkinnedMeshAttachment)attachment;
+                    int vertexCount = mesh.UVs.Length;
+                    if (vertices.Length < vertexCount) vertices = new float[vertexCount];
+                    mesh.ComputeWorldVertices(x, y, slot, vertices);
+
+                    int[] triangles = mesh.Triangles;
+                    MeshData item = mBatch.NextItem(vertexCount, triangles.Length);
+                    item.triangles = triangles;
+                    item.TextureID = textId;
+
+
+                    float[] uvs = mesh.UVs;
+                    VertexPositionTexture[] itemVertices = item.vertices;
+                    for (int ii = 0, v = 0; v < vertexCount; ii++, v += 2)
+                    {
+                        
+                        itemVertices[ii].Position.X = vertices[v];
+                        itemVertices[ii].Position.Y = vertices[v + 1];
+                        itemVertices[ii].Position.Z = 0;
+                        itemVertices[ii].TextureCoordinate.X = uvs[v];
+                        itemVertices[ii].TextureCoordinate.Y = uvs[v + 1];
+                    }
+
+                }
 
             }
         }
@@ -403,8 +474,14 @@ namespace KryptonEngine.Rendering
         #region Light Methods
         public void ProcessLight(List<Light> pLightList, Matrix pTranslation)
         {
-            EngineSettings.Graphics.GraphicsDevice.SetRenderTarget(mLightTarget);
-            EngineSettings.Graphics.GraphicsDevice.Clear(Color.Transparent);
+            RenderTargetBinding[] renderTargets = new RenderTargetBinding[] { this.mLightTarget, this.mShadowPositionTarget, this.mShadowUV };
+            this.mGraphicsDevice.SetRenderTargets(renderTargets);
+
+            mClearLightAndShadow.CurrentTechnique.Passes[0].Apply();
+            QuadRenderer.Render(mGraphicsDevice);
+
+            //EngineSettings.Graphics.GraphicsDevice.SetRenderTarget(mLightTarget);
+           // EngineSettings.Graphics.GraphicsDevice.Clear(Color.Transparent);
 
             EngineSettings.Graphics.GraphicsDevice.BlendState = mLightMapBlendState;
 
@@ -441,6 +518,24 @@ namespace KryptonEngine.Rendering
                QuadRenderer.Render(this.mGraphicsDevice);
             }
 
+            EngineSettings.Graphics.GraphicsDevice.SetRenderTarget(null);
+        }
+
+        public void ProcessShadow()
+        {
+            EngineSettings.Graphics.GraphicsDevice.SetRenderTarget(mFinalTarget);
+            EngineSettings.Graphics.GraphicsDevice.Clear(Color.Transparent);
+
+
+            EngineSettings.Graphics.GraphicsDevice.Textures[0] = this.mGBuffer.RenderTargets[0];
+            EngineSettings.Graphics.GraphicsDevice.Textures[1] = mLightTarget;
+
+            this.mCombineShader.Parameters["ambientColor"].SetValue(AmbientLight.LightColor);
+            this.mCombineShader.Parameters["ambientIntensity"].SetValue(AmbientLight.Intensity);
+
+            mCombineShader.CurrentTechnique.Passes[0].Apply();
+
+            QuadRenderer.Render(this.mGraphicsDevice);
             EngineSettings.Graphics.GraphicsDevice.SetRenderTarget(null);
         }
        
@@ -510,7 +605,6 @@ namespace KryptonEngine.Rendering
             batch.DrawString(KryptonEngine.Manager.FontManager.Instance.GetElementByString("font"),this.mFPSCounter.FPS.ToString() + " FPS", Vector2.Zero, Color.White);
             batch.DrawString(KryptonEngine.Manager.FontManager.Instance.GetElementByString("font"), this.mBatch.mDiffuseTextureBuffer.Count.ToString() + " Textures", new Vector2(0,20), Color.White);
             batch.DrawString(KryptonEngine.Manager.FontManager.Instance.GetElementByString("font"), this.mBatch.mFreeItems.Count.ToString() + " Free Items", new Vector2(0, 40), Color.White);
-            batch.DrawString(KryptonEngine.Manager.FontManager.Instance.GetElementByString("font"), this.mBatch.mVertexDataBuffer.Count.ToString() + " VertexData", new Vector2(0, 60), Color.White);
             
             batch.End();
         }
@@ -526,6 +620,13 @@ namespace KryptonEngine.Rendering
         {
             batch.Begin();
             batch.Draw(mLightTarget, Vector2.Zero, Color.White);
+            batch.End();
+        }
+
+        public void DrawShadowTargettOnScreen(SpriteBatch batch)
+        {
+            batch.Begin();
+            batch.Draw(mShadowUV, Vector2.Zero, Color.White);
             batch.End();
         }
 

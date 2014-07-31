@@ -9,8 +9,8 @@ namespace KryptonEngine.FModAudio
 	public class FModSong
 	{
 		private FMOD.Sound []sound;
-		private Channel []channel;
-		private float[] volume;
+		public Channel []Channel;
+		public float[] Volume;
 		private float[] fadeSpeed;
 
 		public int MaxChannelCount;
@@ -19,7 +19,7 @@ namespace KryptonEngine.FModAudio
 			get
 			{
 				bool done = false;
-				channel[0].isPlaying(ref done);
+				Channel[0].isPlaying(ref done);
 				if (!done)
 					return true;
 				else return false;
@@ -34,7 +34,7 @@ namespace KryptonEngine.FModAudio
 		public FModSong()
 		{
 			sound = new FMOD.Sound[1];
-			channel = new Channel[1];
+			Channel = new Channel[1];
 		}
 
 		public FModSong(List<string> pSongNameList)
@@ -42,8 +42,8 @@ namespace KryptonEngine.FModAudio
 			MaxChannelCount = pSongNameList.Count;
 
 			sound = new FMOD.Sound[MaxChannelCount];
-			channel = new Channel[MaxChannelCount];
-			volume = new float[MaxChannelCount];
+			Channel = new Channel[MaxChannelCount];
+			Volume = new float[MaxChannelCount];
 			fadeSpeed = new float[MaxChannelCount];
 
 			RESULT r;
@@ -51,11 +51,8 @@ namespace KryptonEngine.FModAudio
 			{
 				r = EngineSettings.FMODDevice.createSound("./Content/sfx/" + pSongNameList[i] + ".mp3", MODE.HARDWARE, ref sound[i]);
 				sound[i].setMode(MODE.LOOP_NORMAL);
-				volume[i] = 0.0f;
+				Volume[i] = 0.0f;
 				fadeSpeed[i] = 0.0f;
-
-				if (r == RESULT.ERR_FILE_NOTFOUND)
-					;
 			}
 		}
 
@@ -64,21 +61,21 @@ namespace KryptonEngine.FModAudio
 			MaxChannelCount = 1;
 
 			sound = new FMOD.Sound[MaxChannelCount];
-			channel = new Channel[MaxChannelCount];
-			volume = new float[MaxChannelCount];
+			Channel = new Channel[MaxChannelCount];
+			Volume = new float[MaxChannelCount];
 			
 			RESULT r;
 			
 			r = EngineSettings.FMODDevice.createSound("./Content/sfx/" + pSongName + ".mp3", MODE.HARDWARE, ref sound[0]);
-			EngineSettings.FMODDevice.playSound(CHANNELINDEX.FREE, sound[0], false, ref channel[0]);
+			EngineSettings.FMODDevice.playSound(CHANNELINDEX.FREE, sound[0], false, ref Channel[0]);
 		}
 
 		public void StartSong()
 		{
 			for (int i = 0; i < MaxChannelCount; i++)
 			{
-				EngineSettings.FMODDevice.playSound(CHANNELINDEX.FREE, sound[i], false, ref channel[i]);
-				channel[i].setVolume(0.0f);
+				EngineSettings.FMODDevice.playSound(CHANNELINDEX.FREE, sound[i], false, ref Channel[i]);
+				Channel[i].setVolume(0.0f);
 			}
 		}
 
@@ -89,14 +86,14 @@ namespace KryptonEngine.FModAudio
 
 		public void FadeVolume(int index)
 		{
-			volume[index] += fadeSpeed[index];
+			Volume[index] += fadeSpeed[index];
 
-			if (volume[index] < FADING_MIN_VOLUME)
-				volume[index] = FADING_MIN_VOLUME;
-			if (volume[index] > FADING_MAX_VOLUME)
-				volume[index] = FADING_MAX_VOLUME;
+			if (Volume[index] < FADING_MIN_VOLUME)
+				Volume[index] = FADING_MIN_VOLUME;
+			if (Volume[index] > FADING_MAX_VOLUME)
+				Volume[index] = FADING_MAX_VOLUME;
 
-			channel[index].setVolume(volume[index]);
+			Channel[index].setVolume(Volume[index]);
 		}
 
 		public void Release()
@@ -111,14 +108,14 @@ namespace KryptonEngine.FModAudio
 			{
 				for (int i = 0; i < MaxChannelCount; i++)
 				{
-					channel[i].setVolume(0.0f);
+					Channel[i].setVolume(0.0f);
 				}
 			}
 			else
 			{
 				for (int i = 0; i < MaxChannelCount; i++)
 				{
-					channel[i].setVolume(volume[i]);
+					Channel[i].setVolume(Volume[i]);
 				}
 			}
 		}

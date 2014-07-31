@@ -1,5 +1,6 @@
 ﻿using HanselAndGretel.Data;
 using KryptonEngine.Entities;
+using KryptonEngine.FModAudio;
 using KryptonEngine.Manager;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -142,8 +143,22 @@ namespace KryptonEngine.AI
 					int y = (int)(EngineSettings.VirtualResHeight / 2 - (EngineSettings.VirtualResHeight / GameReferenzes.GameCamera.Scale) / 2 + GameReferenzes.GameCamera.Position.Y - EngineSettings.VirtualResHeight / 2);
 					if(y < 0) y = 0;
 					Rectangle ScreenView = new Rectangle(x, y, (int)(EngineSettings.VirtualResWidth / GameReferenzes.GameCamera.Scale), (int)(EngineSettings.VirtualResHeight / GameReferenzes.GameCamera.Scale));
-					if(ScreenView.Contains(e.PositionX, e.PositionY))
+					if (ScreenView.Contains(e.PositionX, e.PositionY))
+					{
+						int charackterSound = EngineSettings.Randomizer.Next(0,2);
+						int number = EngineSettings.Randomizer.Next(1,5);
+
+						String SongName;
+						SongName = (charackterSound == 0)? "hansel_fear_0" + number.ToString() : "gretel_fear_0" + number.ToString();
+
+						FmodMediaPlayer.Instance.AddSong(SongName);
+
 						e.IsAiActive = true;
+						if (e.GetType() == typeof(Wolf))
+							FmodMediaPlayer.Instance.FadeBackgroundChannelIn(2);
+						else if (e.GetType() == typeof(Witch))
+							FmodMediaPlayer.Instance.FadeBackgroundChannelIn(3);
+					}
 				}
 
 				if (!e.IsAiActive) continue;
