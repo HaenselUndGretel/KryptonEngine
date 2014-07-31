@@ -78,7 +78,7 @@ namespace HanselAndGretel.Data
 			if (FadingDuration == 0)
 				FadingDuration = 1;
 
-			float lerpFactor = Math.Abs((float)Math.Sin(EngineSettings.Time.TotalGameTime.TotalMilliseconds * (1.0f / (float)FadingDuration)));
+			float lerpFactor = ((float)Math.Sin(EngineSettings.Time.TotalGameTime.TotalMilliseconds * (1.0f / (float)FadingDuration)) + 1) / 2.0f;
 			
 			float X = MathHelper.Lerp(StartColor.X, FadingLightColor.X, lerpFactor);
 			float Y = MathHelper.Lerp(StartColor.Y, FadingLightColor.Y, lerpFactor);
@@ -94,7 +94,7 @@ namespace HanselAndGretel.Data
 			if (MoveSpeed == 0)
 				FadingDuration = 1;
 
-			float lerpFactor = Math.Abs((float)Math.Sin(EngineSettings.Time.TotalGameTime.TotalMilliseconds * (1.0f / (float)MoveSpeed)));
+			float lerpFactor = ((float)Math.Sin(EngineSettings.Time.TotalGameTime.TotalMilliseconds * (1.0f / (float)MoveSpeed)) +  1) / 2.0f;
 
 			mDepth = (Math.Abs(MinHeight - MaxHeight) / 1000.0f) * lerpFactor + MinHeight / 1000.0f;
 		}
