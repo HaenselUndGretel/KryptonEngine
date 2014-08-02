@@ -20,7 +20,7 @@ namespace KryptonEngine.AI
 
 		#region Properties
 
-		const float UPDATETIME = 800;
+		private const float UPDATETIME = 800;
 
 		protected int[,] Map;
 		protected int FieldsHeight;
@@ -246,6 +246,29 @@ namespace KryptonEngine.AI
 
 				CalculateWolfPath(StartPos,true);
 				ApplyPath(e);
+				return;
+			}
+
+			if(Vector2.Distance(GameReferenzes.UntargetPlayer.Position, StartPos * GameReferenzes.RasterSize) < GameReferenzes.LIGHT_RADIUS)
+			{
+				do
+				{
+					float Angle = EngineSettings.Randomizer.Next() * 360;
+					TargetField = new Vector2(
+						(int)(GameReferenzes.UntargetPlayer.PositionX + Wolf.ESCAPE_DISTANCE * Math.Cos(Angle)) / GameReferenzes.RasterSize,
+						(int)(GameReferenzes.UntargetPlayer.PositionY + Wolf.ESCAPE_DISTANCE * Math.Sin(Angle)) / GameReferenzes.RasterSize);
+
+					if (TargetField.X < 0) TargetField.X = 0;
+					if (TargetField.Y < 0) TargetField.Y = 0;
+
+					if (TargetField.X >= FieldsWidth) TargetField.X = FieldsWidth - 1;
+					if (TargetField.Y >= FieldsHeight) TargetField.Y = FieldsHeight - 1;
+				} while (Map[(int)TargetField.X, (int)TargetField.Y] == -1 || Map[(int)TargetField.X, (int)TargetField.Y] == -2);
+				e.EscapePoint = TargetField;
+
+				CalculateWolfPath(StartPos, false);
+				ApplyPath(e);
+				return;
 			}
 
 		}
