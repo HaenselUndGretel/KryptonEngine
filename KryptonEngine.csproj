@@ -137,6 +137,8 @@
     <Compile Include="Rendering\RenderModuls\2DRenderer.cs" />
     <Compile Include="Rendering\RenderModuls\Batch.cs" />
     <Compile Include="Rendering\Shader\BaseShader.cs" />
+    <Compile Include="Rendering\Shader\FogPostShader.cs" />
+    <Compile Include="Rendering\Shader\Hatching.cs" />
     <Compile Include="Rendering\Shader\MaterialShader.cs" />
     <Compile Include="Rendering\Shader\PostShader.cs" />
     <Compile Include="SceneManagement\Scene.cs" />

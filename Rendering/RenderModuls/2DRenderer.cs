@@ -40,6 +40,8 @@ namespace KryptonEngine.Rendering
         private RenderTarget2D mShadowPositionTarget;
         private RenderTarget2D mShadowUV;
 
+        Texture2D mTextureFinalTarget;
+
         private GBuffer mGBuffer;
 
         private Matrix mWorld;
@@ -60,6 +62,8 @@ namespace KryptonEngine.Rendering
 
         private AmbientLight mAmbientLight;
 
+
+        private FogPostShader mFogPost;
 
         #endregion
 
@@ -141,6 +145,10 @@ namespace KryptonEngine.Rendering
 
             this.mTextureArray = new Texture2D[4];
             this.mBatch = new Batch(this.mGraphicsDevice);
+
+            mTextureFinalTarget = (Texture2D)mFinalTarget;
+
+            this.mFogPost = new FogPostShader( ref mTextureFinalTarget, ref mGBuffer.RenderTargets[3]);
         }
 
         public void UpdateFPSCounter()
@@ -162,6 +170,7 @@ namespace KryptonEngine.Rendering
             this.mClearLightAndShadow = KryptonEngine.Manager.ShaderManager.Instance.GetElementByString("ClearLS");
 
             this.mGBuffer.LoadContent();
+            this.mFogPost.LoadContent();
         }
         #endregion
 
@@ -485,6 +494,8 @@ namespace KryptonEngine.Rendering
 
             EngineSettings.Graphics.GraphicsDevice.Textures[0] = this.mGBuffer.RenderTargets[0];
             EngineSettings.Graphics.GraphicsDevice.Textures[1] = mLightTarget;
+            EngineSettings.Graphics.GraphicsDevice.Textures[2] = this.mGBuffer.RenderTargets[2];
+            
 
             this.mCombineShader.Parameters["ambientColor"].SetValue(AmbientLight.LightColor);
             this.mCombineShader.Parameters["ambientIntensity"].SetValue(AmbientLight.Intensity);
@@ -506,6 +517,7 @@ namespace KryptonEngine.Rendering
         public void DisposeGBuffer()
         {
             this.mGBuffer.DisposeGBuffer();
+            KryptonEngine.EngineSettings.Graphics.GraphicsDevice.DepthStencilState = DepthStencilState.None;
         }
 
         public void ClearGBuffer()
@@ -524,6 +536,25 @@ namespace KryptonEngine.Rendering
             this.mGBuffer.RenderTargets[index].SaveAsPng(file, this.mGBuffer.RenderTargets[index].Width, this.mGBuffer.RenderTargets[index].Height);
 
         }
+        #endregion
+
+        #region PostEffects
+
+        public void ApplyFog()
+        {
+            this.mFogPost.Render();
+        }
+
+        public void SetMaxFogHeight(float pMaxHeight)
+        {
+            this.mFogPost.mMaxFogHeight = pMaxHeight;
+        }
+
+        public void SetMinFogHeight(float pMinHeight)
+        {
+            this.mFogPost.mMinFogHeight = pMinHeight;
+        }
+
         #endregion
 
         #region Debug
