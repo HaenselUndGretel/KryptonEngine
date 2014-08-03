@@ -50,7 +50,7 @@ namespace KryptonEngine.FModAudio
 			if (mSongList.ContainsKey(pName)) return;
 
 			FModSong newSong = new FModSong(pName);
-			newSong.Volume[0] = pVolume;
+			newSong.Channel[0].setVolume(pVolume);
 			mSongList.Add(pName, newSong);
 		}
 

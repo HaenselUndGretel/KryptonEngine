@@ -157,7 +157,7 @@ namespace KryptonEngine.AI
 						String SongName;
 						SongName = (charackterSound == 0)? "hansel_fear_0" + number.ToString() : "gretel_fear_0" + number.ToString();
 
-						FmodMediaPlayer.Instance.AddSong(SongName, 0.8f);
+						FmodMediaPlayer.Instance.AddSong(SongName, 0.7f);
 
 						e.IsAiActive = true;
 						switch(type)

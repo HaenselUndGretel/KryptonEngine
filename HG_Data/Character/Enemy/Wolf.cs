@@ -24,7 +24,7 @@ namespace HanselAndGretel.Data
 		public bool IsEscaping;
 		[XmlIgnoreAttribute]
 		public Vector2 EscapePoint;
-		private float mWolfSpeed = 3.0f;
+		private float mWolfSpeed = 6.0f;
 		#endregion
 
 		#region Getter & Setter
@@ -71,7 +71,7 @@ namespace HanselAndGretel.Data
 				if (mSoundCountdown > SOUND_COOLDOWN)
 				{
 					int number = EngineSettings.Randomizer.Next(1, 5);
-					FmodMediaPlayer.Instance.AddSong("SfxWolf" + number, 0.8f);
+					FmodMediaPlayer.Instance.AddSong("SfxWolf" + number, 0.9f);
 					mSoundCountdown -= SOUND_COOLDOWN;
 				}
 			}
