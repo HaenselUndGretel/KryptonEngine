@@ -95,7 +95,7 @@ namespace HanselAndGretel.Data
 		/// <param name="pScene">Scene für ggf Kollisionsprüfung, darf bei pIgnoreCollision = true null sein.</param>
 		/// <param name="pIgnoreCollision">Keine Kollision</param>
 		/// <param name="pIgnoreOtherPlayer">Wenn pIgnoreCollision = false ist auch anderen Spieler ignorieren.</param>
-		public void MoveManually(Vector2 pMovementDirection, float pMovementSpeedFactor = 1f, SceneData pScene = null, bool pIgnoreCollision = true, bool pIgnoreOtherPlayer = false)
+		public void MoveManually(Vector2 pMovementDirection, float pMovementSpeedFactor = 1f, SceneData pScene = null, bool pIgnoreCollision = true, bool pIgnoreOtherPlayer = false, bool pIgnoreMapBounds = false)
 		{
 			Vector2 TmpMovement;
 			List<Rectangle> TmpBodies;
@@ -108,7 +108,10 @@ namespace HanselAndGretel.Data
 			}
 			else
 			{
-				TmpMovement = ViewportCheckedVector(GetMovement(pMovementDirection, pMovementSpeedFactor));
+				if (pIgnoreMapBounds)
+					TmpMovement = GetMovement(pMovementDirection, pMovementSpeedFactor);
+				else
+					TmpMovement = ViewportCheckedVector(GetMovement(pMovementDirection, pMovementSpeedFactor));
 				TmpBodies = GetBodiesForCollisionCheck(pScene);
 			}
 			AnimBasicAnimation(Move(TmpMovement, TmpBodies));
