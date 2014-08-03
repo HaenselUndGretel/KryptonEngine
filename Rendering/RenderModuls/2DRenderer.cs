@@ -41,13 +41,11 @@ namespace KryptonEngine.Rendering
         private Effect mDraw,mMRTDraw,mSingelDraw;
         private Effect mLightShader;
         private Effect mCombineShader;
-        private Effect mClearLightAndShadow;
 
         private RenderTarget2D mLightTarget;
         private RenderTarget2D mFinalTarget;
-        private RenderTarget2D mShadowTarget;
-        private RenderTarget2D mShadowPositionTarget;
-        private RenderTarget2D mShadowUV;
+
+        Texture2D mTextureFinalTarget;
 
         private GBuffer mGBuffer;
 
@@ -69,6 +67,8 @@ namespace KryptonEngine.Rendering
 
         private AmbientLight mAmbientLight;
 
+
+        private FogPostShader mFogPost;
 
         #endregion
 
@@ -137,10 +137,7 @@ namespace KryptonEngine.Rendering
 
             this.mLightTarget = new RenderTarget2D(this.mGraphicsDevice, pWidth, pHeight, false, SurfaceFormat.Color, DepthFormat.None);
             this.mFinalTarget = new RenderTarget2D(this.mGraphicsDevice, pWidth, pHeight, false, SurfaceFormat.Color, DepthFormat.None);
-            this.mShadowTarget = new RenderTarget2D(this.mGraphicsDevice, pWidth, pHeight, false, SurfaceFormat.Color, DepthFormat.None);
-            this.mShadowPositionTarget = new RenderTarget2D(this.mGraphicsDevice, pWidth, pHeight, false, SurfaceFormat.Color, DepthFormat.None);
-            this.mShadowUV = new RenderTarget2D(this.mGraphicsDevice, pWidth, pHeight, false, SurfaceFormat.Color, DepthFormat.None);
-
+           
             this.mView  = Matrix.CreateLookAt(new Vector3(0.0f, 0.0f, 1.0f), Vector3.Zero, Vector3.Up);
             this.mTranslatetViewMatrix = this.mView;
 
@@ -150,6 +147,10 @@ namespace KryptonEngine.Rendering
 
             this.mTextureArray = new Texture2D[4];
             this.mBatch = new Batch(this.mGraphicsDevice);
+
+            mTextureFinalTarget = (Texture2D)mFinalTarget;
+
+            this.mFogPost = new FogPostShader( ref mTextureFinalTarget, ref mGBuffer.RenderTargets[3]);
         }
 
         public void UpdateFPSCounter()
@@ -168,9 +169,9 @@ namespace KryptonEngine.Rendering
             this.mCombineShader = KryptonEngine.Manager.ShaderManager.Instance.GetElementByString("CombineShader");
             this.mSingelDraw = KryptonEngine.Manager.ShaderManager.Instance.GetElementByString("Singel");
             this.mMRTDraw = KryptonEngine.Manager.ShaderManager.Instance.GetElementByString("MRT");
-            this.mClearLightAndShadow = KryptonEngine.Manager.ShaderManager.Instance.GetElementByString("ClearLS");
-
+       
             this.mGBuffer.LoadContent();
+            this.mFogPost.LoadContent();
         }
         #endregion
 
@@ -474,14 +475,9 @@ namespace KryptonEngine.Rendering
         #region Light Methods
         public void ProcessLight(List<Light> pLightList, Matrix pTranslation)
         {
-            RenderTargetBinding[] renderTargets = new RenderTargetBinding[] { this.mLightTarget, this.mShadowPositionTarget, this.mShadowUV };
-            this.mGraphicsDevice.SetRenderTargets(renderTargets);
 
-            mClearLightAndShadow.CurrentTechnique.Passes[0].Apply();
-            QuadRenderer.Render(mGraphicsDevice);
-
-            //EngineSettings.Graphics.GraphicsDevice.SetRenderTarget(mLightTarget);
-           // EngineSettings.Graphics.GraphicsDevice.Clear(Color.Transparent);
+            EngineSettings.Graphics.GraphicsDevice.SetRenderTarget(mLightTarget);
+            EngineSettings.Graphics.GraphicsDevice.Clear(Color.Transparent);
 
             EngineSettings.Graphics.GraphicsDevice.BlendState = mLightMapBlendState;
 
@@ -520,24 +516,6 @@ namespace KryptonEngine.Rendering
 
             EngineSettings.Graphics.GraphicsDevice.SetRenderTarget(null);
         }
-
-        public void ProcessShadow()
-        {
-            EngineSettings.Graphics.GraphicsDevice.SetRenderTarget(mFinalTarget);
-            EngineSettings.Graphics.GraphicsDevice.Clear(Color.Transparent);
-
-
-            EngineSettings.Graphics.GraphicsDevice.Textures[0] = this.mGBuffer.RenderTargets[0];
-            EngineSettings.Graphics.GraphicsDevice.Textures[1] = mLightTarget;
-
-            this.mCombineShader.Parameters["ambientColor"].SetValue(AmbientLight.LightColor);
-            this.mCombineShader.Parameters["ambientIntensity"].SetValue(AmbientLight.Intensity);
-
-            mCombineShader.CurrentTechnique.Passes[0].Apply();
-
-            QuadRenderer.Render(this.mGraphicsDevice);
-            EngineSettings.Graphics.GraphicsDevice.SetRenderTarget(null);
-        }
        
         public void ProcessFinalScene()
         {
@@ -547,6 +525,8 @@ namespace KryptonEngine.Rendering
 
             EngineSettings.Graphics.GraphicsDevice.Textures[0] = this.mGBuffer.RenderTargets[0];
             EngineSettings.Graphics.GraphicsDevice.Textures[1] = mLightTarget;
+            EngineSettings.Graphics.GraphicsDevice.Textures[2] = this.mGBuffer.RenderTargets[2];
+            
 
             this.mCombineShader.Parameters["ambientColor"].SetValue(AmbientLight.LightColor);
             this.mCombineShader.Parameters["ambientIntensity"].SetValue(AmbientLight.Intensity);
@@ -568,6 +548,7 @@ namespace KryptonEngine.Rendering
         public void DisposeGBuffer()
         {
             this.mGBuffer.DisposeGBuffer();
+            KryptonEngine.EngineSettings.Graphics.GraphicsDevice.DepthStencilState = DepthStencilState.None;
         }
 
         public void ClearGBuffer()
@@ -586,6 +567,25 @@ namespace KryptonEngine.Rendering
             this.mGBuffer.RenderTargets[index].SaveAsPng(file, this.mGBuffer.RenderTargets[index].Width, this.mGBuffer.RenderTargets[index].Height);
 
         }
+        #endregion
+
+        #region PostEffects
+
+        public void ApplyFog()
+        {
+            this.mFogPost.Render();
+        }
+
+        public void SetMaxFogHeight(float pMaxHeight)
+        {
+            this.mFogPost.mMaxFogHeight = pMaxHeight;
+        }
+
+        public void SetMinFogHeight(float pMinHeight)
+        {
+            this.mFogPost.mMinFogHeight = pMinHeight;
+        }
+
         #endregion
 
         #region Debug
@@ -623,12 +623,6 @@ namespace KryptonEngine.Rendering
             batch.End();
         }
 
-        public void DrawShadowTargettOnScreen(SpriteBatch batch)
-        {
-            batch.Begin();
-            batch.Draw(mShadowUV, Vector2.Zero, Color.White);
-            batch.End();
-        }
 
         public void DrawFinalTargettOnScreen(SpriteBatch batch)
         {
