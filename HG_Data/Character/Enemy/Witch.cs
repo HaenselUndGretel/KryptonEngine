@@ -42,7 +42,7 @@ namespace HanselAndGretel.Data
 			if (mSoundCountdown > SOUND_COOLDOWN)
 			{
 				int number = EngineSettings.Randomizer.Next(1, 5);
-				FmodMediaPlayer.Instance.AddSong("ghost_groan_0" + number, 0.8f);
+				FmodMediaPlayer.Instance.AddSong("ghost_groan_0" + number, 0.4f);
 				mSoundCountdown -= SOUND_COOLDOWN;
 			}
 
