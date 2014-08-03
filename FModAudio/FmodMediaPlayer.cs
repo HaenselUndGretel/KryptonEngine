@@ -45,11 +45,12 @@ namespace KryptonEngine.FModAudio
 		}
 
 		// Spielt den SoundEffekt ab. Übergabe ist nur der Name der Datei ( ohne .mp3)
-		public void AddSong(string pName)
+		public void AddSong(string pName, float pVolume)
 		{
 			if (mSongList.ContainsKey(pName)) return;
 
 			FModSong newSong = new FModSong(pName);
+			newSong.Volume[0] = pVolume;
 			mSongList.Add(pName, newSong);
 		}
 
@@ -57,8 +58,7 @@ namespace KryptonEngine.FModAudio
 		public void SetBackgroundSong(List<string> pMusicList)
 		{
 			if (BackgroundSong != null)
-				for (int i = 0; i < BackgroundSong.MaxChannelCount; i++)
-					BackgroundSong.Channel[i].setVolume(0.0f);
+				BackgroundSong.Release();
 
 			BackgroundSong = new FModSong(pMusicList);
 			BackgroundSong.StartSong();

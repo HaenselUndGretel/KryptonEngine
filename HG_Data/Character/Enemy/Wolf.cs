@@ -71,13 +71,12 @@ namespace HanselAndGretel.Data
 				if (mSoundCountdown > SOUND_COOLDOWN)
 				{
 					int number = EngineSettings.Randomizer.Next(1, 5);
-					FmodMediaPlayer.Instance.AddSong("SfxWolf" + number);
+					FmodMediaPlayer.Instance.AddSong("SfxWolf" + number, 0.8f);
 					mSoundCountdown -= SOUND_COOLDOWN;
 				}
 			}
 
 			if (Path == null || CurrentPath == -1) return;
-
 
 			if (IsEscaping && EscapePoint == Vector2.Zero)
 				return;

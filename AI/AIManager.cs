@@ -11,6 +11,11 @@ using System.Text;
 
 namespace KryptonEngine.AI
 {
+	enum EnemyType
+	{
+		Wolf,
+		Witch
+	}
 	public class AIManager
 	{
 		#region Singleton
@@ -20,7 +25,7 @@ namespace KryptonEngine.AI
 
 		#region Properties
 
-		private const float UPDATETIME = 800;
+		private EnemyType type;
 
 		protected int[,] Map;
 		protected int FieldsHeight;
@@ -127,7 +132,7 @@ namespace KryptonEngine.AI
 						Map[x, y] = 0;
 			SetCollisionInteractiveObject();
 
-			if (GameReferenzes.ReferenzHansel == null || GameReferenzes.ReferenzGretel == null) return;
+			if (GameReferenzes.ReferenzHansel == null || GameReferenzes.ReferenzGretel == null || GameReferenzes.IsSceneSwitching) return;
 
 			GameReferenzes.TargetPlayer = (GameReferenzes.ReferenzHansel.Lantern) ? (Player)GameReferenzes.ReferenzGretel : (Player)GameReferenzes.ReferenzHansel;
 			GameReferenzes.UntargetPlayer = (GameReferenzes.ReferenzHansel.Lantern) ? (Player)GameReferenzes.ReferenzHansel : (Player)GameReferenzes.ReferenzGretel;
@@ -136,6 +141,7 @@ namespace KryptonEngine.AI
 
 			foreach(Enemy e in Agents)
 			{
+				type = (e.GetType() == typeof(Wolf)) ? EnemyType.Wolf : EnemyType.Witch;
 				if(!e.IsAiActive)
 				{
 					int x = (int)(EngineSettings.VirtualResWidth / 2 - (EngineSettings.VirtualResWidth / GameReferenzes.GameCamera.Scale) / 2 + GameReferenzes.GameCamera.Position.X - EngineSettings.VirtualResWidth / 2);
@@ -151,21 +157,34 @@ namespace KryptonEngine.AI
 						String SongName;
 						SongName = (charackterSound == 0)? "hansel_fear_0" + number.ToString() : "gretel_fear_0" + number.ToString();
 
-						FmodMediaPlayer.Instance.AddSong(SongName);
+						FmodMediaPlayer.Instance.AddSong(SongName, 0.8f);
 
 						e.IsAiActive = true;
-						if (e.GetType() == typeof(Wolf))
-							FmodMediaPlayer.Instance.FadeBackgroundChannelIn(2);
-						else if (e.GetType() == typeof(Witch))
-							FmodMediaPlayer.Instance.FadeBackgroundChannelIn(3);
+						switch(type)
+						{
+							case EnemyType.Witch:
+								FmodMediaPlayer.Instance.FadeBackgroundChannelIn(2);
+								break;
+							case EnemyType.Wolf:
+								FmodMediaPlayer.Instance.FadeBackgroundChannelIn(3);
+								break;
+						}
 					}
 				}
 
 				if (!e.IsAiActive) continue;
 
 				e.CurrentAiUpdateTime += EngineSettings.Time.ElapsedGameTime.Milliseconds;
-				if (e.CurrentAiUpdateTime < UPDATETIME) continue;
-				e.CurrentAiUpdateTime -= UPDATETIME;
+				if (EnemyType.Witch == type && e.CurrentAiUpdateTime < GameReferenzes.UPDATETIME_WOLF) continue;
+				if (EnemyType.Wolf == type && e.CurrentAiUpdateTime < GameReferenzes.UPDATETIME_WITCH) continue;
+
+				switch(type)
+				{
+					case EnemyType.Witch: e.CurrentAiUpdateTime -= GameReferenzes.UPDATETIME_WITCH;
+						break;
+					case EnemyType.Wolf: e.CurrentAiUpdateTime -= GameReferenzes.UPDATETIME_WOLF;
+						break;
+				}
 				
 				UpdateEnemy(e);
 			}
@@ -245,28 +264,6 @@ namespace KryptonEngine.AI
 				e.EscapePoint = TargetField;
 
 				CalculateWolfPath(StartPos,true);
-				ApplyPath(e);
-				return;
-			}
-
-			if(Vector2.Distance(GameReferenzes.UntargetPlayer.Position, StartPos * GameReferenzes.RasterSize) < GameReferenzes.LIGHT_RADIUS)
-			{
-				do
-				{
-					float Angle = EngineSettings.Randomizer.Next() * 360;
-					TargetField = new Vector2(
-						(int)(GameReferenzes.UntargetPlayer.PositionX + Wolf.ESCAPE_DISTANCE * Math.Cos(Angle)) / GameReferenzes.RasterSize,
-						(int)(GameReferenzes.UntargetPlayer.PositionY + Wolf.ESCAPE_DISTANCE * Math.Sin(Angle)) / GameReferenzes.RasterSize);
-
-					if (TargetField.X < 0) TargetField.X = 0;
-					if (TargetField.Y < 0) TargetField.Y = 0;
-
-					if (TargetField.X >= FieldsWidth) TargetField.X = FieldsWidth - 1;
-					if (TargetField.Y >= FieldsHeight) TargetField.Y = FieldsHeight - 1;
-				} while (Map[(int)TargetField.X, (int)TargetField.Y] == -1 || Map[(int)TargetField.X, (int)TargetField.Y] == -2);
-				e.EscapePoint = TargetField;
-
-				CalculateWolfPath(StartPos, false);
 				ApplyPath(e);
 				return;
 			}
@@ -422,7 +419,7 @@ namespace KryptonEngine.AI
 			for(int y = 0; y < FieldsHeight; y++)
 				spriteBatch.Draw(pixel, new Rectangle(0, y * GameReferenzes.RasterSize,FieldsWidth * GameReferenzes.RasterSize, 2), Color.Black);
 
-			for (int x = 0; x < FieldsHeight; x++)
+			for (int x = 0; x < FieldsWidth; x++)
 				spriteBatch.Draw(pixel, new Rectangle(x * GameReferenzes.RasterSize, 0, 2, FieldsHeight * GameReferenzes.RasterSize), Color.Black);
 
 			foreach (Node n in ClosedList)
@@ -433,6 +430,20 @@ namespace KryptonEngine.AI
 				if(e.Path != null)
 				foreach(Node n in e.Path)
 					spriteBatch.Draw(pixel, new Rectangle((int)n.Position.X * GameReferenzes.RasterSize, (int)n.Position.Y * GameReferenzes.RasterSize, GameReferenzes.RasterSize, GameReferenzes.RasterSize), Color.Green * 0.8f);
+		}
+
+		public void ClearAgents()
+		{
+			List<Enemy> delete = new List<Enemy>();
+			foreach(Enemy e in Agents)
+			{
+				e.IsAiActive = false;
+				if (e.GetType() == typeof(Witch))
+					delete.Add(e);
+			}
+
+			foreach (Enemy e in delete)
+				Agents.Remove(e);
 		}
 		#endregion
 	}
