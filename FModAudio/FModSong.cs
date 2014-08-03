@@ -49,8 +49,10 @@ namespace KryptonEngine.FModAudio
 			RESULT r;
 			for(int i = 0; i < pSongNameList.Count; i++)
 			{
+				if(sound[i] != null)
+					sound[i].release();
+
 				r = EngineSettings.FMODDevice.createSound("./Content/sfx/" + pSongNameList[i] + ".mp3", MODE.HARDWARE, ref sound[i]);
-				sound[i].setMode(MODE.LOOP_NORMAL);
 				Volume[i] = 0.0f;
 				fadeSpeed[i] = 0.0f;
 			}
@@ -74,7 +76,8 @@ namespace KryptonEngine.FModAudio
 		{
 			for (int i = 0; i < MaxChannelCount; i++)
 			{
-				EngineSettings.FMODDevice.playSound(CHANNELINDEX.FREE, sound[i], false, ref Channel[i]);
+				EngineSettings.FMODDevice.playSound(CHANNELINDEX.REUSE, sound[i], false, ref Channel[i]);
+				sound[i].setMode(MODE.LOOP_NORMAL);
 				Channel[i].setVolume(0.0f);
 			}
 		}

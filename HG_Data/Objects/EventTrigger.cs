@@ -89,14 +89,15 @@ namespace HanselAndGretel.Data
 
 		private void PlaySound()
 		{
-			FmodMediaPlayer.Instance.AddSong(this.mSoundName);
+			FmodMediaPlayer.Instance.AddSong(this.mSoundName, 0.8f);
 		}
 
 		private void SpawnWitch()
 		{
 			//FmodMediaPlayer.Instance.AddSong("WitchSpawn");
 			//FmodMediaPlayer.Instance.FadeBackgroundChannelIn(WitchChannelIndex);
-			Witch witch = new Witch();
+			Witch witch = new Witch("wolf");
+			witch.LoadContent();
 			witch.Position = mWitchSpawnPosition;
 			witch.ApplySettings();
 			witch.IsAiActive = true;
