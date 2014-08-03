@@ -21,6 +21,7 @@ namespace KryptonEngine.Entities
 		PushDoor,
 		PullDoor,
 		UseWell,
+		ChargeAmulet,
 		UseAmulet
 	};
 

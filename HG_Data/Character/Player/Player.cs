@@ -95,7 +95,7 @@ namespace HanselAndGretel.Data
 		/// <param name="pScene">Scene für ggf Kollisionsprüfung, darf bei pIgnoreCollision = true null sein.</param>
 		/// <param name="pIgnoreCollision">Keine Kollision</param>
 		/// <param name="pIgnoreOtherPlayer">Wenn pIgnoreCollision = false ist auch anderen Spieler ignorieren.</param>
-		public void MoveManually(Vector2 pMovementDirection, float pMovementSpeedFactor = 1f, SceneData pScene = null, bool pIgnoreCollision = true, bool pIgnoreOtherPlayer = false)
+		public void MoveManually(Vector2 pMovementDirection, float pMovementSpeedFactor = 1f, SceneData pScene = null, bool pIgnoreCollision = true, bool pIgnoreOtherPlayer = false, bool pIgnoreMapBounds = false)
 		{
 			Vector2 TmpMovement;
 			List<Rectangle> TmpBodies;
@@ -108,7 +108,10 @@ namespace HanselAndGretel.Data
 			}
 			else
 			{
-				TmpMovement = ViewportCheckedVector(GetMovement(pMovementDirection, pMovementSpeedFactor));
+				if (pIgnoreMapBounds)
+					TmpMovement = GetMovement(pMovementDirection, pMovementSpeedFactor);
+				else
+					TmpMovement = ViewportCheckedVector(GetMovement(pMovementDirection, pMovementSpeedFactor));
 				TmpBodies = GetBodiesForCollisionCheck(pScene);
 			}
 			AnimBasicAnimation(Move(TmpMovement, TmpBodies));
@@ -122,7 +125,7 @@ namespace HanselAndGretel.Data
 		/// <param name="pScene">Scene für ggf Kollisionsprüfung, darf bei pIgnoreCollision = true null sein.</param>
 		/// <param name="pIgnoreCollision">Keine Kollision</param>
 		/// <param name="pIgnoreOtherPlayer">Wenn pIgnoreCollision = false ist auch anderen Spieler ignorieren.</param>
-		public void MoveAgainstPoint(Vector2 pTargetPoint, float pMovementSpeedFactor = 1f, SceneData pScene = null, bool pIgnoreCollision = true, bool pIgnoreOtherPlayer = false)
+		public void MoveAgainstPoint(Vector2 pTargetPoint, float pMovementSpeedFactor = 1f, SceneData pScene = null, bool pIgnoreCollision = true, bool pIgnoreOtherPlayer = false, bool pAnimate = true)
 		{
 			Vector2 TmpMovementDirection = pTargetPoint - SkeletonPosition;
 			TmpMovementDirection.Normalize();
@@ -142,7 +145,9 @@ namespace HanselAndGretel.Data
 			}
 			if ((pTargetPoint - SkeletonPosition).Length() < TmpMovement.Length()) //Nicht über Punkt hinaus gehen.
 				TmpMovement = pTargetPoint - SkeletonPosition;
-			AnimBasicAnimation(Move(TmpMovement, TmpBodies));
+			Vector2 Movement = Move(TmpMovement, TmpBodies);
+			if (pAnimate)
+				AnimBasicAnimation(Movement);
 		}
 
 		/// <summary>

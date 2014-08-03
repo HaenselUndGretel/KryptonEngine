@@ -73,8 +73,8 @@ namespace HanselAndGretel.Data
 			Scenes = new SceneData[18]; //ToDo: Anzahl Scenes setzen !---!---!---!---!
 			for (int i = 0; i < Scenes.Length; i++)
 				Scenes[i] = new SceneData(); //Scenes initialisieren
-			hansel = new Hansel("skeleton");
-			gretel = new Gretel("skeleton");
+			hansel = new Hansel();
+			gretel = new Gretel();
 		}
 
 		public static Savegame Load(Hansel pHansel, Gretel pGretel) //Muss static sein damit das Savegame als solches gesetzt werden kann.

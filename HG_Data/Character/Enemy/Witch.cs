@@ -22,7 +22,7 @@ namespace HanselAndGretel.Data
 
 		#region Constructor
 
-		public Witch() { }
+		public Witch() :base("witch") { }
 
 		public Witch(string pName)
 			:base(pName)

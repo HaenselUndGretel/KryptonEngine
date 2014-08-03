@@ -13,7 +13,7 @@ namespace HanselAndGretel.Data
 	{
 		#region Constructor
 
-		public Hansel() : base() { Initialize(); }
+		public Hansel() : base("skeleton") { Initialize(); }
 
 		public Hansel(string pName)
 			:base(pName)
@@ -29,8 +29,6 @@ namespace HanselAndGretel.Data
 		{
 			base.Initialize();
 			mInput = InputHelper.Player1;
-			//mCollisionBox.Width = 50;
-			//mCollisionBox.Height = 50;
 			mHandicaps.Add(Activity.SlipThroughRock);
 		}
 
