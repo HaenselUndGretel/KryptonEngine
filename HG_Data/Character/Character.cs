@@ -93,11 +93,13 @@ namespace HanselAndGretel.Data
 		/// <summary>
 		/// Gibt entsprechend den Bedingungen potentielles Movement zurück.
 		/// </summary>
-		protected Vector2 GetMovement(Vector2 pMovementDirection, float pMovementSpeedFactor = 1f)
+		protected Vector2 GetMovement(Vector2 pMovementDirection, float pMovementSpeedFactor = 1f, bool pIgnoreTemp = false)
 		{
 			if (pMovementDirection.Length() != 1f)
 				pMovementDirection.Normalize();
-			return pMovementDirection * mSpeed * mBodyTemperature * pMovementSpeedFactor * (EngineSettings.Time.ElapsedGameTime.Milliseconds / 1000f);
+			if (pIgnoreTemp)
+				return pMovementDirection * mSpeed * mBodyTemperature * pMovementSpeedFactor * (EngineSettings.Time.ElapsedGameTime.Milliseconds / 1000f);
+			return pMovementDirection * mSpeed * pMovementSpeedFactor * (EngineSettings.Time.ElapsedGameTime.Milliseconds / 1000f);
 		}
 
 		#region Animation

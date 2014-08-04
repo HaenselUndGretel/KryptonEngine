@@ -125,7 +125,7 @@ namespace HanselAndGretel.Data
 		/// <param name="pScene">Scene für ggf Kollisionsprüfung, darf bei pIgnoreCollision = true null sein.</param>
 		/// <param name="pIgnoreCollision">Keine Kollision</param>
 		/// <param name="pIgnoreOtherPlayer">Wenn pIgnoreCollision = false ist auch anderen Spieler ignorieren.</param>
-		public void MoveAgainstPoint(Vector2 pTargetPoint, float pMovementSpeedFactor = 1f, SceneData pScene = null, bool pIgnoreCollision = true, bool pIgnoreOtherPlayer = false, bool pAnimate = true)
+		public void MoveAgainstPoint(Vector2 pTargetPoint, float pMovementSpeedFactor = 1f, SceneData pScene = null, bool pIgnoreCollision = true, bool pIgnoreOtherPlayer = false, bool pAnimate = true, bool pIgnoreTemp = false)
 		{
 			Vector2 TmpMovementDirection = pTargetPoint - SkeletonPosition;
 			TmpMovementDirection.Normalize();
@@ -133,14 +133,14 @@ namespace HanselAndGretel.Data
 			List<Rectangle> TmpBodies;
 			if (pIgnoreCollision)
 			{
-				TmpMovement = ViewportCheckedVector(GetMovement(TmpMovementDirection, pMovementSpeedFactor));
+				TmpMovement = ViewportCheckedVector(GetMovement(TmpMovementDirection, pMovementSpeedFactor, pIgnoreTemp));
 				TmpBodies = new List<Rectangle>();
 				if (!pIgnoreOtherPlayer)
 					TmpBodies.Add(rOtherPlayer.CollisionBox);
 			}
 			else
 			{
-				TmpMovement = GetMovement(TmpMovementDirection, pMovementSpeedFactor);
+				TmpMovement = GetMovement(TmpMovementDirection, pMovementSpeedFactor, pIgnoreTemp);
 				TmpBodies = GetBodiesForCollisionCheck(pScene);
 			}
 			if ((pTargetPoint - SkeletonPosition).Length() < TmpMovement.Length()) //Nicht über Punkt hinaus gehen.
