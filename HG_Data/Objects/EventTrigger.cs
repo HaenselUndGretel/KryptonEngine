@@ -96,12 +96,13 @@ namespace HanselAndGretel.Data
 		{
 			//FmodMediaPlayer.Instance.AddSong("WitchSpawn");
 			//FmodMediaPlayer.Instance.FadeBackgroundChannelIn(WitchChannelIndex);
-			Witch witch = new Witch("wolf");
+			Witch witch = new Witch("witch");
 			witch.LoadContent();
 			witch.Position = mWitchSpawnPosition;
 			witch.ApplySettings();
 			witch.IsAiActive = true;
 			GameReferenzes.Level.Enemies.Add(witch);
+			GameReferenzes.Level.RenderList.Add(witch);
 		}
 		#endregion
 	}
