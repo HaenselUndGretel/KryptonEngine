@@ -125,5 +125,10 @@ namespace KryptonEngine.FModAudio
 			foreach (KeyValuePair<string, FModSong> pair in mSongList)
 				pair.Value.Mute(isMuted);
 		}
+
+		public void StopSong(string SongName)
+		{
+			mSongList.Remove(SongName);
+		}
 	}
 }

@@ -91,6 +91,7 @@ namespace KryptonEngine.Entities
 			mTextures[3] = TextureManager.Instance.GetElementByString(mName + "Depth");
 
 			mSkeleton.FlipY = true;
+			//mSkeleton.SetSkin("default");
 			mSkeleton.SetSkin("front");
         }
 
