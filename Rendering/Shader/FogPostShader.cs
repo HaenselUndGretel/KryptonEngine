@@ -69,7 +69,6 @@ namespace KryptonEngine.Rendering
             mGrapicsDevice.Clear(Color.Transparent);
 
 
-
             mFogShader.Parameters["View"].SetValue(pTransforme.Translation);
             mFogShader.Parameters["Timer"].SetValue(mTimer);
             mFogShader.Parameters["Speed"].SetValue(mSpeed);
