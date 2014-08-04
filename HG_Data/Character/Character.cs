@@ -22,8 +22,6 @@ namespace HanselAndGretel.Data
 		protected const string Anim_Addon_Walk_Up = "";//"Up";
 		protected const string Anim_Addon_Walk_Down = "";//"Down";
 		protected const string Anim_Addon_Walk_Side = "";//"Side";
-		protected const string Anim_Addon_Walk_SideUp = "";//"SideUp";
-		protected const string Anim_Addon_Walk_SideDown = "";//"SideDown";
 		protected const string Anim_Addon_Shiver = "";//"Shiver";
 
 		#endregion
@@ -126,7 +124,7 @@ namespace HanselAndGretel.Data
 			}
 			Vector2 TmpMovement = pMovement;
 			SetSkeletonFlipState(this, TmpMovement);
-			string TmpAnimation = Anim_Walk + GetRightDirectionAnimation(TmpMovement, Anim_Addon_Walk_Up, Anim_Addon_Walk_Down, Anim_Addon_Walk_Side, false, Anim_Addon_Walk_Up, Anim_Addon_Walk_Down);
+			string TmpAnimation = Anim_Walk + GetRightDirectionAnimation(TmpMovement, Anim_Addon_Walk_Up, Anim_Addon_Walk_Down, Anim_Addon_Walk_Side);
 			if (mBodyTemperature < 1f)
 				TmpAnimation += "";//Anim_Addon_Shiver;
 
@@ -135,19 +133,15 @@ namespace HanselAndGretel.Data
 			SetAnimation(TmpAnimation);
 		}
 
-		public static string GetRightDirectionAnimation(Vector2 pDirection, string pAnimUp, string pAnimDown, string pAnimSide, bool pJust4Dirs = true, string pAnimSideUp = "", string pAnimSideDown = "")
+		public static string GetRightDirectionAnimation(Vector2 pDirection, string pAnimUp, string pAnimDown, string pAnimSide)
 		{
 			pDirection.Normalize();
 			string anim = "";
 			
 			if (pDirection.Y > Math.Sin(67.5)) //Hoch
 				anim = pAnimUp;
-			else if (!pJust4Dirs && pDirection.Y > Math.Sin(22.5)) //Seitlich hoch
-				anim = pAnimSideUp;
 			else if (pDirection.Y > -Math.Sin(22.5)) //Seitlich
 				anim = pAnimSide;
-			else if (!pJust4Dirs && pDirection.Y > -Math.Sin(67.5)) //Seitlich runter
-				anim = pAnimSideDown;
 			else //Runter
 				anim = pAnimDown;
 
