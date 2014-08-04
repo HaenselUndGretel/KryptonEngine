@@ -41,6 +41,7 @@ namespace KryptonEngine
 		public static List<String> HouseTheme = new List<String>() { "MusicHouse0", "MusicHouse1", "MusicHouse2", "MusicHouse3", "MusicHouse4" };
 		public static List<String> MountainsTheme = new List<String>() { "MusicMountains0", "MusicMountains1", "MusicMountains2", "MusicMountains3" };
 		public static List<String> MainTheme = new List<String>(){"MusicMainTheme"};
+		//public static List<String> BossFightTheme = new List<String>(){ }
 
 		public static List<String> GetBackgroundMusic()
 		{

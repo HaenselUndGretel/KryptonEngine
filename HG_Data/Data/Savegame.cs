@@ -186,6 +186,13 @@ namespace HanselAndGretel.Data
 			pGretel.ApplySettings();
 		}
 
+		public static void Delete()
+		{
+			FileInfo file = new FileInfo(Savegame.SavegamePath);
+			if (file.Exists)
+				file.Delete();
+		}
+
 		#endregion
 	}
 }
