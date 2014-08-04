@@ -23,7 +23,7 @@ namespace KryptonEngine
 		public static Player UntargetPlayer;
 
 		public readonly static int RasterSize = 16;
-		public readonly static float DEATH_ZONE = 20.0f;
+		public readonly static float DEATH_ZONE = 50.0f;
 		public readonly static float LIGHT_RADIUS = 200.0f;
 
 		public static Camera GameCamera;

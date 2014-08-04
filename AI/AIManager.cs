@@ -159,7 +159,9 @@ namespace KryptonEngine.AI
 
 						FmodMediaPlayer.Instance.AddSong(SongName, 0.7f);
 
-						e.IsAiActive = true;
+						if(type == EnemyType.Wolf)
+							e.IsAiActive = true;
+
 						switch(type)
 						{
 							case EnemyType.Witch:
