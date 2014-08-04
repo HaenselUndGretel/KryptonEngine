@@ -107,7 +107,6 @@ namespace HanselAndGretel.Data
 		public void LoadContent(string pBackgroundTextureName)
 		{
 			BackgroundTexture.TextureName = pBackgroundTextureName;
-			BackgroundTexture.LoadContent();
 			foreach (InteractiveObject iObj in InteractiveObjects)
 			{
 				iObj.LoadContent();
