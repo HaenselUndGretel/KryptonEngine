@@ -56,7 +56,7 @@ namespace KryptonEngine.Controls
 		private static KeyboardState mKeyboardStateCurrent;
 		private static KeyboardState mKeyboardStateBefore;
 
-		private static Input mDebug = new Input(Buttons.RightStick, Keys.F7, Keys.None);
+		public static Input mDebug = new Input(Buttons.RightStick, Keys.F7, Keys.None);
 
 		private static Input mPause = new Input(Buttons.Start, Keys.Escape, Keys.Escape);
 		public static Input mBack = new Input(Buttons.B, Keys.Escape, Keys.Back);
