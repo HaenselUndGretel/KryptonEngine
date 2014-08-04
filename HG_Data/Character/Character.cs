@@ -140,7 +140,7 @@ namespace HanselAndGretel.Data
 			
 			if (pDirection.Y > Math.Sin(MathHelper.ToRadians(67.5f))) //Runter
 				anim = pAnimDown;
-			else if (pDirection.Y > -Math.Sin(MathHelper.ToRadians(22.5f))) //Seitlich
+			else if (pDirection.Y > Math.Sin(MathHelper.ToRadians(-22.5f))) //Seitlich
 				anim = pAnimSide;
 			else //Hoch
 				anim = pAnimUp;
