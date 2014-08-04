@@ -135,6 +135,12 @@ namespace KryptonEngine.Entities
 			return mTextures[index];
 		}
 
+		public void Dispose()
+		{
+			foreach (Texture2D tex in mTextures)
+				tex.Dispose();
+		}
+
         #endregion
     }
 }
