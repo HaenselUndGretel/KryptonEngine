@@ -138,12 +138,12 @@ namespace HanselAndGretel.Data
 			pDirection.Normalize();
 			string anim = "";
 			
-			if (pDirection.Y > Math.Sin(67.5)) //Hoch
-				anim = pAnimUp;
-			else if (pDirection.Y > -Math.Sin(22.5)) //Seitlich
-				anim = pAnimSide;
-			else //Runter
+			if (pDirection.Y > Math.Sin(MathHelper.ToRadians(67.5f))) //Runter
 				anim = pAnimDown;
+			else if (pDirection.Y > -Math.Sin(MathHelper.ToRadians(22.5f))) //Seitlich
+				anim = pAnimSide;
+			else //Hoch
+				anim = pAnimUp;
 
 			return anim;
 		}
