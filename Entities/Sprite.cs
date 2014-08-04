@@ -129,10 +129,25 @@ namespace KryptonEngine.Entities
 			mTextures[3] = TextureManager.Instance.GetElementByString(TextureName + "Depth");
 		}
 
+		public void LoadBackgroundTextures()
+		{
+			mTextures = new Texture2D[4];
+			mTextures[0] = EngineSettings.Content.Load<Texture2D>(@"gfx\Backgrounds\" + mTextureName);
+			mTextures[1] = EngineSettings.Content.Load<Texture2D>(@"gfx\Backgrounds\" + mTextureName + "Normal");
+			mTextures[2] = EngineSettings.Content.Load<Texture2D>(@"gfx\Backgrounds\" + mTextureName + "AO");
+			mTextures[3] = EngineSettings.Content.Load<Texture2D>(@"gfx\Backgrounds\" + mTextureName + "Depth");
+		}
+
 		//direkt über Textures[index], ist dann überall einheitlich
 		public Texture2D GetTexture(int index)
 		{
 			return mTextures[index];
+		}
+
+		public void Dispose()
+		{
+			foreach (Texture2D tex in mTextures)
+				tex.Dispose();
 		}
 
         #endregion
