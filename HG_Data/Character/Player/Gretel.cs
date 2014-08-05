@@ -12,7 +12,7 @@ namespace HanselAndGretel.Data
 	{
 		#region Constructor
 
-		public Gretel() : base("skeleton") { Initialize(); }
+		public Gretel() : base("gretel") { Initialize(); }
 
 		public Gretel(string pName)
 			:base(pName)
@@ -34,7 +34,7 @@ namespace HanselAndGretel.Data
 		public override void LoadContent()
 		{
 			base.LoadContent();
-			SkeletonPosition = new Vector2(250, 50); //Init Position Gretel
+			SkeletonPosition = new Vector2(250, 400); //Init Position Gretel
 			Position = SkeletonPosition;
 		}
 
