@@ -38,6 +38,11 @@ namespace KryptonEngine.Entities
 		public int Height { get { return mHeight; } set { mHeight = value; } }
 		public Vector2 Origin { get { return mOrigin; } }
 		public int Rotation { get { return mRotation; } set { mRotation = value; } }
+        public byte Transparents { get { return mTint.A; } 
+            set { byte t = value >= 255? (byte)255:value;
+                        t = value <= 0 ? (byte)0 : value;
+                        mTint.A = value;
+                    } }
 		[XmlIgnoreAttribute]
 		public SpriteEffects Effect { get { return mEffekt; } set { mEffekt = value; } }
 		[XmlIgnoreAttribute]
@@ -89,7 +94,12 @@ namespace KryptonEngine.Entities
 
 		public override void Draw(TwoDRenderer renderer)
 		{
-			renderer.Draw(mTextures, new Vector3(Position, NormalZ));
+            
+            if(mTint.A > 0)
+            {
+                renderer.Draw(mTextures, new Vector3(Position, NormalZ), mTint);
+            }
+			
 		}
 
 		public override void Draw(SpriteBatch spriteBatch)

@@ -10,7 +10,7 @@ namespace KryptonEngine.Rendering.Components
     {
         public int TextureID;
         public int vertexCount, triangleCount;
-        public VertexPositionTexture[] vertices = { };
+        public VertexPositionColorTexture[] vertices = { };
         public int[] triangles = { };
     }
 }
