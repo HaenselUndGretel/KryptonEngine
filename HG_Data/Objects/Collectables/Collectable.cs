@@ -68,7 +68,7 @@ namespace HanselAndGretel.Data
 		{
 			base.LoadContent();
 			if (mShowTextureName == "") return;
-			mShowTexture = TextureManager.Instance.GetElementByString(mShowTextureName);
+				mShowTexture = TextureManager.Instance.GetElementByString(mShowTextureName);
 		}
 
 		public override void Draw(SpriteBatch spriteBatch)

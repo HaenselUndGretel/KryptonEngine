@@ -12,11 +12,12 @@ using System.Xml.Serialization;
 using KryptonEngine.Controls;
 using HanselAndGretel.Data;
 using KryptonEngine.Rendering;
+using KryptonEngine.HG_Data;
 
 
 namespace KryptonEngine.Entities
 {
-	[Serializable, XmlInclude(typeof(Sprite)), XmlInclude(typeof(InteractiveObject)), XmlInclude(typeof(Character)), XmlInclude(typeof(Enemy)), XmlInclude(typeof(Wolf)), XmlInclude(typeof(Collectable)), XmlInclude(typeof(Lantern))]
+	[Serializable, XmlInclude(typeof(Sprite)), XmlInclude(typeof(InteractiveObject)), XmlInclude(typeof(Character)), XmlInclude(typeof(Enemy)), XmlInclude(typeof(Wolf)), XmlInclude(typeof(Collectable)), XmlInclude(typeof(Lantern)), XmlInclude(typeof(Amulet))]
     public class GameObject : BaseObject
     {
         #region Properties

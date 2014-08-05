@@ -98,6 +98,7 @@
     <Compile Include="HG_Data\Data\Savegame.cs" />
     <Compile Include="HG_Data\Data\SceneData.cs" />
     <Compile Include="HG_Data\Data\Waypoint.cs" />
+    <Compile Include="HG_Data\Objects\Collectables\Amulet.cs" />
     <Compile Include="HG_Data\Objects\Collectables\Collectable.cs" />
     <Compile Include="HG_Data\Objects\Collectables\Lantern.cs" />
     <Compile Include="HG_Data\Objects\EventTrigger.cs" />

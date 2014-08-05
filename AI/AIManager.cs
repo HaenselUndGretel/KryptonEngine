@@ -38,6 +38,9 @@ namespace KryptonEngine.AI
 		private Vector2 TargetField;
 		private List<Node> OpenList;
 		private List<Node> ClosedList;
+
+		private float InteractiveNewTimer = 0;
+		private readonly float InteractiveTimerUpdate = 1000;
 		#endregion
 
 		#region Constructor
@@ -125,14 +128,18 @@ namespace KryptonEngine.AI
 
 		public void Update()
 		{
-
-			for (int y = 0; y < FieldsHeight; y++)
-				for (int x = 0; x < FieldsWidth; x++)
-					if (Map[x, y] == -2)
-						Map[x, y] = 0;
-			SetCollisionInteractiveObject();
-
 			if (GameReferenzes.ReferenzHansel == null || GameReferenzes.ReferenzGretel == null || GameReferenzes.IsSceneSwitching) return;
+
+			InteractiveNewTimer += EngineSettings.Time.ElapsedGameTime.Milliseconds;
+			if (InteractiveNewTimer > InteractiveTimerUpdate)
+			{
+				for (int y = 0; y < FieldsHeight; y++)
+					for (int x = 0; x < FieldsWidth; x++)
+						if (Map[x, y] == -2)
+							Map[x, y] = 0;
+				SetCollisionInteractiveObject();
+				InteractiveNewTimer -= InteractiveTimerUpdate;
+			}
 
 			GameReferenzes.TargetPlayer = (GameReferenzes.ReferenzHansel.Lantern) ? (Player)GameReferenzes.ReferenzGretel : (Player)GameReferenzes.ReferenzHansel;
 			GameReferenzes.UntargetPlayer = (GameReferenzes.ReferenzHansel.Lantern) ? (Player)GameReferenzes.ReferenzHansel : (Player)GameReferenzes.ReferenzGretel;
