@@ -17,13 +17,16 @@ namespace HanselAndGretel.Data
 
 		#region AnimationMapping
 
-		protected const string Anim_Idle = "idle";
-		protected const string Anim_Walk = "walk";
-		protected const string Anim_Addon_Walk_Up = "Up";
-		protected const string Anim_Addon_Walk_Down = "Down";
-		protected const string Anim_Addon_Walk_Side = "Side";
-		protected const string Anim_Addon_Shiver = "Shiver";
-		protected const string Anim_Addon_Lantern = "Lantern";
+		protected const string Anim_Idle = "";//"idle";
+		protected const string Anim_Walk = "";//"walk";
+		protected const string Anim_Addon_Walk_Up = "";//"Up";
+		protected const string Anim_Addon_Walk_Down = "";//"Down";
+		protected const string Anim_Addon_Walk_Side = "";//"Side";
+		protected const string Anim_Addon_Shiver = "";//"Shiver";
+		protected const string Anim_Addon_Lantern = "";//"Lantern";
+
+		private Vector2 LastMovementDirection;
+
 		#endregion
 
 		protected float mSpeed;
@@ -125,15 +128,17 @@ namespace HanselAndGretel.Data
 			if (TmpMovement == Vector2.Zero)
 			{
 				TmpAnimation = Anim_Idle;
+				TmpMovement = LastMovementDirection;
 			}
 			else
 			{
+				LastMovementDirection = TmpMovement;
 				TmpAnimation = Anim_Walk;
+				if (pLantern)
+					TmpAnimation += Anim_Addon_Lantern;
 			}
 			TmpAnimation += GetRightDirectionAnimation(TmpMovement, Anim_Addon_Walk_Up, Anim_Addon_Walk_Down, Anim_Addon_Walk_Side);
-			if (pLantern)
-				TmpAnimation += Anim_Addon_Lantern;
-			else if (mBodyTemperature < 1f)
+			if (!pLantern && mBodyTemperature < 1f)
 				TmpAnimation += Anim_Addon_Shiver;
 
 			//Animation setzen
