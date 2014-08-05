@@ -27,7 +27,7 @@ namespace KryptonEngine.Rendering
         public Queue<MeshData> mFreeItems;
 
 
-        public VertexPositionTexture[] mVertexBuffer = {};
+        public VertexPositionColorTexture[] mVertexBuffer = {};
         public int[] mIndexBuffer = {};
 
         #endregion
@@ -181,7 +181,7 @@ namespace KryptonEngine.Rendering
                 PrimitiveType.TriangleList,
                 mVertexBuffer, 0, vertexCount,
                 mIndexBuffer, 0, triangleCount / 3,
-                VertexPositionTexture.VertexDeclaration);
+                VertexPositionColorTexture.VertexDeclaration);
 
         }
         #endregion
@@ -204,7 +204,7 @@ namespace KryptonEngine.Rendering
         public MeshData NextItem(int pVertexCount, int pIndexCount)
         {
             MeshData item = mFreeItems.Count > 0 ? mFreeItems.Dequeue() : new MeshData();
-            if (item.vertices.Length < pVertexCount) item.vertices = new VertexPositionTexture[pVertexCount];
+            if (item.vertices.Length < pVertexCount) item.vertices = new VertexPositionColorTexture[pVertexCount];
             if (item.triangles.Length < pIndexCount) item.triangles = new int[pIndexCount];
 
             item.vertexCount = pVertexCount;
@@ -240,7 +240,7 @@ namespace KryptonEngine.Rendering
 
         private void EnsureCapaicty(int pVertexCount, int pIndexCount)
         {
-            if (mVertexBuffer.Length < pVertexCount) mVertexBuffer = new VertexPositionTexture[pVertexCount];
+            if (mVertexBuffer.Length < pVertexCount) mVertexBuffer = new VertexPositionColorTexture[pVertexCount];
             if (mIndexBuffer.Length < pIndexCount) mIndexBuffer = new int[pIndexCount];
         }
 

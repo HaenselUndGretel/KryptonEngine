@@ -216,7 +216,17 @@ namespace KryptonEngine.Rendering
             this.mTextureArray[2] = pMapArray[2];
             this.mTextureArray[3] = pMapArray[3];
 
-            this.InternalDraw(pSkeleton, this.mTextureArray, pDepth,pScale);
+            this.InternalDraw(pSkeleton, this.mTextureArray, pDepth,pScale, Color.White);
+        }
+
+        public void Draw(Skeleton pSkeleton, Texture2D[] pMapArray, Color pColor, float pDepth = 1.0f, float pScale = 1.0f)
+        {
+            this.mTextureArray[0] = pMapArray[0];
+            this.mTextureArray[1] = pMapArray[1];
+            this.mTextureArray[2] = pMapArray[2];
+            this.mTextureArray[3] = pMapArray[3];
+
+            this.InternalDraw(pSkeleton, this.mTextureArray, pDepth, pScale, pColor);
         }
 
         #endregion
@@ -239,11 +249,11 @@ namespace KryptonEngine.Rendering
 
             Rectangle sourceRectangel = Rectangle.Empty;
 
-            this.InternalDraw(this.mTextureArray, vector, ref sourceRectangel);
+            this.InternalDraw(this.mTextureArray, vector, ref sourceRectangel,Color.White);
         }
 
 
-        public void Draw(Texture2D[] pMapArray, Vector3 pPosition, float pScale = 1.0f)
+        public void Draw(Texture2D[] pMapArray, Vector3 pPosition,float pScale = 1.0f)
         {
             Vector4 vector = default(Vector4);
             vector.X = pPosition.X;
@@ -258,7 +268,25 @@ namespace KryptonEngine.Rendering
 
             Rectangle sourceRectangel = new Rectangle(0, 0, pMapArray[0].Width, pMapArray[0].Height);
 
-            this.InternalDraw(this.mTextureArray, vector,ref sourceRectangel);
+            this.InternalDraw(this.mTextureArray, vector,ref sourceRectangel,Color.White);
+        }
+
+                public void Draw(Texture2D[] pMapArray, Vector3 pPosition, Color pColor,float pScale = 1.0f)
+        {
+            Vector4 vector = default(Vector4);
+            vector.X = pPosition.X;
+            vector.Y = pPosition.Y;
+            vector.Z = pPosition.Z;
+            vector.W = pScale;
+
+			this.mTextureArray[0] = pMapArray[0];
+			this.mTextureArray[1] = pMapArray[1];
+			this.mTextureArray[2] = pMapArray[2];
+			this.mTextureArray[3] = pMapArray[3];
+
+            Rectangle sourceRectangel = new Rectangle(0, 0, pMapArray[0].Width, pMapArray[0].Height);
+
+            this.InternalDraw(this.mTextureArray, vector,ref sourceRectangel,pColor);
         }
 
         public void Draw(Texture2D[] pMapArray, Vector3 pPosition,Rectangle sourceRectangel, float pScale = 1.0f)
@@ -276,14 +304,33 @@ namespace KryptonEngine.Rendering
             this.mTextureArray[2] = pMapArray[2];
             this.mTextureArray[3] = pMapArray[3];
 
-            this.InternalDraw(this.mTextureArray, vector, ref sourceRectangel);
+            this.InternalDraw(this.mTextureArray, vector, ref sourceRectangel,Color.White);
         }
+
+                public void Draw(Texture2D[] pMapArray, Vector3 pPosition,Rectangle sourceRectangel, Color pColor,float pScale = 1.0f)
+        {
+            Vector4 vector = default(Vector4);
+            vector.X = pPosition.X;
+            vector.Y = pPosition.Y;
+            vector.Z = pPosition.Z;
+            vector.W = pScale;
+
+            
+
+            this.mTextureArray[0] = pMapArray[0];
+            this.mTextureArray[1] = pMapArray[1];
+            this.mTextureArray[2] = pMapArray[2];
+            this.mTextureArray[3] = pMapArray[3];
+
+            this.InternalDraw(this.mTextureArray, vector, ref sourceRectangel,pColor);
+        }
+
 
         #endregion
 
 
         #region InternalDraw
-        private void InternalDraw(Texture2D[] pTextureArray, Vector4 pDestination, ref Rectangle sourceRectangel)
+        private void InternalDraw(Texture2D[] pTextureArray, Vector4 pDestination, ref Rectangle sourceRectangel, Color pColor)
         {
             if (!isBegin) throw new Exception("Beginn muss vor Draw aufgerufen werden!");
             MeshData item = this.mBatch.NextItem(4,6);
@@ -326,7 +373,10 @@ namespace KryptonEngine.Rendering
             item.vertices[BR].TextureCoordinate.X = (sourceRectangel.Location.X * texelWidth) + (rectWidth * texelWidth);
             item.vertices[BR].TextureCoordinate.Y = (sourceRectangel.Location.Y * texelHeight) + (rectHeight * texelHeight);
 
-
+            item.vertices[TL].Color = pColor;
+            item.vertices[BL].Color = pColor;
+            item.vertices[BR].Color = pColor;
+            item.vertices[TR].Color = pColor;
             //if ( textId == -1) 
             //{
             //   textId = this.mBatch.AddTextures(pTextureArray);
@@ -336,7 +386,7 @@ namespace KryptonEngine.Rendering
 
         }
 
-        private void InternalDraw(Skeleton pSkeleton,Texture2D[] pTextureArray,float pDepth ,float scale)
+        private void InternalDraw(Skeleton pSkeleton,Texture2D[] pTextureArray,float pDepth ,float scale, Color pColor)
         {
             if (!isBegin) throw new Exception("Beginn muss vor Draw aufgerufen werden!");
             
@@ -387,6 +437,11 @@ namespace KryptonEngine.Rendering
                     item.vertices[TR].TextureCoordinate.X = uvs[RegionAttachment.X4];
                     item.vertices[TR].TextureCoordinate.Y = uvs[RegionAttachment.Y4];
 
+                    item.vertices[TL].Color = pColor;
+                    item.vertices[BL].Color = pColor;
+                    item.vertices[BR].Color = pColor;
+                    item.vertices[TR].Color = pColor;
+
                     item.TextureID = textId;
                 }
                 else if(attachment is MeshAttachment)
@@ -407,7 +462,7 @@ namespace KryptonEngine.Rendering
                     AtlasRegion region = (AtlasRegion)mesh.RendererObject;
 
                     float[] uvs = mesh.UVs;
-                    VertexPositionTexture[] itemVertices = item.vertices;
+                    VertexPositionColorTexture[] itemVertices = item.vertices;
 
                     for (int ii = 0, v = 0; v < vertexCount; ii++, v += 2)
                     {
@@ -433,7 +488,7 @@ namespace KryptonEngine.Rendering
 
 
                     float[] uvs = mesh.UVs;
-                    VertexPositionTexture[] itemVertices = item.vertices;
+                    VertexPositionColorTexture[] itemVertices = item.vertices;
                     for (int ii = 0, v = 0; v < vertexCount; ii++, v += 2)
                     {
                         
