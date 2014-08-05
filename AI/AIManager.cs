@@ -285,7 +285,7 @@ namespace KryptonEngine.AI
 			} while (ClosedList[ClosedList.Count - 1].Position != TargetField && Map[(int)TargetField.X, (int)TargetField.Y] != -1
 			&& Map[(int)TargetField.X, (int)TargetField.Y] != -2
 			&& StartPos.X >= 0 && StartPos.Y >= 0 && StartPos.X < FieldsWidth && StartPos.Y < FieldsHeight
-			&& OpenList.Count != 0);
+			&& OpenList.Count != 0 && ClosedList.Count < 500);
 		}
 
 		private void CalculateWolfPath(Vector2 StartPos, bool escaping)
