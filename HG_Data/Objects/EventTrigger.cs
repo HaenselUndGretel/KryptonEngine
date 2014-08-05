@@ -95,7 +95,7 @@ namespace HanselAndGretel.Data
 		private void SpawnWitch()
 		{
 			//FmodMediaPlayer.Instance.AddSong("WitchSpawn");
-			//FmodMediaPlayer.Instance.FadeBackgroundChannelIn(WitchChannelIndex);
+			FmodMediaPlayer.Instance.FadeBackgroundChannelIn(3);
 			Witch witch = new Witch("witch");
 			witch.LoadContent();
 			witch.Position = mWitchSpawnPosition;
