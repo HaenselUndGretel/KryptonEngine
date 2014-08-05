@@ -19,7 +19,7 @@ namespace HanselAndGretel.Data
 		private Camera mCamera;
 
 		[XmlIgnoreAttribute]
-		public const float ESCAPE_DISTANCE = 400.0f;
+		public const float ESCAPE_DISTANCE = 550.0f;
 		[XmlIgnoreAttribute]
 		public bool IsEscaping;
 		[XmlIgnoreAttribute]
@@ -51,11 +51,13 @@ namespace HanselAndGretel.Data
 
         public override void Update()
         {
-
 			base.Update();
 
 			if (GameReferenzes.UntargetPlayer == null) return;
 			if (Vector2.Distance(GameReferenzes.UntargetPlayer.Position, Position) < GameReferenzes.LIGHT_RADIUS)
+				IsEscaping = true;
+
+			if (Vector2.Distance(GameReferenzes.UntargetPlayer.Position, Position) < GameReferenzes.LIGHT_RADIUS_HIGH && GameReferenzes.ReferenzHansel.IsLanternRaised)
 				IsEscaping = true;
 
 			if (Vector2.Distance(GameReferenzes.UntargetPlayer.Position, Position) > Wolf.ESCAPE_DISTANCE)
@@ -81,6 +83,7 @@ namespace HanselAndGretel.Data
 			if (IsEscaping && EscapePoint == Vector2.Zero)
 				return;
 
+			// Bewegen des Wolfes
 			Vector2 Direction = Path[CurrentPath].Position * 16 - Position + new Vector2(EngineSettings.Randomizer.Next(0,16),EngineSettings.Randomizer.Next(0,16));
 			Direction = Vector2.Normalize(Direction);
 
