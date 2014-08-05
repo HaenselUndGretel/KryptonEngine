@@ -11,6 +11,12 @@ namespace HanselAndGretel.Data
 {
 	public class Hansel : Player
 	{
+		#region Properties
+
+		public bool IsLanternRaised;
+
+		#endregion
+
 		#region Constructor
 
 		public Hansel() : base("skeleton") { Initialize(); }
