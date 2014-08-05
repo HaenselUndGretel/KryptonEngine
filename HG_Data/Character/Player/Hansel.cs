@@ -19,7 +19,7 @@ namespace HanselAndGretel.Data
 
 		#region Constructor
 
-		public Hansel() : base("skeleton") { Initialize(); }
+		public Hansel() : base("hansel") { Initialize(); }
 
 		public Hansel(string pName)
 			:base(pName)
@@ -41,7 +41,7 @@ namespace HanselAndGretel.Data
 		public override void LoadContent()
 		{
 			base.LoadContent();
-			SkeletonPosition = new Vector2(190, 50); //Init Position Hansel
+			SkeletonPosition = new Vector2(190, 450); //Init Position Hansel
 			Position = SkeletonPosition;
 		}
 

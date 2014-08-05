@@ -119,24 +119,26 @@ namespace HanselAndGretel.Data
 		/// <param name="pMovement"></param>
 		public void AnimBasicAnimation(Vector2 pMovement)
 		{
-			if (pMovement == Vector2.Zero)
-			{
-				SetAnimation();
-				return;
-			}
+			//Animation bestimmen
 			Vector2 TmpMovement = pMovement;
-			SetSkeletonFlipState(this, TmpMovement);
-			string TmpAnimation = Anim_Walk + GetRightDirectionAnimation(TmpMovement, Anim_Addon_Walk_Up, Anim_Addon_Walk_Down, Anim_Addon_Walk_Side);
+			string TmpAnimation;
+			if (TmpMovement == Vector2.Zero)
+				TmpAnimation = Anim_Idle;
+			else
+				TmpAnimation = Anim_Walk;
+			TmpAnimation += GetRightDirectionAnimation(TmpMovement, Anim_Addon_Walk_Up, Anim_Addon_Walk_Down, Anim_Addon_Walk_Side);
 			if (mBodyTemperature < 1f)
-				TmpAnimation += "";//Anim_Addon_Shiver;
+				TmpAnimation += Anim_Addon_Shiver;
 
-			TmpAnimation = Anim_Idle;//
-
+			//Animation setzen
 			SetAnimation(TmpAnimation);
+			SetSkeletonFlipState(this, TmpMovement);
 		}
 
 		public static string GetRightDirectionAnimation(Vector2 pDirection, string pAnimUp, string pAnimDown, string pAnimSide)
 		{
+			if (pDirection == Vector2.Zero)
+				return pAnimDown;
 			pDirection.Normalize();
 			string anim = "";
 			
