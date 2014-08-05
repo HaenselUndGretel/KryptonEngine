@@ -17,7 +17,8 @@ namespace HanselAndGretel.Data
 	{
 		Forest,
 		Mountain,
-		Inside
+		Inside,
+		EndTheme
 	}
 
 	public class SceneData
