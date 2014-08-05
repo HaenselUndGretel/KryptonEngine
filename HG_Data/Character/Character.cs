@@ -23,6 +23,7 @@ namespace HanselAndGretel.Data
 		protected const string Anim_Addon_Walk_Down = "Down";
 		protected const string Anim_Addon_Walk_Side = "Side";
 		protected const string Anim_Addon_Shiver = "Shiver";
+		protected const string Anim_Addon_Lantern = "Lantern";
 
 		#endregion
 
@@ -117,7 +118,7 @@ namespace HanselAndGretel.Data
 		/// Animiert den Character für idle und Movement.
 		/// </summary>
 		/// <param name="pMovement"></param>
-		public void AnimBasicAnimation(Vector2 pMovement)
+		public void AnimBasicAnimation(Vector2 pMovement, bool pLantern = false)
 		{
 			//Animation bestimmen
 			Vector2 TmpMovement = pMovement;
@@ -131,7 +132,9 @@ namespace HanselAndGretel.Data
 				TmpAnimation = Anim_Walk;
 			}
 			TmpAnimation += GetRightDirectionAnimation(TmpMovement, Anim_Addon_Walk_Up, Anim_Addon_Walk_Down, Anim_Addon_Walk_Side);
-			if (mBodyTemperature < 1f)
+			if (pLantern)
+				TmpAnimation += Anim_Addon_Lantern;
+			else if (mBodyTemperature < 1f)
 				TmpAnimation += Anim_Addon_Shiver;
 
 			//Animation setzen

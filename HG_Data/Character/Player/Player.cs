@@ -82,7 +82,7 @@ namespace HanselAndGretel.Data
 		{
 			base.Update();
 			if (pMayMove && pMovementSpeedFactor > 0)
-				AnimBasicAnimation(Move(ViewportCheckedVector(GetMovement(mInput.Movement, pMovementSpeedFactor)), GetBodiesForCollisionCheck(pScene)));
+				AnimBasicAnimation(Move(ViewportCheckedVector(GetMovement(mInput.Movement, pMovementSpeedFactor)), GetBodiesForCollisionCheck(pScene)), Lantern);
 		}
 
 		#region Update Movement Helper
@@ -114,7 +114,7 @@ namespace HanselAndGretel.Data
 					TmpMovement = ViewportCheckedVector(GetMovement(pMovementDirection, pMovementSpeedFactor));
 				TmpBodies = GetBodiesForCollisionCheck(pScene);
 			}
-			AnimBasicAnimation(Move(TmpMovement, TmpBodies));
+			AnimBasicAnimation(Move(TmpMovement, TmpBodies), Lantern);
 		}
 
 		/// <summary>
@@ -147,7 +147,7 @@ namespace HanselAndGretel.Data
 				TmpMovement = pTargetPoint - SkeletonPosition;
 			Vector2 Movement = Move(TmpMovement, TmpBodies);
 			if (pAnimate)
-				AnimBasicAnimation(Movement);
+				AnimBasicAnimation(Movement, Lantern);
 		}
 
 		/// <summary>
