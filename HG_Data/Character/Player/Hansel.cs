@@ -6,11 +6,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml.Serialization;
 
 namespace HanselAndGretel.Data
 {
 	public class Hansel : Player
 	{
+		#region Properties
+
+		[XmlIgnoreAttribute]
+		public bool IsLanternRaised;
+		#endregion
+
 		#region Constructor
 
 		public Hansel() : base("skeleton") { Initialize(); }

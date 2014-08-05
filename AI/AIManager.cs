@@ -232,8 +232,8 @@ namespace KryptonEngine.AI
 		{
 			CalculateWitchPath(StartPos);
 
-			if (Vector2.Distance(GameReferenzes.ReferenzGretel.Position, e.Position) < GameReferenzes.LIGHT_RADIUS)
-				e.SlowFactor = 0.6f;
+			if (Vector2.Distance(GameReferenzes.UntargetPlayer.Position, e.Position) < GameReferenzes.LIGHT_RADIUS)
+				e.SlowFactor = 0.5f;
 			else
 				e.SlowFactor = 1.0f;
 		}
