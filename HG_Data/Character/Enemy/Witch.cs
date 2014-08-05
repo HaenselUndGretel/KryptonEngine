@@ -52,7 +52,7 @@ namespace HanselAndGretel.Data
 			Direction = Vector2.Normalize(Direction);
 
 			// Bewegen der Hexe
-			AnimBasicAnimation(Direction);
+			AnimBasicAnimation(Direction, false, false);
 			MoveInteractiveObject(Direction * 3.0f * SlowFactor);
 
 			if (Path[CurrentPath].Position.X == (int)(Position.X / 16)

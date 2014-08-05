@@ -118,7 +118,7 @@ namespace HanselAndGretel.Data
 		/// Animiert den Character für idle und Movement.
 		/// </summary>
 		/// <param name="pMovement"></param>
-		public void AnimBasicAnimation(Vector2 pMovement, bool pLantern = false)
+		public void AnimBasicAnimation(Vector2 pMovement, bool pLantern = false, bool CanShiver = true)
 		{
 			//Animation bestimmen
 			Vector2 TmpMovement = pMovement;
