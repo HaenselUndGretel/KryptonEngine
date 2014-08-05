@@ -25,8 +25,6 @@ namespace HanselAndGretel.Data
 		protected const string Anim_Addon_Shiver = "Shiver";
 		protected const string Anim_Addon_Lantern = "Lantern";
 
-		private Vector2 LastMovementDirection;
-
 		#endregion
 
 		protected float mSpeed;

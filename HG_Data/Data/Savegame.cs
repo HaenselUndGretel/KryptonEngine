@@ -70,7 +70,7 @@ namespace HanselAndGretel.Data
 			SavegameSerializer = new XmlSerializer(typeof(Savegame));
 			Collectables = new List<Collectable>();
 			SceneId = 0;
-			Scenes = new SceneData[18]; //ToDo: Anzahl Scenes setzen !---!---!---!---!
+			Scenes = new SceneData[19]; //ToDo: Anzahl Scenes setzen !---!---!---!---!
 			for (int i = 0; i < Scenes.Length; i++)
 				Scenes[i] = new SceneData(); //Scenes initialisieren
 			hansel = new Hansel();
