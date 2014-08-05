@@ -128,7 +128,18 @@ namespace KryptonEngine.FModAudio
 
 		public void StopSong(string SongName)
 		{
-			mSongList.Remove(SongName);
+			if (mSongList.ContainsKey(SongName))
+			{
+				mSongList[SongName].Release();
+				mSongList.Remove(SongName);
+			}
+		}
+
+		public void StopAllSongs()
+		{
+			foreach (KeyValuePair<string, FModSong> pair in mSongList)
+				pair.Value.Release();
+			mSongList.Clear();
 		}
 	}
 }
