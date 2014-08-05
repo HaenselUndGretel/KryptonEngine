@@ -24,7 +24,6 @@ namespace HanselAndGretel.Data
 		protected const string Anim_Addon_Walk_Side = "Side";
 		protected const string Anim_Addon_Shiver = "Shiver";
 		protected const string Anim_Addon_Lantern = "Lantern";
-
 		#endregion
 
 		protected float mSpeed;

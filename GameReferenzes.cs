@@ -24,6 +24,7 @@ namespace KryptonEngine
 
 		public readonly static int RasterSize = 16;
 		public readonly static float DEATH_ZONE = 50.0f;
+
 		public readonly static float LIGHT_RADIUS = 250.0f;
 		public readonly static float LIGHT_RADIUS_HIGH = 400.0f;
 
