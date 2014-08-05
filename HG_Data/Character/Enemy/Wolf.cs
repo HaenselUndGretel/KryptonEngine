@@ -87,6 +87,7 @@ namespace HanselAndGretel.Data
 			Vector2 Direction = Path[CurrentPath].Position * 16 - Position + new Vector2(EngineSettings.Randomizer.Next(0,16),EngineSettings.Randomizer.Next(0,16));
 			Direction = Vector2.Normalize(Direction);
 
+			AnimBasicAnimation(Direction);
 			MoveInteractiveObject(Direction * mWolfSpeed *SlowFactor);
 
 			if (Path[CurrentPath].Position.X == (int)(Position.X / 16)
@@ -94,9 +95,6 @@ namespace HanselAndGretel.Data
 				CurrentPath--;
         }
 
-		#endregion
-
-		#region Methods
 		#endregion
 	}
 }
