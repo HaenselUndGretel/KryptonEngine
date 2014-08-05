@@ -129,8 +129,8 @@ namespace HanselAndGretel.Data
 			else
 			{
 				TmpAnimation = Anim_Walk;
-				TmpAnimation += GetRightDirectionAnimation(TmpMovement, Anim_Addon_Walk_Up, Anim_Addon_Walk_Down, Anim_Addon_Walk_Side);
 			}
+			TmpAnimation += GetRightDirectionAnimation(TmpMovement, Anim_Addon_Walk_Up, Anim_Addon_Walk_Down, Anim_Addon_Walk_Side);
 			if (mBodyTemperature < 1f)
 				TmpAnimation += Anim_Addon_Shiver;
 
