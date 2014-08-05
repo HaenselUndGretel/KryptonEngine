@@ -18,11 +18,11 @@ namespace HanselAndGretel.Data
 		#region AnimationMapping
 
 		protected const string Anim_Idle = "idle";
-		protected const string Anim_Walk = "idle";//"walk";
-		protected const string Anim_Addon_Walk_Up = "";//"Up";
-		protected const string Anim_Addon_Walk_Down = "";//"Down";
-		protected const string Anim_Addon_Walk_Side = "";//"Side";
-		protected const string Anim_Addon_Shiver = "";//"Shiver";
+		protected const string Anim_Walk = "walk";
+		protected const string Anim_Addon_Walk_Up = "Up";
+		protected const string Anim_Addon_Walk_Down = "Down";
+		protected const string Anim_Addon_Walk_Side = "Side";
+		protected const string Anim_Addon_Shiver = "Shiver";
 
 		#endregion
 
