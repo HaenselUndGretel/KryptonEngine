@@ -33,6 +33,12 @@ namespace KryptonEngine
              }
 
             player.Play(tempVideo);
+           
+        }
+
+       public static void Stop()
+        {
+            CutScenePlayer.Stop();
         }
 
         public static void Draw(SpriteBatch pSpritBatch)
