@@ -164,7 +164,7 @@ namespace KryptonEngine.AI
 						String SongName;
 						SongName = (charackterSound == 0)? "hansel_fear_0" + number.ToString() : "gretel_fear_0" + number.ToString();
 
-						FmodMediaPlayer.Instance.AddSong(SongName, 0.7f);
+						
 
 						if(type == EnemyType.Wolf)
 							e.IsAiActive = true;
@@ -176,6 +176,7 @@ namespace KryptonEngine.AI
 								break;
 							case EnemyType.Wolf:
 								FmodMediaPlayer.Instance.FadeBackgroundChannelIn(3);
+								FmodMediaPlayer.Instance.AddSong(SongName, 0.9f);
 								break;
 						}
 					}
@@ -292,7 +293,7 @@ namespace KryptonEngine.AI
 			} while (ClosedList[ClosedList.Count - 1].Position != TargetField && Map[(int)TargetField.X, (int)TargetField.Y] != -1
 			&& Map[(int)TargetField.X, (int)TargetField.Y] != -2
 			&& StartPos.X >= 0 && StartPos.Y >= 0 && StartPos.X < FieldsWidth && StartPos.Y < FieldsHeight
-			&& OpenList.Count != 0 && ClosedList.Count < 500);
+			&& OpenList.Count != 0 && ClosedList.Count < 2500);
 		}
 
 		private void CalculateWolfPath(Vector2 StartPos, bool escaping)
