@@ -136,12 +136,12 @@ namespace KryptonEngine.Entities
 					pAnimation += "Up";
 				pAnimation = "walkUp"; //
 			}
-			//if (mSkeleton.Data.FindAnimation(pAnimation) == null)
-			//	throw new Exception("Animation \"" + pAnimation + "\" ist im Skeleton \"" + mSkeleton.Data.Name + "\" nicht vorhanden.");
+			if (mSkeleton.Data.FindAnimation(pAnimation) == null)
+				throw new Exception("Animation \"" + pAnimation + "\" ist im Skeleton \"" + mSkeleton.Data.Name + "\" nicht vorhanden.");
 			if (pCut)
 				AnimationState.ClearTracks();
-			//if (AnimationState.GetCurrent(0) == null || AnimationState.GetCurrent(0).ToString() != pAnimation || pForce)
-			//	AnimationState.SetAnimation(0, pAnimation, pLoop);
+			if (AnimationState.GetCurrent(0) == null || AnimationState.GetCurrent(0).ToString() != pAnimation || pForce)
+				AnimationState.SetAnimation(0, pAnimation, pLoop);
 		}
 
 		public virtual void ApplySettings()
