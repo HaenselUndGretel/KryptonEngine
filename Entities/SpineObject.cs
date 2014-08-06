@@ -29,6 +29,8 @@ namespace KryptonEngine.Entities
 
 		new protected Color mDebugColor = Color.Yellow;
 
+		protected Vector2 LastMovementDirection;
+
 		#endregion
 
 		#region Getter & Setter
@@ -120,8 +122,20 @@ namespace KryptonEngine.Entities
 		/// <param name="pLoop">Soll die Animation gelooped werden?</param>
 		/// <param name="pForce">Soll die Animation applyed werden auch wenn schon diese Animation läuft?</param>
 		/// <param name="pCut">Soll nicht gefaded werden sondern alles gestoppt und direkt die Animation abgespielt werden?</param>
-		public void SetAnimation(string pAnimation = "idle", bool pLoop = true, bool pForce = false, bool pCut = false)
+		public void SetAnimation(string pAnimation = "", bool pLoop = true, bool pForce = false, bool pCut = false)
 		{
+			if (pAnimation == "")
+			{
+				pAnimation = "idle";
+				LastMovementDirection.Normalize();
+				if (LastMovementDirection.Y > Math.Sin(MathHelper.ToRadians(67.5f))) //Runter
+					pAnimation += "Down";
+				else if (LastMovementDirection.Y > Math.Sin(MathHelper.ToRadians(-22.5f))) //Seitlich
+					pAnimation += "Side";
+				else //Hoch
+					pAnimation += "Up";
+				pAnimation = "walkUp"; //
+			}
 			if (mSkeleton.Data.FindAnimation(pAnimation) == null)
 				throw new Exception("Animation \"" + pAnimation + "\" ist im Skeleton \"" + mSkeleton.Data.Name + "\" nicht vorhanden.");
 			if (pCut)
