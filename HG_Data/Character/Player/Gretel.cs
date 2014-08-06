@@ -34,7 +34,7 @@ namespace HanselAndGretel.Data
 		public override void LoadContent()
 		{
 			base.LoadContent();
-			SkeletonPosition = new Vector2(250, 400); //Init Position Gretel
+			SkeletonPosition = new Vector2(632, 238); //Init Position Gretel
 			Position = SkeletonPosition;
 		}
 
