@@ -12,11 +12,6 @@ namespace HanselAndGretel.Data
 {
 	public class Hansel : Player
 	{
-		#region Properties
-
-		[XmlIgnoreAttribute]
-		public bool IsLanternRaised;
-		#endregion
 
 		#region Constructor
 

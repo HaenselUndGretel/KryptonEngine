@@ -19,6 +19,7 @@ namespace HanselAndGretel.Data
 
 		protected const string Anim_Idle = "idle";
 		protected const string Anim_Walk = "walk";
+		protected const string Anim_LanternRaised = "raiseLantern";
 		protected const string Anim_Addon_Walk_Up = "Up";
 		protected const string Anim_Addon_Walk_Down = "Down";
 		protected const string Anim_Addon_Walk_Side = "Side";
@@ -118,7 +119,7 @@ namespace HanselAndGretel.Data
 		/// Animiert den Character für idle und Movement.
 		/// </summary>
 		/// <param name="pMovement"></param>
-		public void AnimBasicAnimation(Vector2 pMovement, bool pLantern = false, bool CanShiver = true)
+		public void AnimBasicAnimation(Vector2 pMovement, bool pLantern = false, bool CanShiver = true, bool pLanternRaised = false)
 		{
 			//Animation bestimmen
 			Vector2 TmpMovement = pMovement;
@@ -135,12 +136,14 @@ namespace HanselAndGretel.Data
 				if (pLantern)
 					TmpAnimation += Anim_Addon_Lantern;
 			}
+			if (pLanternRaised)
+				TmpAnimation = Anim_LanternRaised;
 			TmpAnimation += GetRightDirectionAnimation(TmpMovement, Anim_Addon_Walk_Up, Anim_Addon_Walk_Down, Anim_Addon_Walk_Side);
 			if (!pLantern && mBodyTemperature < 1f)
 				TmpAnimation += Anim_Addon_Shiver;
 
 			//Animation setzen
-			//SetAnimation(TmpAnimation);
+			SetAnimation(TmpAnimation);
 			SetSkeletonFlipState(this, TmpMovement);
 		}
 

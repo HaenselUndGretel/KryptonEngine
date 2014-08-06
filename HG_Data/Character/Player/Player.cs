@@ -23,6 +23,8 @@ namespace HanselAndGretel.Data
 		public int mCurrentState;
 		protected InputHelper mInput;
 		public bool Lantern;
+		[XmlIgnoreAttribute]
+		public bool IsLanternRaised;
 
 		//References
 		protected Player rOtherPlayer;
@@ -82,7 +84,7 @@ namespace HanselAndGretel.Data
 		{
 			base.Update();
 			if (pMayMove && pMovementSpeedFactor > 0)
-				AnimBasicAnimation(Move(ViewportCheckedVector(GetMovement(mInput.Movement, pMovementSpeedFactor)), GetBodiesForCollisionCheck(pScene)), Lantern);
+				AnimBasicAnimation(Move(ViewportCheckedVector(GetMovement(mInput.Movement, pMovementSpeedFactor)), GetBodiesForCollisionCheck(pScene)), Lantern, true, IsLanternRaised);
 		}
 
 		#region Update Movement Helper
@@ -114,7 +116,7 @@ namespace HanselAndGretel.Data
 					TmpMovement = ViewportCheckedVector(GetMovement(pMovementDirection, pMovementSpeedFactor));
 				TmpBodies = GetBodiesForCollisionCheck(pScene);
 			}
-			AnimBasicAnimation(Move(TmpMovement, TmpBodies), Lantern);
+			AnimBasicAnimation(Move(TmpMovement, TmpBodies), Lantern, true, IsLanternRaised);
 		}
 
 		/// <summary>
@@ -147,7 +149,7 @@ namespace HanselAndGretel.Data
 				TmpMovement = pTargetPoint - SkeletonPosition;
 			Vector2 Movement = Move(TmpMovement, TmpBodies);
 			if (pAnimate)
-				AnimBasicAnimation(Movement, Lantern);
+				AnimBasicAnimation(Movement, Lantern, true, IsLanternRaised);
 		}
 
 		/// <summary>
