@@ -103,7 +103,6 @@ namespace KryptonEngine.Entities
 				if (CollisionRectList.Count > 0)
 					this.CollisionBox = this.CollisionRectList[0];
 			}
-
 		}
 		#endregion
 

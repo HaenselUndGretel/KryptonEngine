@@ -143,6 +143,15 @@ namespace HanselAndGretel.Data
 					wellOverlay.ApplySettings();
 					RenderList.Add(wellOverlay);
 				}
+
+			List<InteractiveObject> del = new List<InteractiveObject>();
+
+			foreach (InteractiveObject iObj in RenderList)
+				if (iObj.Name.Contains("jump") || iObj.Name.Contains("slip"))
+					del.Add(iObj);
+
+			foreach (InteractiveObject iObj in del)
+				RenderList.Remove(iObj);
 		}
 
 		public void DrawDebug(SpriteBatch pSpriteBatch)
