@@ -24,14 +24,11 @@ namespace KryptonEngine
              player = new VideoPlayer();
              switch (scene)
              {
-                 case "Ga":
-                     tempVideo = KryptonEngine.EngineSettings.Content.Load<Video>("video\\ga");
-                     break;
-                 case "Fables":
-                     tempVideo = KryptonEngine.EngineSettings.Content.Load<Video>("video\\fables");
+                 case "Intro":
+                     tempVideo = KryptonEngine.EngineSettings.Content.Load<Video>("video\\Intro");
                      break;
                  case "Outro":
-                     tempVideo = KryptonEngine.EngineSettings.Content.Load<Video>("video\\outro");
+                     tempVideo = KryptonEngine.EngineSettings.Content.Load<Video>("video\\Outro");
                      break;
              }
 
