@@ -139,7 +139,7 @@ namespace HanselAndGretel.Data
 			if (pLanternRaised)
 				TmpAnimation = Anim_LanternRaised;
 			TmpAnimation += GetRightDirectionAnimation(TmpMovement, Anim_Addon_Walk_Up, Anim_Addon_Walk_Down, Anim_Addon_Walk_Side);
-			if (!pLantern && mBodyTemperature < 1f)
+			if (CanShiver && !pLantern && mBodyTemperature < 1f)
 				TmpAnimation += Anim_Addon_Shiver;
 
 			//Animation setzen
