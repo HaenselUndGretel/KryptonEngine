@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace KryptonEngine
 {
-    static class CutScenePlayer
+   public static class CutScenePlayer
     {
         static Video Ga = null;
         static Video Fables = null;
@@ -21,6 +21,7 @@ namespace KryptonEngine
         static public void Play(string scene)
         {
              Video tempVideo = null;
+             player = new VideoPlayer();
              switch (scene)
              {
                  case "Ga":
@@ -37,7 +38,7 @@ namespace KryptonEngine
             player.Play(tempVideo);
         }
 
-        static void Draw(SpriteBatch pSpritBatch)
+        public static void Draw(SpriteBatch pSpritBatch)
         {
             pSpritBatch.Draw(player.GetTexture(),Vector2.Zero,Color.White);
         }
