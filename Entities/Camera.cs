@@ -172,6 +172,14 @@ namespace KryptonEngine.Entities
 			mTransform = Matrix.CreateTranslation(new Vector3(mPositionCamera, 0));
         }
 
+		public void MoveCameraFree(Vector2 mSpeed)
+		{
+			mPositionCamera += mSpeed;
+			mTransform = Matrix.CreateTranslation(new Vector3(-Position, 0))
+				* Matrix.CreateScale(mScale)
+				* Matrix.CreateTranslation(EngineSettings.VirtualResWidth / 2, EngineSettings.VirtualResHeight / 2, 0);
+		}
+
 		public void ResetScale()
 		{
 			mScale = 1;

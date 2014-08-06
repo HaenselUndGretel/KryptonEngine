@@ -471,6 +471,7 @@ namespace KryptonEngine.Rendering
                         itemVertices[ii].Position.Z = pDepth;
                         itemVertices[ii].TextureCoordinate.X = uvs[v];
                         itemVertices[ii].TextureCoordinate.Y = uvs[v + 1];
+						itemVertices[ii].Color = pColor;
                     }
 
                 }
@@ -497,6 +498,7 @@ namespace KryptonEngine.Rendering
                         itemVertices[ii].Position.Z = 0;
                         itemVertices[ii].TextureCoordinate.X = uvs[v];
                         itemVertices[ii].TextureCoordinate.Y = uvs[v + 1];
+						itemVertices[ii].Color = pColor;
                     }
 
                 }
