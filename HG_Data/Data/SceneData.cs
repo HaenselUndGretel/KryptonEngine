@@ -33,7 +33,7 @@ namespace HanselAndGretel.Data
 
 		public List<GameObject> BackgroundSprites;
 		[XmlIgnoreAttribute]
-		public Sprite BackgroundTexture;
+		public static Sprite BackgroundTexture;
 
 		public List<InteractiveObject> InteractiveObjects;
 		public List<Collectable> Collectables;
