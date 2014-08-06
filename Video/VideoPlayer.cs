@@ -38,9 +38,15 @@ namespace KryptonEngine
 
        public static void Stop()
         {
-            CutScenePlayer.Stop();
+            player.Stop();
         }
 
+       public static bool isPlaying()
+       {
+           if (player.State == MediaState.Stopped)
+               return false;
+           return true;
+       }
         public static void Draw(SpriteBatch pSpritBatch)
         {
 
