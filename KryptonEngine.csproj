@@ -170,6 +170,7 @@
     <Compile Include="Spine\xna\SkeletonRegionRenderer.cs" />
     <Compile Include="Spine\xna\Util.cs" />
     <Compile Include="Spine\xna\XnaTextureLoader.cs" />
+    <Compile Include="Video\VideoPlayer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="HG_Data\ClassDiagram.cd" />
