@@ -153,7 +153,7 @@ namespace HanselAndGretel.Data
 			LoadContent();
 		}
 
-		protected string LevelNameFromId(int pLevelId)
+		public static string LevelNameFromId(int pLevelId)
 		{
 			string LevelName = "";
 			for (int i = 0; i < 3 - pLevelId.ToString().Length; i++)
