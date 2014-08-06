@@ -139,7 +139,7 @@ namespace HanselAndGretel.Data
 			if (pLanternRaised)
 				TmpAnimation = Anim_LanternRaised;
 			TmpAnimation += GetRightDirectionAnimation(TmpMovement, Anim_Addon_Walk_Up, Anim_Addon_Walk_Down, Anim_Addon_Walk_Side);
-			if (!pLantern && mBodyTemperature < 1f)
+			if (CanShiver && !pLantern && mBodyTemperature < 1f)
 				TmpAnimation += Anim_Addon_Shiver;
 
 			//Animation setzen
@@ -171,7 +171,7 @@ namespace HanselAndGretel.Data
 				pSpineObj.Flip = true;
 			else if (pAnimDirection.X < 0)
 				pSpineObj.Flip = false;
-			if (pAnimDirection.X == 0 && (pSpineObj.AnimationState.GetCurrent(0).animation.name.Contains("Down") || pSpineObj.AnimationState.GetCurrent(0).animation.name.Contains("Up")))
+			if (pSpineObj.AnimationState.GetCurrent(0) != null && (pAnimDirection.X == 0 && (pSpineObj.AnimationState.GetCurrent(0).animation.name.Contains("Down") || pSpineObj.AnimationState.GetCurrent(0).animation.name.Contains("Up"))))
 				pSpineObj.Flip = false;
 		}
 
