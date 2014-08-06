@@ -42,10 +42,11 @@ namespace KryptonEngine.Entities
 		{
 			if (!mIsUnlocked)
 				spriteBatch.Draw(mTextures[2], mPosition, Color.White);
-			else if (mIsSelected)
-				spriteBatch.Draw(mTextures[1], mPosition, Color.White);
 			else
 				spriteBatch.Draw(mTextures[0], mPosition, Color.White);
+
+			if (mIsSelected)
+				spriteBatch.Draw(mTextures[1], mPosition, Color.White);
 		}
 
 		public void IsClicked()

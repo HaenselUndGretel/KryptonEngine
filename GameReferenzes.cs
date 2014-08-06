@@ -31,6 +31,7 @@ namespace KryptonEngine
 		public static Camera GameCamera;
 
 		public static SceneData Level;
+		public static Savegame SaveGame;
 
 		public readonly static float UPDATETIME_WOLF = 800.0f;
 		public readonly static float UPDATETIME_WITCH = 1000.0f;

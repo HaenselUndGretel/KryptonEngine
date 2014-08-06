@@ -141,5 +141,16 @@ namespace KryptonEngine.FModAudio
 				pair.Value.Release();
 			mSongList.Clear();
 		}
+
+		public void SetBackgroundVolume(float pVolume)
+		{
+			foreach (Channel c in BackgroundSong.Channel)
+				c.setVolume(pVolume);
+			for (int i = 0; i < BackgroundSong.MaxChannelCount; i++ )
+			{
+				BackgroundSong.Volume[i] = pVolume;
+				BackgroundSong.Channel[i].setVolume(pVolume);
+			}
+		}
 	}
 }
