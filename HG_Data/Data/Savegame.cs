@@ -184,6 +184,8 @@ namespace HanselAndGretel.Data
 			pGretel.CollisionRectList = pSavegame.gretel.CollisionRectList;
 			pHansel.ApplySettings();
 			pGretel.ApplySettings();
+			pHansel.Lantern = pSavegame.hansel.Lantern;
+			pGretel.Lantern = pSavegame.gretel.Lantern;
 		}
 
 		public static void Delete()

@@ -628,10 +628,10 @@ namespace KryptonEngine.Rendering
 
         #region PostEffects
 
-        public void ApplyFog(Matrix pTranslation)
+        public void ApplyFog(Matrix pTranslation,float pScale)
         {
             this.mTranslatetViewMatrix = Matrix.Multiply(mView, pTranslation);
-            this.mFogPost.Render(pTranslation);
+            this.mFogPost.Render(pTranslation,pScale);
         }
 
         public void SetMaxFogHeight(float pMaxHeight)

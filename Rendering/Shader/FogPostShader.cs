@@ -61,7 +61,7 @@ namespace KryptonEngine.Rendering
             mFogTexture = TextureManager.Instance.GetElementByString("clouds");
         }
 
-        public void Render(Matrix pTransforme)
+        public void Render(Matrix pTransforme,float pScale)
         {
             mTimer = (float)(KryptonEngine.EngineSettings.Time.TotalGameTime.TotalMilliseconds / 10000);
 
@@ -70,6 +70,7 @@ namespace KryptonEngine.Rendering
 
 
             mFogShader.Parameters["View"].SetValue(pTransforme.Translation);
+			mFogShader.Parameters["Scale"].SetValue(pScale);
             mFogShader.Parameters["Timer"].SetValue(mTimer);
             mFogShader.Parameters["Speed"].SetValue(mSpeed);
             mFogShader.Parameters["FogFactorMin"].SetValue(mFogFactorMin);
