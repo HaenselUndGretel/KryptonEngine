@@ -51,7 +51,8 @@ namespace KryptonEngine.Entities
 
 		public void IsClicked()
 		{
-			mClickAction();
+			if(mClickAction != null && mIsUnlocked)
+				mClickAction();
 		}
 		#endregion
 	}
