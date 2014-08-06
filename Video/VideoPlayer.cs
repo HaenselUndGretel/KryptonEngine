@@ -40,7 +40,10 @@ namespace KryptonEngine
 
         public static void Draw(SpriteBatch pSpritBatch)
         {
-            pSpritBatch.Draw(player.GetTexture(),Vector2.Zero,Color.White);
+
+
+
+            pSpritBatch.Draw(player.GetTexture(), new Rectangle(0,0,1280,720),null, Color.White);
         }
         
 
