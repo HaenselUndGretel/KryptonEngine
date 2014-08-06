@@ -171,6 +171,8 @@ namespace HanselAndGretel.Data
 				pSpineObj.Flip = true;
 			else if (pAnimDirection.X < 0)
 				pSpineObj.Flip = false;
+			if (pAnimDirection.X == 0 && (pSpineObj.AnimationState.GetCurrent(0).animation.name.Contains("Down") || pSpineObj.AnimationState.GetCurrent(0).animation.name.Contains("Up")))
+				pSpineObj.Flip = false;
 		}
 
 		#endregion

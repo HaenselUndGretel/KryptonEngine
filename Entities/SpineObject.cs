@@ -29,7 +29,7 @@ namespace KryptonEngine.Entities
 
 		new protected Color mDebugColor = Color.Yellow;
 
-		protected Vector2 LastMovementDirection;
+		protected Vector2 LastMovementDirection = new Vector2(0, 1);
 
 		#endregion
 
